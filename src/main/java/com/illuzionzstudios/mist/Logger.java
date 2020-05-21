@@ -18,6 +18,10 @@ import java.util.logging.Level;
  */
 public final class Logger {
 
+    //  -------------------------------------------------------------------------
+    //  Main logging functions
+    //  -------------------------------------------------------------------------
+
     /**
      * Debug an object as output
      *
@@ -83,6 +87,23 @@ public final class Logger {
         }
 
         SpigotPlugin.getInstance().getLogger().log(level, String.format(message.toString(), parameters));
+    }
+
+    //  -------------------------------------------------------------------------
+    //  Error handling
+    //  -------------------------------------------------------------------------
+
+    /**
+     * Nicely display an error to console
+     *
+     * @param throwable The error to display
+     * @param errorMessage The error message/cause for this error
+     */
+    public static void displayError(final Throwable throwable, String errorMessage) {
+        severe(" ");
+        severe("An error occurred for " + SpigotPlugin.getPluginName() + " v" + SpigotPlugin.getPluginVersion());
+        severe(" ");
+        severe(errorMessage);
     }
 
 }

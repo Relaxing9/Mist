@@ -9,6 +9,8 @@
  */
 package com.illuzionzstudios.mist.plugin;
 
+import com.illuzionzstudios.mist.Logger;
+import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +28,12 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     //  -------------------------------------------------------------------------
     //  Static instances that stay final
     //  -------------------------------------------------------------------------
+
+    /**
+     * If our {@link SpigotPlugin} is currently reloading
+     */
+    @Getter
+    private static volatile boolean reloading = false;
 
     /**
      * Singleton instance of our {@link SpigotPlugin}
@@ -151,7 +159,35 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * Attempt to reload the plugin
      */
     public final void reload() {
+        Logger.info(" ");
+        Logger.info("Reloading plugin " + getPluginName() + " v" + getPluginVersion());
+        Logger.info(" ");
 
+        reloading = true;
+
+        try {
+            // TODO: Reload other stuff
+            onPluginPreReload();
+            onPluginReload();
+        } catch (final Throwable ex) {
+            Logger.displayError(ex, "Error reloading plugin");
+        } finally {
+            Logger.info(" ");
+            reloading = false;
+        }
+    }
+
+    //  -------------------------------------------------------------------------
+    //  Additional features of our main plugin
+    //  -------------------------------------------------------------------------
+
+    /**
+     * The start-up fancy logo
+     *
+     * @return null by default
+     */
+    public String[] getStartupLogo() {
+        return null;
     }
 
 }
