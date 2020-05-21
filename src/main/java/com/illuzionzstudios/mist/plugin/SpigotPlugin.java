@@ -110,7 +110,14 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract void onPluginDisable();
 
     /**
-     * Called when the plugin is reloaded
+     * Called before the plugin is reloaded
+     * This means config reloads, /reload, or if the plugin is
+     * disabled and then enabled while the server is running
+     */
+    public abstract void onPluginPreReload();
+
+    /**
+     * Called after the plugin is reloaded
      * This means config reloads, /reload, or if the plugin is
      * disabled and then enabled while the server is running
      */
@@ -137,6 +144,13 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public final void onDisable() {
+
+    }
+
+    /**
+     * Attempt to reload the plugin
+     */
+    public final void reload() {
 
     }
 
