@@ -82,7 +82,7 @@ public final class Logger {
     private static void log(Level level, Object message, Object... parameters) {
         // Make sure has instance
         if (!SpigotPlugin.hasInstance()) {
-            System.err.println("Fatal error trying to log messages");
+            System.out.println("[Unloaded Plugin] " + String.format(message.toString(), parameters));
             return;
         }
 
