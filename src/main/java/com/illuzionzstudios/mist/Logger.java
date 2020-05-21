@@ -104,6 +104,9 @@ public final class Logger {
         severe("An error occurred for " + SpigotPlugin.getPluginName() + " v" + SpigotPlugin.getPluginVersion());
         severe(" ");
         severe(errorMessage);
+        severe(" ");
+        severe("Report the following error:");
+        throwable.printStackTrace();
     }
 
 }

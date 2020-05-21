@@ -147,12 +147,37 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public final void onEnable() {
+        // TODO: Fill in everything else we enable
 
+        if (!isEnabled) return;
+
+        // Pre start the plugin
+        onPluginPreEnable();
+
+        // Return if plugin pre start indicated a fatal problem
+        if (!isEnabled || !isEnabled()) return;
+
+        // Main enabled
+        try {
+            onPluginEnable();
+        } catch (final Throwable ex) {
+            Logger.displayError(ex, "Could not enable plugin");
+        }
     }
 
     @Override
     public final void onDisable() {
+        // Don't shutdown if wasn't enabled
+        if (!isEnabled) return;
 
+        try {
+            onPluginDisable();
+        } catch (final Throwable t) {
+            Logger.info("&cPlugin might not shut down property. Got " + t.getClass().getSimpleName() + ": " + t.getMessage());
+        }
+
+        Objects.requireNonNull(INSTANCE, "Plugin " + getName() + " has already been shutdown!");
+        INSTANCE = null;
     }
 
     /**

@@ -11,6 +11,7 @@ package com.illuzionzstudios.mist;
 
 /**
  * Main library class to handle utils and other stuff
+ * Will contain a lot of static utils for our convenience
  */
 public class Mist {
 
