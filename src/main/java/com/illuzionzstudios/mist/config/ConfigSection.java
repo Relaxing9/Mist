@@ -15,11 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -107,9 +105,6 @@ public class ConfigSection extends MemoryConfiguration {
      * need one lock per instance, as we can edit different instances at
      * the different times. Although, we generally invoke on the {@link #root}
      * {@link ConfigSection} as we want to lock each actual {@link YamlConfig} instance
-     *
-     * Methods that invoke this (we limit) are:
-     * {@link #createNodePath(String, boolean)}
      */
     private final Object lock = new Object();
 
@@ -279,6 +274,127 @@ public class ConfigSection extends MemoryConfiguration {
             root.defaultComments.put(fullPath + path, new Comment(style, comment));
         }
         return section;
+    }
+
+    /**
+     * See {@link #setComment(String, Comment)} and construct {@link Comment} from paramaters
+     * 
+     * @param commentStyle The styling for the comment
+     * @param lines The lines to set
+     */
+    @NotNull
+    public ConfigSection setComment(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, String... lines) {
+        return setComment(path, lines != null ? new Comment(commentStyle, lines) : null);
+    }
+
+    /**
+     * See {@link #setComment(String, Comment.CommentStyle, String...)}
+     */
+    @NotNull
+    public ConfigSection setComment(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, @Nullable List<String> lines) {
+        return setComment(path, lines != null ? new Comment(commentStyle, lines) : null);
+    }
+
+    /**
+     * Set a {@link Comment} for a node of a {@link ConfigSection}
+     *
+     * @param path The relevant path to the node to set
+     * @param comment The {@link Comment} object to set
+     * @return The {@link ConfigSection} the comment was set for
+     */
+    @NotNull
+    public ConfigSection setComment(@NotNull String path, @Nullable Comment comment) {
+        // Assure not null
+        Objects.requireNonNull(root.defaultComments, "Root config has invalid default comments map");
+        Objects.requireNonNull(root.configComments, "Root config has invalid config comments map");
+
+        synchronized (root.lock) {
+            if (isDefault) {
+                root.defaultComments.put(fullPath + path, comment);
+            } else {
+                root.configComments.put(fullPath + path, comment);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * See {@link #setDefaultComment(String, List)}
+     */
+    @NotNull
+    public ConfigSection setDefaultComment(@NotNull String path, String... lines) {
+        return setDefaultComment(path, lines.length == 0 ? null : Arrays.asList(lines));
+    }
+
+    /**
+     * See {@link #setDefaultComment(String, Comment)}
+     */
+    @NotNull
+    public ConfigSection setDefaultComment(@NotNull String path, @Nullable List<String> lines) {
+        setDefaultComment(fullPath + path, new Comment(lines));
+        return this;
+    }
+
+    /**
+     * See {@link #setDefaultComment(String, Comment.CommentStyle, List)}
+     */
+    @NotNull
+    public ConfigSection setDefaultComment(@NotNull String path, Comment.CommentStyle commentStyle, String... lines) {
+        return setDefaultComment(path, commentStyle, lines.length == 0 ? null : Arrays.asList(lines));
+    }
+
+    /**
+     * See {@link #setDefaultComment(String, List)} but we set {@link com.illuzionzstudios.mist.config.format.Comment.CommentStyle}
+     * for the comments
+     */
+    @NotNull
+    public ConfigSection setDefaultComment(@NotNull String path, Comment.CommentStyle commentStyle, @Nullable List<String> lines) {
+        setDefaultComment(fullPath + path, new Comment(commentStyle, lines));
+        return this;
+    }
+
+    /**
+     * See {@link #setComment(String, Comment)} but we are setting default values,
+     * so mapped to {@link #defaultComments}
+     */
+    @NotNull
+    public ConfigSection setDefaultComment(@NotNull String path, @Nullable Comment comment) {
+        Objects.requireNonNull(root.defaultComments, "Root config has invalid default comments map");
+
+        synchronized (root.lock) {
+            root.defaultComments.put(fullPath + path, comment);
+        }
+        return this;
+    }
+
+    /**
+     * Get the {@link Comment} instance from a relevant node path
+     * May produce {@code null}
+     *
+     * @param path The relevant path to the value
+     * @return The {@link Comment} for the {@link ConfigSection} if applicable
+     */
+    @Nullable
+    public Comment getComment(@NotNull String path) {
+        Objects.requireNonNull(root.defaultComments, "Root config has invalid default comments map");
+        Objects.requireNonNull(root.configComments, "Root config has invalid config comments map");
+
+        Comment result = root.configComments.get(fullPath + path);
+        if (result == null) {
+            result = root.defaultComments.get(fullPath + path);
+        }
+        return result;
+    }
+
+    /**
+     * See {@link #getComment(String)}
+     *
+     * @return {@link Comment} invoked with {@link Comment#toString()}
+     */
+    @Nullable
+    public String getCommentString(@NotNull String path) {
+        Comment result = getComment(path);
+        return result != null ? result.toString() : null;
     }
 
 }
