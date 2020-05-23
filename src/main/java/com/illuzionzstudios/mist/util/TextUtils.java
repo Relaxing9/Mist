@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Util methods to help parsing text
  */
-public class TextUtils {
+public final class TextUtils {
 
     /**
      * These are all the {@link Charset} we support for encoding/saving

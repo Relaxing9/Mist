@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 /**
  * External UUID library included for our plugin
  */
-public class UUIDFetcher {
+public final class UUIDFetcher {
 
     /**
      * Date when name changes were introduced
