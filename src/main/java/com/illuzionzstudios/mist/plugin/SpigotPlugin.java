@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist.plugin;
 
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.config.PluginSettings;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -224,5 +225,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @return The main labels for the main plugin command. For instance, "customfishing", "customf"
      */
     public abstract List<String> getCommandAliases();
+
+    /**
+     * @return Our custom implementation of {@link PluginSettings}
+     */
+    public abstract PluginSettings getPluginSettings();
 
 }

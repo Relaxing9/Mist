@@ -39,8 +39,14 @@ public abstract class PluginSettings extends YamlConfig {
      */
     protected static int VERSION;
 
+    /**
+     * Here we want to update the current configuration version set
+     * in the config to the static version in the code.
+     *
+     * Note: Call {@code super#preLoad} when overriding
+     */
     @Override
-    protected void preLoad() {
+    protected void postLoad() {
         // Load version first so we can use it later
         if ((VERSION = getInt("Version")) != getConfigVersion())
             set("Version", getConfigVersion());
@@ -75,12 +81,26 @@ public abstract class PluginSettings extends YamlConfig {
      * Load these {@link PluginSettings} into the server, setting values
      * if not there, or loading the values into memory
      *
+     * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
+     *
      * @param plugin The {@link SpigotPlugin} to load settings for
      * @param settings The instance of {@link PluginSettings} to load
      */
     public static void loadSettings(SpigotPlugin plugin, PluginSettings settings) {
+        // Load settings file
+        settings.load();
+
         MAIN_COMMAND_ALIASES = new ConfigSetting(settings, "Main Command Aliases", plugin.getCommandAliases());
         LOCALE = new ConfigSetting(settings, "Locale", "en_US");
+
+        // Load our other custom settings
+        settings.loadSettings();
     }
+
+    /**
+     * Invoked to load all other custom settings that we implement
+     * in our own {@link PluginSettings}
+     */
+    public abstract void loadSettings();
 
 }

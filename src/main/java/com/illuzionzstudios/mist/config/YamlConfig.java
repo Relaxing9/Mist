@@ -95,6 +95,13 @@ public class YamlConfig extends ConfigSection {
     //  -------------------------------------------------------------------------
 
     /**
+     * Flag indicating if the file is loaded
+     */
+    @Getter
+    @Setter
+    protected boolean loaded = false;
+
+    /**
      * This is the actual file that this {@link YamlConfig} is
      */
     protected File file;
@@ -294,6 +301,12 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
+     * To be overridden, called after loading the file into memory
+     */
+    protected void postLoad() {
+    }
+
+    /**
      * Load the {@link #file} into memory
      *
      * @return If loaded successfully
@@ -310,8 +323,9 @@ public class YamlConfig extends ConfigSection {
     public boolean load(@NotNull File file) {
         Validate.notNull(file, "File cannot be null");
 
-        // Pre load file
+        // Start loading
         preLoad();
+        this.loaded = true;
 
         if (file.exists()) {
             try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
@@ -362,6 +376,9 @@ public class YamlConfig extends ConfigSection {
             }
             this.convertMapsToSections(input, this);
         }
+
+        // Loading is done
+        postLoad();
     }
 
     protected void convertMapsToSections(@NotNull Map<?, ?> input, @NotNull ConfigSection section) {
