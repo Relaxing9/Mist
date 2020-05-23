@@ -57,7 +57,7 @@ public class YamlConfig extends ConfigSection {
     /**
      * This is the REGEX to parse YAML syntax
      */
-    protected final Pattern yamlNode = Pattern.compile("^( *)([^:\\{\\}\\[\\],&\\*#\\?\\|\\-<>=!%@`]+):(.*)$");
+    protected final Pattern yamlNode = Pattern.compile("^( *)([^:{}\\[\\],&*#?|\\-<>=!%@`]+):(.*)$");
 
     /**
      * This is the path to the directory to store the file in. This
@@ -67,21 +67,21 @@ public class YamlConfig extends ConfigSection {
      * If we set this value to "foo", this final dir would be "foo/config.yml"
      */
     @Getter
-    private final String directory;
+    protected final String directory;
 
     /**
      * This is the name of the file for this {@link YamlConfig}. Name must include
      * the file extensions, otherwise default "yml" will be appended.
      */
     @Getter
-    private final String fileName;
+    protected final String fileName;
 
     /**
      * This is the instance of the {@link SpigotPlugin} that this {@link YamlConfig}
      * belongs to.
      */
     @Getter
-    private final SpigotPlugin plugin;
+    protected final SpigotPlugin plugin;
 
     /**
      * These are YAML options used to help parse the file
@@ -288,6 +288,12 @@ public class YamlConfig extends ConfigSection {
     //  -------------------------------------------------------------------------
 
     /**
+     * To be overridden, called before loading the file into memory
+     */
+    protected void preLoad() {
+    }
+
+    /**
      * Load the {@link #file} into memory
      *
      * @return If loaded successfully
@@ -303,6 +309,10 @@ public class YamlConfig extends ConfigSection {
      */
     public boolean load(@NotNull File file) {
         Validate.notNull(file, "File cannot be null");
+
+        // Pre load file
+        preLoad();
+
         if (file.exists()) {
             try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
                 Charset charset = TextUtils.detectCharset(stream, StandardCharsets.UTF_8);

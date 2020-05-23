@@ -14,6 +14,7 @@ import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -214,5 +215,14 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public String[] getStartupLogo() {
         return null;
     }
+
+    //  -------------------------------------------------------------------------
+    //  Stuff we need to implement
+    //  -------------------------------------------------------------------------
+
+    /**
+     * @return The main labels for the main plugin command. For instance, "customfishing", "customf"
+     */
+    public abstract List<String> getCommandAliases();
 
 }
