@@ -945,4 +945,101 @@ public class ConfigSection extends MemoryConfiguration {
         onChange();
         return section;
     }
+
+    //  -------------------------------------------------------------------------
+    //  Type safe getters
+    //  -------------------------------------------------------------------------
+
+    @Nullable
+    @Override
+    public String getString(@NotNull String path) {
+        return getT(path, String.class, "");
+    }
+
+    @Nullable
+    @Override
+    public String getString(@NotNull String path, @Nullable String def) {
+        return getT(path, String.class, def);
+    }
+
+    public char getChar(@NotNull String path) {
+        return getT(path, Character.class, '\0');
+    }
+
+    public char getChar(@NotNull String path, char def) {
+        return getT(path, Character.class, def);
+    }
+
+    @Override
+    public int getInt(@NotNull String path) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).intValue() : 0;
+    }
+
+    @Override
+    public int getInt(@NotNull String path, int def) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).intValue() : def;
+    }
+
+    @Override
+    public boolean getBoolean(@NotNull String path) {
+        return getT(path, Boolean.class, false);
+    }
+
+    @Override
+    public boolean getBoolean(@NotNull String path, boolean def) {
+        return getT(path, Boolean.class, def);
+    }
+
+    @Override
+    public double getDouble(@NotNull String path) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).doubleValue() : 0;
+    }
+
+    @Override
+    public double getDouble(@NotNull String path, double def) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).doubleValue() : def;
+    }
+
+    @Override
+    public long getLong(@NotNull String path) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).longValue() : 0;
+    }
+
+    @Override
+    public long getLong(@NotNull String path, long def) {
+        Object result = get(path);
+        return result instanceof Number ? ((Number) result).longValue() : def;
+    }
+
+    @Nullable
+    @Override
+    public List<?> getList(@NotNull String path) {
+        return getT(path, List.class);
+    }
+
+    @Nullable
+    @Override
+    public List<?> getList(@NotNull String path, @Nullable List<?> def) {
+        return getT(path, List.class, def);
+    }
+
+    @Override
+    public ConfigSection getConfigurationSection(@NotNull String path) {
+        return getT(path, ConfigSection.class);
+    }
+
+    /**
+     * See {@link #getConfigurationSection(String)}
+     *
+     * Except it will create the section if not found
+     */
+    @NotNull
+    public ConfigSection getOrCreateConfigurationSection(@NotNull String path) {
+        return Objects.requireNonNull(getT(path, ConfigSection.class, createSection(path)));
+    }
 }
