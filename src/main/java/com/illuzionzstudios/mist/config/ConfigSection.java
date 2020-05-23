@@ -53,21 +53,21 @@ public class ConfigSection extends MemoryConfiguration {
      * All sections come under it
      */
     @Getter
-    private final ConfigSection root;
+    protected final ConfigSection root;
 
     /**
      * This is the {@link ConfigSection} that this section
      * is under
      */
     @Getter
-    private final ConfigSection parent;
+    protected final ConfigSection parent;
 
     /**
      * These are the current {@link Comment} loaded for this section
      * Each comment is mapped to the absolute path to the value
      */
     @Getter
-    private final HashMap<String, Comment> configComments;
+    protected final HashMap<String, Comment> configComments;
 
     /**
      * These are the default {@link Comment} for each value. These are
@@ -75,27 +75,26 @@ public class ConfigSection extends MemoryConfiguration {
      * is mapped to the absolute path to the value
      */
     @Getter
-    private final HashMap<String, Comment> defaultComments;
+    protected final HashMap<String, Comment> defaultComments;
 
     /**
      * These are the loaded key value pairs for this {@link ConfigSection}
      */
     @Getter
-    private final Map<String, Object> values;
+    protected final Map<String, Object> values;
 
     /**
      * These are the default key value pairs for this {@link ConfigSection}
      * They're what are automatically loaded if no values are found
      */
-    @Getter
-    private final Map<String, Object> defaults;
+    protected final Map<String, Object> defaults;
 
     /**
      * Flag if this section is a default {@link ConfigSection}
      * Meaning it gets loaded into the file if not found
      */
     @Getter
-    private final boolean isDefault;
+    protected final boolean isDefault;
 
     /**
      * This object here is invoked on by the {@code synchronized} tag
@@ -108,7 +107,7 @@ public class ConfigSection extends MemoryConfiguration {
      * the different times. Although, we generally invoke on the {@link #root}
      * {@link ConfigSection} as we want to lock each actual {@link YamlConfig} instance
      */
-    private final Object lock = new Object();
+    protected final Object lock = new Object();
 
     //  -------------------------------------------------------------------------
     //  Values we may want to change
@@ -141,7 +140,7 @@ public class ConfigSection extends MemoryConfiguration {
      * Useful for detecting to save
      */
     @Getter
-    private boolean changed = false;
+    protected boolean changed = false;
 
     /**
      * Init blank config section
