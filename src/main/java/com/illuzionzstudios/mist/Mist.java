@@ -13,6 +13,36 @@ package com.illuzionzstudios.mist;
  * Main library class to handle utils and other stuff
  * Will contain a lot of static utils for our convenience
  */
-public class Mist {
+public final class Mist {
+
+    //  -------------------------------------------------------------------------
+    //  Static final settings across the plugin
+    //  Stored in internal classes relating to their category
+    //  -------------------------------------------------------------------------
+
+    /**
+     * Core options relating to the plugin
+     */
+    public static final class Core {
+
+        /**
+         * Core revision version, meaning each major refactor or change,
+         * we increment this number
+         */
+        public static final int VERSION = 1;
+
+    }
+
+    /**
+     * Options relating to file parsing
+     */
+    public static final class File {
+
+        /**
+         * The name (with extension) for the main config file
+         */
+        public static final String SETTINGS_NAME = "config.yml";
+
+    }
 
 }

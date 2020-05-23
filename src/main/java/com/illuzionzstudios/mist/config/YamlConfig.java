@@ -9,6 +9,7 @@
  */
 package com.illuzionzstudios.mist.config;
 
+import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.TextUtils;
@@ -201,9 +202,9 @@ public class YamlConfig extends ConfigSection {
     public File getFile() {
         if (file == null) {
             if (directory != null) {
-                this.file = new File(plugin.getDataFolder() + directory, fileName != null ? fileName : "config.yml");
+                this.file = new File(plugin.getDataFolder() + directory, fileName != null ? fileName : Mist.File.SETTINGS_NAME);
             } else {
-                this.file = new File(plugin.getDataFolder(), fileName != null ? fileName : "config.yml");
+                this.file = new File(plugin.getDataFolder(), fileName != null ? fileName : Mist.File.SETTINGS_NAME);
             }
         }
         return file;
