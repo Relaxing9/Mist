@@ -9,11 +9,16 @@
  */
 package com.illuzionzstudios.mist.command;
 
+import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,6 +105,49 @@ public abstract class SpigotCommand extends Command {
         // When creating this command instance, register it
         // Not actually registered for execution
         registeredCommands.add(this);
+    }
+
+    /**
+     * See {@link #register(boolean)}
+     */
+    public final void register() {
+        register(true);
+    }
+    
+    /**
+     * Register this command into Bukkit to be used.
+     * Can throw {@link com.illuzionzstudios.mist.exception.PluginException} if {@link #isRegistered()}
+     * 
+     * @param unregisterOldAliases If to unregister old aliases
+     */
+    public final void register(final boolean unregisterOldAliases) {
+        Valid.checkBoolean(!registered, "The command /" + getLabel() + " has already been registered!");
+
+        final PluginCommand oldCommand = Bukkit.getPluginCommand(getLabel());
+
+        if (oldCommand != null) {
+            final String owningPlugin = oldCommand.getPlugin().getName();
+
+            if (!owningPlugin.equals(SpigotPlugin.getPluginName()))
+                Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...");
+
+            VersionUtil.unregisterCommand(oldCommand.getLabel(), unregisterOldAliases);
+        }
+
+        VersionUtil.registerCommand(this);
+        registered = true;
+    }
+
+    /**
+     * Removes the command from Bukkit.
+     *
+     * Throws an error if the command is not {@link #isRegistered()}.
+     */
+    public final void unregister() {
+        Valid.checkBoolean(registered, "The command /" + getLabel() + " is not registered!");
+
+        VersionUtil.unregisterCommand(getLabel());
+        registered = false;
     }
 
     // ----------------------------------------------------------------------

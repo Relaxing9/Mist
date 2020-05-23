@@ -9,6 +9,9 @@
  */
 package com.illuzionzstudios.mist;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
  * Main library class to handle utils and other stuff
  * Will contain a lot of static utils for our convenience
@@ -49,5 +52,9 @@ public final class Mist {
         public static final String SETTINGS_NAME = "config.yml";
 
     }
+
+    //  -------------------------------------------------------------------------
+    //  Static util methods
+    //  -------------------------------------------------------------------------
 
 }
