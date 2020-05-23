@@ -11,7 +11,9 @@ package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
+import com.illuzionzstudios.mist.exception.CommandException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.TextUtils;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.Setter;
@@ -149,6 +151,73 @@ public abstract class SpigotCommand extends Command {
         VersionUtil.unregisterCommand(getLabel());
         registered = false;
     }
+
+    // ----------------------------------------------------------------------
+    // Execution
+    // ----------------------------------------------------------------------w
+
+    /**
+     * Execute this command, updates the {@link #sender}, {@link #label} and {@link #args} variables,
+     * checks permission and returns if the sender lacks it,
+     * checks minimum arguments and finally passes the command to the child class.
+     *
+     * Also contains various error handling scenarios
+     */
+    @Override
+    public final boolean execute(final CommandSender sender, final String label, final String[] args) {
+
+        // Update variables
+        this.sender = sender;
+        this.label = label;
+        this.args = args;
+
+        // Attempt to execute commands and catch errors
+        try {
+
+            // Check permissions
+
+            // Finally execute command
+            onCommand();
+
+        } catch (final CommandException ex) {
+            if (ex.getMessages() != null)
+                informError(ex.getMessages());
+        } catch (final Throwable ex) {
+            informError("&cFatal error occurred trying to execute command /" + getLabel(),
+                    "&cPlease contact an administrator to resolve the issue");
+            Logger.displayError(ex, "Failed to execute command /" + getLabel() + " " + String.join(" ", args));
+        }
+
+        return true;
+    }
+
+    /**
+     * This is invoked when the command is run. All dynamic information about the command
+     * can be accessed via the class and doesn't need to be passed to here
+     */
+    protected abstract void onCommand();
+
+    /**
+     * A simple util method to log error messages to the {@link CommandSender}
+     *
+     * @param messages The messages to send
+     */
+    private void informError(final String... messages) {
+        for (final String message : messages) {
+            getSender().sendMessage(TextUtils.formatText(message));
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Convenience checks
+    //
+    // Here is how they work: When you command is executed, simply call any
+    // of these checks. If they fail, an error will be thrown inside of
+    // which will be a message for the player.
+    //
+    // We catch that error and send the message to the player without any
+    // harm or console errors to your plugin. That is intended and saves time.
+    // ----------------------------------------------------------------------
 
     // ----------------------------------------------------------------------
     // Parsers
