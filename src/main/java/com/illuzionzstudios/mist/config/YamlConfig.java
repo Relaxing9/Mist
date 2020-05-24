@@ -9,9 +9,11 @@
  */
 package com.illuzionzstudios.mist.config;
 
+import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.FileUtil;
 import com.illuzionzstudios.mist.util.TextUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -179,7 +179,7 @@ public class YamlConfig extends ConfigSection {
         this.plugin = null;
         this.file = file.getAbsoluteFile();
         directory = null;
-        fileName = null;
+        fileName = file.getName();
     }
 
     public YamlConfig(@NotNull SpigotPlugin plugin) {
@@ -304,6 +304,56 @@ public class YamlConfig extends ConfigSection {
      * To be overridden, called after loading the file into memory
      */
     protected void postLoad() {
+    }
+
+    /**
+     * Load a locale file from internal resources. If file doesn't already exist
+     * on the server, we create it.
+     *
+     * @param locale The locale name, eg "en_US"
+     */
+    protected final boolean loadLocale(final String locale) {
+        Objects.requireNonNull(locale, "Must provide a locale to load");
+
+        // Internal path to locale
+        final String internalPath = "locales/" + locale + ".lang";
+        // Attempt to find resource
+        final InputStream input = FileUtil.getInternalResource(internalPath);
+
+        // Existing file
+        final File existingFile = new File(plugin.getDataFolder(), internalPath);
+
+        // Load buffers
+        // Input stream for internal file and existing file
+        try (BufferedInputStream defaultIn = new BufferedInputStream(input)) {
+            try (BufferedReader defaultReader = new BufferedReader(new InputStreamReader(defaultIn))) {
+
+                // File exists, load that
+                if (existingFile.exists()) {
+                    try (
+                    BufferedInputStream existingIn = new BufferedInputStream(new FileInputStream(existingFile));
+                    BufferedReader existingReader = new BufferedReader(new InputStreamReader(existingIn))) {
+                        load(existingReader);
+                    } catch (Exception ex) {
+                        Logger.displayError(ex, "Locale " + locale + " exists but couldn't be loaded");
+                    }
+                } else {
+                    // Load from default
+                    load(defaultReader);
+                    // Then save in server
+                    save(existingFile);
+                }
+
+                return true;
+
+            } catch (Exception ex) {
+                Logger.displayError(ex, "Could not load locale " + locale);
+            }
+        } catch (Exception ex) {
+            Logger.displayError(ex, "Could not load locale " + locale);
+        }
+
+        return false;
     }
 
     /**
@@ -542,7 +592,7 @@ public class YamlConfig extends ConfigSection {
             }
             return str.toString();
         } catch (Throwable ex) {
-            Logger.getLogger(YamlConfig.class.getName()).log(Level.SEVERE, "Error saving config", ex);
+            Logger.displayError(ex, "Error loading config");
             saveChanges();
         }
         return "";

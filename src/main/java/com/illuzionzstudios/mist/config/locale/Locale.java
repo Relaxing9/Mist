@@ -7,33 +7,45 @@
  * noncommercial uses permitted by copyright law. Any licensing of this software overrides
  * this statement.
  */
-package com.illuzionzstudios.mist.config;
+package com.illuzionzstudios.mist.config.locale;
 
-import com.illuzionzstudios.mist.Mist;
+import com.illuzionzstudios.mist.config.ConfigSetting;
+import com.illuzionzstudios.mist.config.PluginSettings;
+import com.illuzionzstudios.mist.config.YamlConfig;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
 /**
- * An implementation of basic plugin settings. This handles settings that
- * all plugins with this library will have. For instance locale, main command etc.
- * Typically used as the "config.yml"
+ * Loaded file that handles all game language
+ * Also supports different languages apart from English
+ * Implement our own instance in our plugin with the different values
  *
- * This should be implemented by our {@link com.illuzionzstudios.mist.plugin.SpigotPlugin} and
- * define our own {@link ConfigSetting} specific to the plugin
+ * We provide some common messages but can implement your own
  */
-public abstract class PluginSettings extends YamlConfig {
+public abstract class Locale extends YamlConfig {
 
     /**
      * @param plugin Make sure we pass owning plugin
      */
-    public PluginSettings(SpigotPlugin plugin) {
+    public Locale(SpigotPlugin plugin) {
         super(plugin);
     }
 
     /**
-     * @return Get the file name for these settings, by default config.yml
+     * The current loaded {@link Locale} instance
      */
-    protected String getSettingsFileName() {
-        return Mist.File.SETTINGS_NAME;
+    public static YamlConfig LOCALE_FILE;
+
+    /**
+     * This loads our lang file if the "locales/LOCALE.lang" exists
+     * in internal resources.
+     *
+     * Prefix comes from {@link PluginSettings#LOCALE}
+     *
+     * @return If the locale was loaded/exists
+     */
+    @Override
+    public final boolean load() {
+        return loadLocale(PluginSettings.LOCALE.getString());
     }
 
     //  -------------------------------------------------------------------------
@@ -68,21 +80,27 @@ public abstract class PluginSettings extends YamlConfig {
     protected abstract int getConfigVersion();
 
     //  -------------------------------------------------------------------------
-    //  Main config settings provided by default
+    //  Main messages provided by default
+    //  If these are found in the locale, we use those, otherwise use these
+    //  defaults
+    //
+    //  Init methods are called to set variables
     //  -------------------------------------------------------------------------
 
     /**
-     * These are the main command aliases for the plugin.
-     * For instance "customfishing, customf, cf". This way the user
-     * can change what main commands they want, but keep functionality
+     * Messages relating to commands
      */
-    public static ConfigSetting MAIN_COMMAND_ALIASES;
+    public static class Command {
 
-    /**
-     * The locale type to use, for instance
-     * "en_US"
-     */
-    public static ConfigSetting LOCALE;
+        /**
+         * If a command sender that isn't a player tries to execute a command
+         */
+        public static String PLAYER_ONLY = "&cYou must be a player to execute this command";
+
+        public static void init() {
+            PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
+        }
+    }
 
     /**
      * Load these {@link PluginSettings} into the server, setting values
@@ -91,23 +109,25 @@ public abstract class PluginSettings extends YamlConfig {
      * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
      *
      * @param plugin The {@link SpigotPlugin} to load settings for
-     * @param settings The instance of {@link PluginSettings} to load
+     * @param settings The instance of {@link Locale} to load
      */
-    public static void loadSettings(SpigotPlugin plugin, PluginSettings settings) {
-        // Load settings file
+    public static void loadLocale(SpigotPlugin plugin, Locale settings) {
+        // Load settings loadLocale
         settings.load();
+        // Set instance
+        LOCALE_FILE = settings;
 
-        MAIN_COMMAND_ALIASES = new ConfigSetting(settings, "Main Command Aliases", plugin.getCommandAliases());
-        LOCALE = new ConfigSetting(settings, "Locale", "en_US");
+        // Load common messages
+        Command.init();
 
         // Load our other custom settings
-        settings.loadSettings();
+        settings.loadLocale();
     }
 
     /**
      * Invoked to load all other custom settings that we implement
-     * in our own {@link PluginSettings}
+     * in our own {@link Locale}
      */
-    public abstract void loadSettings();
+    public abstract void loadLocale();
 
 }

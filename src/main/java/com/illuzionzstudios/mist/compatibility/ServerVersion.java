@@ -1,5 +1,9 @@
 package com.illuzionzstudios.mist.compatibility;
 
+import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.exception.PluginException;
+import com.illuzionzstudios.mist.util.Valid;
+import lombok.Getter;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 
@@ -7,84 +11,184 @@ import org.bukkit.Bukkit;
  * The major server version the current server software is
  * eg, 1.15, 1.8
  */
-public enum ServerVersion {
+/**
+ * Represents the current Minecraft version the plugin loaded on
+ */
+public final class ServerVersion {
 
     /**
-     * Couldn't find what the current server version is
-     * Could be unsupported or a dev version (snapshot)
+     * The string representation of the version, for example V1_13
      */
-    UNKNOWN,
+    private static String serverVersion;
 
     /**
-     * Only support from 1.8+
+     * The wrapper representation of the version
      */
-    V1_8,
+    @Getter
+    private static V current;
 
-    V1_9, V1_10, V1_11, V1_12, V1_13, V1_14, V1_15, V1_16, V1_17, V1_18, V1_19, V1_20;
+    /**
+     * The version wrapper
+     */
+    public enum V {
+        v1_16(16, false),
+        v1_15(15),
+        v1_14(14),
+        v1_13(13),
+        v1_12(12),
+        v1_11(11),
+        v1_10(10),
+        v1_9(9),
+        v1_8(8),
+        v1_7(7),
+        v1_6(6),
+        v1_5(5),
+        v1_4(4),
+        v1_3_AND_BELOW(3);
 
-    private final static String serverPackagePath = Bukkit.getServer().getClass().getPackage().getName();
-    private final static String serverPackageVersion = serverPackagePath.substring(serverPackagePath.lastIndexOf('.') + 1);
-    private final static String serverReleaseVersion = serverPackageVersion.indexOf('R') != -1 ? serverPackageVersion.substring(serverPackageVersion.indexOf('R') + 1) : "";
-    private final static ServerVersion serverVersion = getVersion();
+        /**
+         * The numeric version (the second part of the 1.x number)
+         */
+        private final int ver;
 
-    private static ServerVersion getVersion() {
-        for (ServerVersion version : values()) {
-            if (serverPackageVersion.toUpperCase().startsWith(version.name())) {
-                return version;
-            }
+        /**
+         * Is this library tested with this Minecraft version?
+         */
+        @Getter
+        private final boolean tested;
+
+        /**
+         * Creates new enum for a MC version that is tested
+         *
+         * @param version
+         */
+        V(int version) {
+            this(version, true);
         }
-        return UNKNOWN;
+
+        /**
+         * Creates new enum for a MC version
+         *
+         * @param version
+         * @param tested
+         */
+        V(int version, boolean tested) {
+            this.ver = version;
+            this.tested = tested;
+        }
+
+        /**
+         * Attempts to get the version from number
+         *
+         * @throws RuntimeException if number not found
+         * @param number
+         * @return
+         */
+        protected static V parse(int number) {
+            for (final V v : values())
+                if (v.ver == number)
+                    return v;
+
+            throw new PluginException("Invalid version number: " + number);
+        }
     }
 
-    public static String getServerVersionString() {
-        return serverPackageVersion;
+    /**
+     * Does the current Minecraft version equal the given version?
+     *
+     * @param version
+     * @return
+     */
+    public static boolean equals(V version) {
+        return compareWith(version) == 0;
     }
 
-    public static String getVersionReleaseNumber() {
-        return serverReleaseVersion;
+    /**
+     * Is the current Minecraft version older than the given version?
+     *
+     * @param version
+     * @return
+     */
+    public static boolean olderThan(V version) {
+        return compareWith(version) < 0;
     }
 
-    public static ServerVersion getServerVersion() {
-        return serverVersion;
+    /**
+     * Is the current Minecraft version newer than the given version?
+     *
+     * @param version
+     * @return
+     */
+    public static boolean newerThan(V version) {
+        return compareWith(version) > 0;
     }
 
-    public static boolean isServerVersion(ServerVersion version) {
-        return serverVersion == version;
+    /**
+     * Is the current Minecraft version at equals or newer than the given version?
+     *
+     * @param version
+     * @return
+     */
+    public static boolean atLeast(V version) {
+        return equals(version) || newerThan(version);
     }
 
-    public static boolean isServerVersion(ServerVersion... versions) {
-        return ArrayUtils.contains(versions, serverVersion);
+    // Compares two versions by the number
+    private static int compareWith(V version) {
+        try {
+            return getCurrent().ver - version.ver;
+
+        } catch (final Throwable t) {
+            t.printStackTrace();
+
+            return 0;
+        }
     }
 
-    public static boolean isServerVersionAbove(ServerVersion version) {
-        return serverVersion.ordinal() > version.ordinal();
+    /**
+     * Return the class versioning such as v1_14_R1
+     */
+    public static String getServerVersion() {
+        return serverVersion.equals("craftbukkit") ? "" : serverVersion;
     }
 
-    public static boolean isServerVersionAtLeast(ServerVersion version) {
-        return serverVersion.ordinal() >= version.ordinal();
-    }
+    // Initialize the version
+    static {
+        try {
 
-    public static boolean isServerVersionAtOrBelow(ServerVersion version) {
-        return serverVersion.ordinal() <= version.ordinal();
-    }
+            final String packageName = Bukkit.getServer() == null ? "" : Bukkit.getServer().getClass().getPackage().getName();
+            final String curr = packageName.substring(packageName.lastIndexOf('.') + 1);
+            final boolean hasGatekeeper = !"craftbukkit".equals(curr);
 
-    public static boolean isServerVersionBelow(ServerVersion version) {
-        return serverVersion.ordinal() < version.ordinal();
-    }
+            serverVersion = curr;
 
-    public boolean isLessThan(ServerVersion other) {
-        return this.ordinal() < other.ordinal();
-    }
+            if (hasGatekeeper) {
+                int pos = 0;
 
-    public boolean isAtOrBelow(ServerVersion other) {
-        return this.ordinal() <= other.ordinal();
-    }
+                for (final char ch : curr.toCharArray()) {
+                    pos++;
 
-    public boolean isGreaterThan(ServerVersion other) {
-        return this.ordinal() > other.ordinal();
-    }
+                    if (pos > 2 && ch == 'R')
+                        break;
+                }
 
-    public boolean isAtLeast(ServerVersion other) {
-        return this.ordinal() >= other.ordinal();
+                final String numericVersion = curr.substring(1, pos - 2).replace("_", ".");
+
+                int found = 0;
+
+                for (final char ch : numericVersion.toCharArray())
+                    if (ch == '.')
+                        found++;
+
+                Valid.checkBoolean(found == 1, "Minecraft Version checker malfunction. Could not detect your server version. Detected: " + numericVersion + " Current: " + curr);
+
+                current = V.parse(Integer.parseInt(numericVersion.split("\\.")[1]));
+
+            } else
+                current = V.v1_3_AND_BELOW;
+
+        } catch (final Throwable t) {
+            Logger.displayError(t, "Error detecting your Minecraft version. Check your server compatibility.");
+        }
     }
 }

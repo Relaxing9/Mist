@@ -15,6 +15,7 @@ import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,6 +84,15 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     public static final String getPluginVersion() {
         return getInstance().getDescription().getVersion();
+    }
+
+    /**
+     * Shortcut for getFile()
+     *
+     * @return plugin's jar file
+     */
+    public static final File getSource() {
+        return getInstance().getFile();
     }
 
     //  -------------------------------------------------------------------------
@@ -163,7 +173,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         try {
             onPluginEnable();
         } catch (final Throwable ex) {
-            Logger.displayError(ex, "Could not enable plugin");
+            Logger.displayError(ex, "Error enabling plugin");
         }
     }
 

@@ -100,6 +100,7 @@ public abstract class SpigotCommand extends Command {
      */
     protected SpigotCommand(@NotNull String label, String... aliases) {
         super(label, "", "", Arrays.asList(aliases));
+        this.label = label;
 
         // Set our permission formatting
         setPermission(DEFAULT_PERMISSION_SYNTAX);
@@ -136,8 +137,8 @@ public abstract class SpigotCommand extends Command {
             VersionUtil.unregisterCommand(oldCommand.getLabel(), unregisterOldAliases);
         }
 
-        VersionUtil.registerCommand(this);
         registered = true;
+        VersionUtil.registerCommand(this);
     }
 
     /**
