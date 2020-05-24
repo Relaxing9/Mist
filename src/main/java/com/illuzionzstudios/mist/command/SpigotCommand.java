@@ -179,6 +179,17 @@ public abstract class SpigotCommand extends Command {
         try {
 
             // Check permissions
+            if (getPermission() != null)
+                checkPerm(getPermission());
+
+            // Too little arguments
+            if (args.length < getMinArguments()) {
+                if (!getUsage().trim().equalsIgnoreCase(""))
+                    // Inform usage message
+                    informError(Locale.Command.INVALID_USAGE.replace("{label}", label)
+                        .replace("{args}", String.join(" ", args)));
+                return true;
+            }
 
             // Finally execute command
             onCommand();

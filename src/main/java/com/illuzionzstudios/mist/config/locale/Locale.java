@@ -105,9 +105,15 @@ public abstract class Locale extends YamlConfig {
          */
         public static String NO_PERMISSION = "&cYou must have the permission {permission} to do this.";
 
+        /**
+         * Sent when the executor provides too little arguments
+         */
+        public static String INVALID_USAGE = "&cInvalid usage. Try /{label} {args}";
+
         public static void init() {
             PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
             NO_PERMISSION = LOCALE_FILE.getString("Command.No Permission", NO_PERMISSION);
+            INVALID_USAGE = LOCALE_FILE.getString("Command.Invalid Usage", INVALID_USAGE);
         }
     }
 
