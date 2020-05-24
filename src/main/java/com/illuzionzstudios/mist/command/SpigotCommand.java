@@ -11,11 +11,14 @@ package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
+import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.exception.CommandException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.PlayerUtil;
 import com.illuzionzstudios.mist.util.TextUtils;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -220,6 +223,27 @@ public abstract class SpigotCommand extends Command {
     // harm or console errors to your plugin. That is intended and saves time.
     // ----------------------------------------------------------------------
 
+    /**
+     * Checks if the sender is a console
+     *
+     * @throws CommandException If is console
+     */
+    protected final void checkConsole() throws CommandException {
+        if (!isPlayer())
+            throw new CommandException("&c" + Locale.Command.PLAYER_ONLY);
+    }
+
+    /**
+     * Checks if the player has the given permission
+     *
+     * @param perm Permission to check
+     * @throws CommandException If player didn't have said permission
+     */
+    public final void checkPerm(@NonNull final String perm) throws CommandException {
+        if (isPlayer() && !PlayerUtil.hasPerm(sender, perm))
+            throw new CommandException(getPermissionMessage().replace("{permission}", perm));
+    }
+
     // ----------------------------------------------------------------------
     // Parsers
     // ----------------------------------------------------------------------
@@ -241,6 +265,20 @@ public abstract class SpigotCommand extends Command {
     // ----------------------------------------------------------------------
 
     /**
+     * A convenience check for quickly determining if the sender has a given
+     * permission.
+     *
+     * TIP: For a more complete check use {@link #checkPerm(String)} that
+     * will automatically return your command if they lack the permission.
+     *
+     * @param permission Permission to check
+     * @return If player does have permission
+     */
+    protected final boolean hasPerm(final String permission) {
+        return PlayerUtil.hasPerm(sender, permission);
+    }
+
+    /**
      * This is the instance of {@link Player} who executed this command.
      * This only applies if the {@link #sender} is an instance of {@link Player}
      * If is not an instance of {@link CommandSender}, returns null
@@ -256,6 +294,14 @@ public abstract class SpigotCommand extends Command {
      */
     protected final boolean isPlayer() {
         return sender instanceof Player;
+    }
+
+    /**
+     * Get the permission for this command, either the one you set or our from Localization
+     */
+    @Override
+    public final String getPermissionMessage() {
+        return super.getPermissionMessage() != null && !super.getPermissionMessage().trim().equals("") ? super.getPermissionMessage() : Locale.Command.NO_PERMISSION;
     }
 
     /**

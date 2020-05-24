@@ -48,9 +48,4 @@ public class PluginException extends RuntimeException {
         super(message, t);
     }
 
-    @Override
-    public String getMessage() {
-        return "Report: " + super.getMessage();
-    }
-
 }

@@ -85,6 +85,9 @@ public abstract class Locale extends YamlConfig {
     //  defaults
     //
     //  Init methods are called to set variables
+    //
+    //  When creating your own messages that have the same name, make sure to
+    //  extend the super class and call the super init method
     //  -------------------------------------------------------------------------
 
     /**
@@ -95,10 +98,16 @@ public abstract class Locale extends YamlConfig {
         /**
          * If a command sender that isn't a player tries to execute a command
          */
-        public static String PLAYER_ONLY = "&cYou must be a player to execute this command";
+        public static String PLAYER_ONLY = "&cYou must be a player to execute this command.";
+
+        /**
+         * If the player doesn't have a required permission
+         */
+        public static String NO_PERMISSION = "&cYou must have the permission {permission} to do this.";
 
         public static void init() {
             PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
+            NO_PERMISSION = LOCALE_FILE.getString("Command.No Permission", NO_PERMISSION);
         }
     }
 

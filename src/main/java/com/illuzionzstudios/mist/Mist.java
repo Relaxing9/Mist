@@ -9,6 +9,8 @@
  */
 package com.illuzionzstudios.mist;
 
+import org.bukkit.ChatColor;
+
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -56,5 +58,15 @@ public final class Mist {
     //  -------------------------------------------------------------------------
     //  Static util methods
     //  -------------------------------------------------------------------------
+
+    /**
+     * Simply turn a message into a colored version with {@link ChatColor#COLOR_CHAR}
+     *
+     * @param message The original method without colors
+     * @return The newly colored message
+     */
+    public static String colorize(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 
 }

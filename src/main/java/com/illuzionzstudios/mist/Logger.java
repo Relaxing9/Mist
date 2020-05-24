@@ -100,7 +100,6 @@ public final class Logger {
      * @param errorMessage The error message/cause for this error
      */
     public static void displayError(final Throwable throwable, String errorMessage) {
-        severe(" ");
         severe("An error occurred for " + SpigotPlugin.getPluginName() + " v" + SpigotPlugin.getPluginVersion());
         severe(" ");
         severe(errorMessage);
