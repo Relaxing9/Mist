@@ -21,6 +21,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Util methods to help parsing text
@@ -177,5 +178,80 @@ public final class TextUtils {
         return false;
     }
 
+    public static String replaceLast(String string, String toReplace, String replacement) {
+        int index = string.lastIndexOf(toReplace);
+        if (index == -1) {
+            return string;
+        }
+        return string.substring(0, index) + replacement + string.substring(index + toReplace.length());
+    }
+
+    public static String getFormattedTime(long millis, boolean verbose) {
+        if (millis < 0) {
+            throw new IllegalArgumentException("Duration must be greater than zero!");
+        }
+
+        long daysLeft = TimeUnit.MILLISECONDS.toDays(millis);
+        millis = millis - TimeUnit.DAYS.toMillis(daysLeft);
+        long hoursLeft = TimeUnit.MILLISECONDS.toHours(millis);
+        millis = millis - TimeUnit.HOURS.toMillis(hoursLeft);
+        long minutesLeft = TimeUnit.MILLISECONDS.toMinutes(millis);
+        millis = millis - TimeUnit.MINUTES.toMillis(minutesLeft);
+        long secondsLeft = TimeUnit.MILLISECONDS.toSeconds(millis);
+
+        StringBuilder message = new StringBuilder();
+        if (daysLeft != 0) {
+            message.append(daysLeft);
+            message.append((verbose ? " days" : "d"));
+        }
+
+        if (hoursLeft != 0) {
+            if (message.length() != 0) {
+                message.append((verbose ? ", " : " "));
+            }
+            message.append(hoursLeft);
+            message.append((verbose ? " hour" : "h"));
+            if (verbose && hoursLeft > 1) {
+                message.append("s");
+            }
+        }
+
+        if (minutesLeft != 0) {
+            if (message.length() != 0) {
+                message.append((verbose ? ", " : " "));
+            }
+            message.append(minutesLeft);
+            message.append((verbose ? " minute" : "m"));
+            if (verbose && minutesLeft > 1) {
+                message.append("s");
+            }
+        }
+
+        //Only display seconds if waittime is <1 hr
+        if (secondsLeft != 0 && hoursLeft == 0 && daysLeft == 0) {
+            if (message.length() != 0) {
+                message.append((verbose ? ", " : " "));
+            }
+            message.append(secondsLeft);
+            message.append((verbose ? " second" : "s"));
+            if (verbose && secondsLeft > 1) {
+                message.append("s");
+            }
+        }
+
+        //Only display seconds if waittime is <1 sec
+        if (hoursLeft == 0 && minutesLeft == 0 && secondsLeft == 0 && millis > 0) {
+            if (message.length() != 0) {
+                message.append((verbose ? ", " : " "));
+            }
+            message.append(millis);
+            message.append((verbose ? " millis" : "ms"));
+        }
+        String formatted = message.toString();
+        if (verbose) {
+            formatted = TextUtils.replaceLast(formatted, ", ", " and ");
+        }
+        return formatted;
+    }
 
 }

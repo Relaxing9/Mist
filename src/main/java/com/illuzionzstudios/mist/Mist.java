@@ -55,6 +55,18 @@ public final class Mist {
 
     }
 
+    /**
+     * Options relating to the ticker
+     */
+    public static final class Scheduler {
+
+        /**
+         * Amount of ticks for a invocation to pause before warning
+         */
+        public static final long TIME_WARNING_THRESHOLD = 100;
+
+    }
+
     //  -------------------------------------------------------------------------
     //  Static util methods
     //  -------------------------------------------------------------------------

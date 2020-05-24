@@ -11,6 +11,7 @@ package com.illuzionzstudios.mist.plugin;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.config.PluginSettings;
+import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -171,6 +172,9 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         // Main enabled
         try {
+            // Enable our scheduler
+            new BukkitScheduler(this).start();
+
             onPluginEnable();
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error enabling plugin");
