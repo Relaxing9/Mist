@@ -111,6 +111,16 @@ public final class ItemCreator {
     //  -------------------------------------------------------------------------
 
     /**
+     * @return This item suitable for a {@link com.illuzionzstudios.mist.ui.UserInterface}
+     */
+    public ItemStack makeUIItem() {
+        unbreakable = true;
+        hideTags = true;
+
+        return make();
+    }
+
+    /**
      * Finally construct the {@link ItemStack} from all parameters
      *
      * @return The built item
