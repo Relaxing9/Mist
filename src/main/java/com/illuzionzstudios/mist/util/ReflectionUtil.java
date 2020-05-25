@@ -24,7 +24,7 @@ import java.util.*;
  * other things we may need to do
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ReflectionUtils {
+public final class ReflectionUtil {
 
     /**
      * The full package name for NMS
@@ -44,7 +44,7 @@ public final class ReflectionUtils {
      * @return
      */
     public static Class<?> getNMSClass(final String name) {
-        return ReflectionUtils.lookupClass(NMS + "." + ServerVersion.getServerVersion() + "." + name);
+        return ReflectionUtil.lookupClass(NMS + "." + ServerVersion.getServerVersion() + "." + name);
     }
 
     /**
@@ -55,7 +55,7 @@ public final class ReflectionUtils {
      * @return
      */
     public static Class<?> getOBCClass(final String name) {
-        return ReflectionUtils.lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name);
+        return ReflectionUtil.lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name);
     }
 
     /**

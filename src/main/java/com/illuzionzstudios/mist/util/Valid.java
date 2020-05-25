@@ -32,7 +32,7 @@ public class Valid {
      * Throws an error with a custom message if the given object is null
      *
      * @param toCheck Object to check if is null
-     * @param falseMessage Message explaning why it may have been null
+     * @param falseMessage Message explaining why it may have been null
      */
     public void checkNotNull(Object toCheck, String falseMessage) {
         if (toCheck == null)
@@ -42,7 +42,7 @@ public class Valid {
     /**
      * Throws an error if the given expression is false
      *
-     * @param expression
+     * @param expression Boolean expression to check
      */
     public void checkBoolean(boolean expression) {
         if (!expression)
@@ -52,8 +52,8 @@ public class Valid {
     /**
      * Throws an error with a custom message if the given expression is false
      *
-     * @param expression
-     * @param falseMessage
+     * @param expression Boolean expression to check
+     * @param falseMessage Message explaining why it may have been false
      */
     public void checkBoolean(boolean expression, String falseMessage) {
         if (!expression)

@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.compatibility.util;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.util.ReflectionUtils;
+import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -99,7 +99,7 @@ public final class VersionUtil {
     // Return servers command map
     private static SimpleCommandMap getCommandMap() {
         try {
-            return (SimpleCommandMap) ReflectionUtils.getOBCClass("CraftServer").getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
+            return (SimpleCommandMap) ReflectionUtil.getOBCClass("CraftServer").getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
         } catch (final ReflectiveOperationException ex) {
             Logger.displayError(ex, "Couldn't load server command map");
         }
