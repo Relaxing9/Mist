@@ -19,6 +19,27 @@ import lombok.experimental.UtilityClass;
 public class Valid {
 
     /**
+     * Throws an error if the given object is null
+     *
+     * @param toCheck Object to check if is null
+     */
+    public void checkNotNull(Object toCheck) {
+        if (toCheck == null)
+            throw new PluginException();
+    }
+
+    /**
+     * Throws an error with a custom message if the given object is null
+     *
+     * @param toCheck Object to check if is null
+     * @param falseMessage Message explaning why it may have been null
+     */
+    public void checkNotNull(Object toCheck, String falseMessage) {
+        if (toCheck == null)
+            throw new PluginException(falseMessage);
+    }
+
+    /**
      * Throws an error if the given expression is false
      *
      * @param expression
