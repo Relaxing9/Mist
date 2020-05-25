@@ -15,7 +15,7 @@ import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.exception.CommandException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.PlayerUtil;
-import com.illuzionzstudios.mist.util.TextUtils;
+import com.illuzionzstudios.mist.util.TextUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.NonNull;
@@ -219,7 +219,7 @@ public abstract class SpigotCommand extends Command {
      */
     private void informError(final String... messages) {
         for (final String message : messages) {
-            getSender().sendMessage(TextUtils.formatText(message));
+            getSender().sendMessage(TextUtil.formatText(message));
         }
     }
 

@@ -14,7 +14,7 @@ import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.FileUtil;
-import com.illuzionzstudios.mist.util.TextUtils;
+import com.illuzionzstudios.mist.util.TextUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.Validate;
@@ -379,7 +379,7 @@ public class YamlConfig extends ConfigSection {
 
         if (file.exists()) {
             try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
-                Charset charset = TextUtils.detectCharset(stream, StandardCharsets.UTF_8);
+                Charset charset = TextUtil.detectCharset(stream, StandardCharsets.UTF_8);
                 // upgrade charset if file was saved in a more complex format
                 if (charset == StandardCharsets.UTF_16BE || charset == StandardCharsets.UTF_16LE) {
                     defaultCharset = StandardCharsets.UTF_16;

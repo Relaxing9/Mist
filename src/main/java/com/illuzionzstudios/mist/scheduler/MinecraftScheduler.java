@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  * These {@link Annotation} can annotate either {@link Class} {@link Field} or {@link Method}
  * Below is explained what each does
  *
- * {@link Class} Any {@link Tickable} objects in the class will be invoked with the set rate
+ * {@link Class} If is an instance of {@link Tickable}, invokes with a set rate
  * {@link Field} If this is an instance of {@link Tickable}, will be invoked with set rate
  * {@link Method} The method will be invoked with a set rate
  *
@@ -106,6 +106,13 @@ public abstract class MinecraftScheduler {
      */
     protected abstract void stop();
 
+    /**
+     * This is the master method to step a tick (or heartbeat) for all our {@link SynchronizationService}
+     * Ticks all of a certain Sync type
+     *
+     * @param type Either {@link Sync} or {@link Async} to tick
+     * @param <A> An {@link Annotation} to tick
+     */
     protected <A extends Annotation> void heartbeat(Class<A> type) {
         for (SynchronizationService service : SYNC_SERVICE_REGISTRATION) {
             for (SynchronizedElement<?> element : service.elements) {

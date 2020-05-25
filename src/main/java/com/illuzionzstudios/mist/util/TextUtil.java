@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Util methods to help parsing text
  */
-public final class TextUtils {
+public final class TextUtil {
 
     /**
      * These are all the {@link Charset} we support for encoding/saving
@@ -249,7 +249,7 @@ public final class TextUtils {
         }
         String formatted = message.toString();
         if (verbose) {
-            formatted = TextUtils.replaceLast(formatted, ", ", " and ");
+            formatted = TextUtil.replaceLast(formatted, ", ", " and ");
         }
         return formatted;
     }

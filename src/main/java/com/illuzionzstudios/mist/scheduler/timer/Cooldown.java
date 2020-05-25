@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.scheduler.timer;
 
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
-import com.illuzionzstudios.mist.util.TextUtils;
+import com.illuzionzstudios.mist.util.TextUtil;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -89,7 +89,7 @@ public class Cooldown {
      * @return The formatted time as a {@link String}
      */
     public String getFormattedTimeLeft(boolean verbose) {
-        return TextUtils.getFormattedTime(getMillisecondsLeft(), verbose);
+        return TextUtil.getFormattedTime(getMillisecondsLeft(), verbose);
     }
 
 }
