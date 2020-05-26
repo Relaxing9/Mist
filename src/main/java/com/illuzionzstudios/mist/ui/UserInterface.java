@@ -9,13 +9,17 @@
  */
 package com.illuzionzstudios.mist.ui;
 
+import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -66,6 +70,16 @@ public abstract class UserInterface {
      * Can be {@code null} if no parent
      */
     private final UserInterface parent;
+
+    /**
+     * The return button to display if applicable
+     */
+    private final Button returnButton;
+
+    /**
+     * Amount of slots in the inventory
+     */
+    private int size = 9 * 3;
 
     /**
      * This is the title to display at the top of the interface
@@ -152,6 +166,10 @@ public abstract class UserInterface {
         return null;
     }
 
+    //  -------------------------------------------------------------------------
+    //  Button utils
+    //  -------------------------------------------------------------------------
+
     /**
      * Scans the class for every {@link Button} instance and registers it
      */
@@ -215,4 +233,237 @@ public abstract class UserInterface {
         return null;
     }
 
+    /**
+     * Try to get a button with a specific icon from {@link ItemStack}
+     *
+     * @param icon {@link ItemStack} to find by
+     * @return Found button otherwise null
+     */
+    public final Button getButton(final ItemStack icon) {
+        if (icon != null) {
+            for (final Button button : registeredButtons) {
+                // Make sure valid button
+                Valid.checkNotNull(button, "Menu button is null at " + getClass().getSimpleName());
+                if (button.getItem() == null)
+                    return null;
+
+                if (icon.isSimilar(button.getItem()))
+                    return button;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return a new instance of this interface
+     *
+     * You must override this in certain cases
+     *
+     * @return the new instance, of null
+     * @throws PluginException if new instance could not be made, for example when the menu is
+     *            taking constructor params
+     */
+    public UserInterface newInstance() {
+        try {
+            return ReflectionUtil.instantiate(getClass());
+        } catch (final Throwable t) {
+            try {
+                final Object parent = getClass().getMethod("getParent").invoke(getClass());
+
+                if (parent != null)
+                    return ReflectionUtil.instantiate(getClass(), parent);
+            } catch (final Throwable ignored) {
+            }
+
+            t.printStackTrace();
+        }
+
+        throw new PluginException("Could not instatiate menu of " + getClass()
+                + ", override 'newInstance' and ensure constructor is public!");
+    }
+
+    //  -------------------------------------------------------------------------
+    //  Final getters and setters
+    //  -------------------------------------------------------------------------
+
+    /**
+     * Returns the item at a certain slot
+     *
+     * @param slot the slow
+     * @return the item, or null if no icon at the given slot (default)
+     */
+    public ItemStack getItemAt(final int slot) {
+        return null;
+    }
+
+    /**
+     * Get the info button position
+     *
+     * @return the slot which info buttons is located on
+     */
+    protected int getInfoButtonPosition() {
+        return size - 9;
+    }
+
+    /**
+     * Should we automatically add the return button to the bottom left corner?
+     *
+     * @return true if the return button should be added, true by default
+     */
+    protected boolean addReturnButton() {
+        return true;
+    }
+
+    /**
+     * Should we automatically add an info button {@link #getInfo()} at the
+     * {@link #getInfoButtonPosition()} ?
+     *
+     * @return If to add button
+     */
+    protected boolean addInfoButton() {
+        return true;
+    }
+
+    /**
+     * Get the return button position
+     *
+     * @return the slot which return buttons is located on
+     */
+    protected int getReturnButtonPosition() {
+        return size - 1;
+    }
+
+    /**
+     * Calculates the center slot of this menu
+     *
+     * <p>
+     * Credits to Gober at
+     * https://www.spigotmc.org/threads/get-the-center-slot-of-a-menu.379586/
+     *
+     * @return the estimated center slot
+     */
+    protected final int getCenterSlot() {
+        final int pos = size / 2;
+
+        return size % 2 == 1 ? pos : pos - 5;
+    }
+
+    /**
+     * The title of this menu
+     *
+     * @return the menu title
+     */
+    public final String getTitle() {
+        return title;
+    }
+
+    /**
+     * Sets the title of this inventory, this change is not reflected in client, you
+     * must call {@link #restartMenu()} to take change
+     *
+     * @param title the new title
+     */
+    protected final void setTitle(final String title) {
+        this.title = title;
+    }
+
+    /**
+     * Return the parent menu or null
+     *
+     * @return
+     */
+    public final UserInterface getParent() {
+        return parent;
+    }
+
+    /**
+     * Get the size of this menu
+     *
+     * @return
+     */
+    public final Integer getSize() {
+        return size;
+    }
+
+    /**
+     * Sets the size of this menu (without updating the player container - if you
+     * want to update it call {@link #restartMenu()})
+     *
+     * @param size
+     */
+    protected final void setSize(final Integer size) {
+        this.size = size;
+    }
+
+    /**
+     * Set the menu's description
+     *
+     * <p>
+     * Used to create an info bottom in bottom left corner, see
+     * {@link Button#makeInfo(String...)}
+     *
+     * @param info the info to set
+     */
+    protected final void setInfo(final String... info) {
+        this.info = info;
+    }
+
+    /**
+     * Get the viewer that this instance of this menu is associated with
+     *
+     * @return the viewer of this instance, or null
+     */
+    protected final Player getViewer() {
+        return viewer;
+    }
+
+    /**
+     * Sets the viewer for this instance of this menu
+     *
+     * @param viewer The new viewer of the menu. Only sets the player
+     *               doesn't perform any magic
+     */
+    protected final void setViewer(final Player viewer) {
+        this.viewer = viewer;
+    }
+
+    /**
+     * Return the top opened inventory if viewer exists
+     *
+     * @return The open inventory instance
+     */
+    protected final Inventory getInventory() {
+        Valid.checkNotNull(viewer, "Cannot get inventory when there is no viewer!");
+
+        final Inventory topInventory = viewer.getOpenInventory().getTopInventory();
+        Valid.checkNotNull(topInventory, "Top inventory is null!");
+
+        return topInventory;
+    }
+
+    /**
+     * Get the open inventory content to match the array length, cloning items
+     * preventing ID mismatch in yaml files
+     *
+     * @param from The slot to start from
+     * @param to The slot to end at
+     * @return The array of found {@link ItemStack} can contain {@link org.bukkit.Material#AIR}
+     */
+    protected final ItemStack[] getContent(final int from, final int to) {
+        final ItemStack[] content = getInventory().getContents();
+        final ItemStack[] copy = new ItemStack[content.length];
+
+        for (int i = from; i < copy.length; i++) {
+            final ItemStack item = content[i];
+
+            copy[i] = item != null ? item.clone() : null;
+        }
+
+        return Arrays.copyOfRange(copy, from, to);
+    }
+
+    //  -------------------------------------------------------------------------
+    //  Interface events
+    //  -------------------------------------------------------------------------
 }

@@ -14,6 +14,8 @@ import com.illuzionzstudios.mist.exception.PluginException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.apache.commons.lang.ClassUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -342,6 +344,68 @@ public final class ReflectionUtil {
 
         } catch (final ClassNotFoundException ex) {
             throw new ReflectionException("Could not find class: " + path);
+        }
+    }
+
+    /**
+     * Makes a new instance of a class if constructor without parameters
+     *
+     * @param clazz The class instance to make
+     * @return The newly created class
+     */
+    public static <T> T instantiate(final Class<T> clazz) {
+        try {
+            final Constructor<T> c = clazz.getDeclaredConstructor();
+            c.setAccessible(true);
+
+            return c.newInstance();
+
+        } catch (final ReflectiveOperationException e) {
+            throw new ReflectionException("Could not make instance of: " + clazz, e);
+        }
+    }
+
+    /**
+     * Makes a new instance of a class with arguments
+     *
+     * @param clazz The class instance to make
+     * @param params Parameters to create a new class
+     * @return The newly created class
+     */
+    public static <T> T instantiate(final Class<T> clazz, final Object... params) {
+        try {
+            final List<Class<?>> classes = new ArrayList<>();
+
+            for (final Object param : params) {
+                Valid.checkNotNull(param, "Argument cannot be null when instatiating " + clazz);
+                final Class<?> paramClass = param.getClass();
+
+                classes.add(paramClass.isPrimitive() ? ClassUtils.wrapperToPrimitive(paramClass) : paramClass);
+            }
+
+            final Constructor<T> c = clazz.getDeclaredConstructor(classes.toArray(new Class[classes.size()]));
+            c.setAccessible(true);
+
+            return c.newInstance(params);
+
+        } catch (final ReflectiveOperationException e) {
+            throw new ReflectionException("Could not make instance of: " + clazz, e);
+        }
+    }
+
+    /**
+     * Attempts to create a new instance from the given constructor and parameters
+     *
+     * @param <T> The type of class to creator
+     * @param constructor Constructor instance for class
+     * @param params Parameters to create a new class
+     * @return The newly created class
+     */
+    public static <T> T instantiate(final Constructor<T> constructor, final Object... params) {
+        try {
+            return constructor.newInstance(params);
+        } catch (final ReflectiveOperationException ex) {
+            throw new PluginException(ex, "Could not make new instance of " + constructor + " with params: " + String.join(" ", (String[]) params));
         }
     }
 
