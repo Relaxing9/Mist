@@ -122,7 +122,7 @@ public abstract class Button {
          * @param ui The instance of {@link UserInterface} that was clicked on
          * @param type How the button was clicked on
          */
-        void onClickInMenu(Player player, UserInterface ui, ClickType type);
+        void onClickInInterface(Player player, UserInterface ui, ClickType type);
 
         /**
          * @return Simply returns a listener without functionlity

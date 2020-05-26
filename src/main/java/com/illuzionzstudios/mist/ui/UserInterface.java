@@ -11,6 +11,7 @@ package com.illuzionzstudios.mist.ui;
 
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
@@ -18,7 +19,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
@@ -466,4 +470,79 @@ public abstract class UserInterface {
     //  -------------------------------------------------------------------------
     //  Interface events
     //  -------------------------------------------------------------------------
+
+    /**
+     * Master method called when the interface is clicked on. Calls methods to be implemented
+     * and handles click logic.
+     *
+     * It passes down to {@link #onInterfaceClick(Player, int, ItemStack)}
+     *
+     * @param player The player clicking the menu
+     * @param slot The slot that was clicked
+     * @param action The type of action performed
+     * @param click How the slot was clicked
+     * @param cursor What {@link ItemStack} was on the cursor
+     * @param clicked The clicked {@link ItemStack}
+     * @param cancelled If the event was cancelled
+     */
+    protected void onInterfaceClick(final Player player, final int slot, final InventoryAction action, final ClickType click,
+                               final ItemStack cursor, final ItemStack clicked, final boolean cancelled) {
+        final InventoryView openedInventory = player.getOpenInventory();
+
+        onInterfaceClick(player, slot, clicked);
+
+        // Delay by 1 tick to get the accurate item in slot
+        MinecraftScheduler.get().synchronize(() -> {
+            // Make sure inventory is still open 1 tick later
+            if (openedInventory.equals(player.getOpenInventory())) {
+                final Inventory topInventory = openedInventory.getTopInventory();
+
+                if (action.toString().contains("PLACE") || action.toString().equals("SWAP_WITH_CURSOR"))
+                    onItemPlace(player, slot, topInventory.getItem(slot));
+            }
+        }, 1);
+    }
+
+    /**
+     * Called automatically when the interface is clicked
+     *
+     * @param player The player clicking the menu
+     * @param slot The slot that was clicked
+     * @param clicked The clicked {@link ItemStack}
+     */
+    protected void onInterfaceClick(final Player player, final int slot, final ItemStack clicked) {
+    }
+
+    /**
+     * Called automatically when an item is placed to the menu
+     *
+     * @param player The player clicking the menu
+     * @param slot The slot that was clicked
+     * @param placed The {@link ItemStack} that was placed
+     */
+    protected void onItemPlace(final Player player, final int slot, final ItemStack placed) {
+    }
+
+    /**
+     * Called when a registered button is clicked on
+     *
+     * @param player The player clicking the menu
+     * @param slot The slot that was clicked
+     * @param action The type of action performed
+     * @param click How the slot was clicked
+     * @param button The {@link Button} object clicked
+     */
+    protected void onButtonClick(final Player player, final int slot, final InventoryAction action,
+                                 final ClickType click, final Button button) {
+        button.getListener().onClickInInterface(player, this, click);
+    }
+
+    /**
+     * Called when the interface is closed
+     *
+     * @param player The player who closed the interface
+     * @param inventory The {@link Inventory} instance ended
+     */
+    protected void onInterfaceClose(final Player player, final Inventory inventory) {
+    }
 }
