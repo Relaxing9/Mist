@@ -125,6 +125,9 @@ public abstract class UserInterface {
      */
     protected UserInterface(final UserInterface parent) {
         this.parent = parent;
+        
+        // TODO: Actually make return
+        returnButton = parent != null ? Button.makeEmpty() : Button.makeEmpty();
     }
 
     //  -------------------------------------------------------------------------

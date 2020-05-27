@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -85,6 +86,13 @@ public abstract class Button {
      */
     public static IconButton makeIcon(final ItemCreator creator) {
         return new IconButton(creator.makeUIItem());
+    }
+
+    /**
+     * @return Simply a button that is just air, represents {@code null}
+     */
+    public static IconButton makeEmpty() {
+        return new IconButton(new ItemStack(Material.AIR));
     }
 
     /**
