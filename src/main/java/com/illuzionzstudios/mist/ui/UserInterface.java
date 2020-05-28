@@ -13,6 +13,7 @@ import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.ui.button.Button;
+import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
@@ -21,15 +22,16 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -79,6 +81,12 @@ public abstract class UserInterface {
      * The return button to display if applicable
      */
     private final Button returnButton;
+
+    /**
+     * Dictates if we called the method to register buttons
+     * See {@link #registerButtonViaReflection(Field)}
+     */
+    private boolean buttonsRegisteredViaReflection = false;
 
     /**
      * Amount of slots in the inventory
@@ -231,6 +239,8 @@ public abstract class UserInterface {
             Valid.checkBoolean(buttons != null && buttons.length > 0, "Null " + field.getName() + "[] in " + this);
             registeredButtons.addAll(Arrays.asList(buttons));
         }
+
+        buttonsRegisteredViaReflection = true;
     }
 
     /**
@@ -291,11 +301,124 @@ public abstract class UserInterface {
     }
 
     //  -------------------------------------------------------------------------
+    //  Rendering
+    //  -------------------------------------------------------------------------
+
+    /**
+     * Build, render, and show our {@link UserInterface} to a player
+     * Only used to firstly show it to a player, shouldn't be used to re-render
+     *
+     * @param player The player to show the menu to
+     */
+    public final void show(Player player) {
+        Valid.checkNotNull(size, "Size not set in " + this + " (call setSize in your constructor)");
+        Valid.checkNotNull(title, "Title not set in " + this + " (call setTitle in your constructor)");
+
+        // Set our viewer
+        viewer = player;
+
+        // If buttons didn't get registered, do it ourselves
+        if (buttonsRegisteredViaReflection)
+            registerButtons();
+
+        // Render the menu
+        final InterfaceDrawer drawer = InterfaceDrawer.of(size, title);
+
+        // Compile bottom bar
+        compileBottomBar().forEach(drawer::setItem);
+
+        // Set items defined by classes upstream
+        // Doesn't replace set items
+        for (int i = 0; i < drawer.getSize(); i++) {
+            final ItemStack item = getItemAt(i);
+
+            if (item != null && !drawer.isSet(i))
+                drawer.setItem(i, item);
+        }
+
+        // Call event
+        onDisplay(drawer);
+
+        // Set our previous menu if applicable
+        final UserInterface previous = getInterface(player);
+        if (previous != null)
+            player.setMetadata(TAG_PREVIOUS, new FixedMetadataValue(SpigotPlugin.getInstance(), previous));
+
+        // Register current menu
+        MinecraftScheduler.get().synchronize(() -> {
+            drawer.display(player);
+
+            player.setMetadata(TAG_CURRENT, new FixedMetadataValue(SpigotPlugin.getInstance(), UserInterface.this));
+        }, 1);
+    }
+
+    /**
+     * Called automatically before the menu is displayed but after all items have
+     * been drawn
+     *
+     * Override for custom last-minute modifications
+     *
+     * @param drawer The drawer for the interface
+     */
+    protected void onDisplay(final InterfaceDrawer drawer) {
+    }
+
+    /**
+     * "Restart" this interface. This means re-registering all buttons,
+     * and redrawing all items
+     */
+    protected final void restart() {
+        registerButtons();
+        redraw();
+    }
+
+    /**
+     * Simply re-render the inventory and bottom items
+     */
+    protected final void redraw() {
+        final Inventory inv = getViewer().getOpenInventory().getTopInventory();
+
+        // Make sure a chest inventory and not something else
+        Valid.checkBoolean(inv.getType() == InventoryType.CHEST,
+                getViewer().getName() + "'s inventory closed in the meanwhile (now == " + inv.getType() + ").");
+
+        for (int i = 0; i < size; i++) {
+            final ItemStack item = getItemAt(i);
+
+            Valid.checkBoolean(i < inv.getSize(), "Item (" + (item != null ? item.getType() : "null") + ") position ("
+                    + i + ") > inv size (" + inv.getSize() + ")");
+            inv.setItem(i, item);
+        }
+
+        compileBottomBar().forEach(inv::setItem);
+        getViewer().updateInventory();
+    }
+
+    /**
+     * Map the buttons placed for navigation to their slots
+     *
+     * @return Map of items
+     */
+    private Map<Integer, ItemStack> compileBottomBar() {
+        final Map<Integer, ItemStack> items = new HashMap<>();
+
+        if (addInfoButton() && getInfo() != null)
+            items.put(getInfoButtonPosition(), Button.makeInfo(getInfo()).getItem());
+
+        if (addReturnButton() && !(returnButton instanceof Button.IconButton))
+            items.put(getReturnButtonPosition(), returnButton.getItem());
+
+        return items;
+    }
+
+    //  -------------------------------------------------------------------------
     //  Final getters and setters
     //  -------------------------------------------------------------------------
 
     /**
      * Returns the item at a certain slot
+     *
+     * To be overridden by the type of menu to get the item
      *
      * @param slot the slow
      * @return the item, or null if no icon at the given slot (default)
@@ -367,7 +490,7 @@ public abstract class UserInterface {
 
     /**
      * Sets the title of this inventory, this change is not reflected in client, you
-     * must call {@link #restartMenu()} to take change
+     * must call {@link #restart()} ()} to take change
      *
      * @param title the new title
      */
@@ -395,7 +518,7 @@ public abstract class UserInterface {
 
     /**
      * Sets the size of this menu (without updating the player container - if you
-     * want to update it call {@link #restartMenu()})
+     * want to update it call {@link #restart()} ()})
      *
      * @param size
      */
