@@ -9,13 +9,21 @@
  */
 package com.illuzionzstudios.mist.plugin;
 
+import com.illuzionzstudios.mist.Listeners;
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.command.SpigotCommand;
 import com.illuzionzstudios.mist.config.PluginSettings;
+import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
+import com.illuzionzstudios.mist.ui.InterfaceController;
+import com.illuzionzstudios.mist.ui.UserInterface;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
@@ -106,6 +114,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     protected boolean isEnabled = true;
 
+    /**
+     * An easy way to handle listeners for reloading
+     */
+    private final Listeners listeners = new Listeners();
+
     //  -------------------------------------------------------------------------
     //  Plugin loading methods
     //  -------------------------------------------------------------------------
@@ -144,6 +157,13 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     public abstract void onPluginReload();
 
+    /**
+     * This method is called when registering things like listeners.
+     *
+     * In your plugin use it to register commands, events etc.
+     */
+    public abstract void onReloadablesStart();
+
     @Override
     public final void onLoad() {
         try {
@@ -160,8 +180,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     @Override
     public final void onEnable() {
-        // TODO: Fill in everything else we enable
-
         if (!isEnabled) return;
 
         // Pre start the plugin
@@ -172,10 +190,20 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         // Main enabled
         try {
+            // Load settings and locale
+            PluginSettings.loadSettings(this, getPluginSettings());
+            Locale.loadLocale(this, getPluginLocale());
+
             // Enable our scheduler
             new BukkitScheduler(this).start();
 
+            onReloadablesStart();
+
             onPluginEnable();
+
+            // Register main events
+            registerListener(this);
+            registerListener(InterfaceController.INSTANCE);
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error enabling plugin");
         }
@@ -190,6 +218,22 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             onPluginDisable();
         } catch (final Throwable t) {
             Logger.info("&cPlugin might not shut down property. Got " + t.getClass().getSimpleName() + ": " + t.getMessage());
+        }
+
+        unregisterReloadables();
+
+        // Try close inventories
+        try {
+            for (final Player online : getServer().getOnlinePlayers()) {
+                final UserInterface userInterface = UserInterface.getInterface(online);
+
+                if (userInterface != null)
+                    online.closeInventory();
+            }
+        } catch (final Throwable t) {
+            Logger.displayError(t, "Error closing menu inventories for players..");
+
+            t.printStackTrace();
         }
 
         Objects.requireNonNull(INSTANCE, "Plugin " + getName() + " has already been shutdown!");
@@ -207,9 +251,13 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         reloading = true;
 
         try {
-            // TODO: Reload other stuff
+            unregisterReloadables();
             onPluginPreReload();
+            listeners.unregister();
+
             onPluginReload();
+
+            onReloadablesStart();
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error reloading plugin");
         } finally {
@@ -217,6 +265,29 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             reloading = false;
         }
     }
+
+    /**
+     * Un register stuff when reloading
+     */
+    private void unregisterReloadables() {
+        // Stop ticking all tasks
+        MinecraftScheduler.get().stopInvocation();
+    }
+
+    /**
+     * @param listener Register a listener for this plugin
+     */
+    protected final void registerListener(Listener listener) {
+        listeners.register(this, listener);
+    }
+
+    /**
+     * @param command Register a {@link SpigotCommand} for this plugin
+     */
+    protected final void registerCommand(final SpigotCommand command) {
+        command.register();
+    }
+
 
     //  -------------------------------------------------------------------------
     //  Additional features of our main plugin
@@ -244,5 +315,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @return Our custom implementation of {@link PluginSettings}
      */
     public abstract PluginSettings getPluginSettings();
+
+    /**
+     * @return Get the {@link com.illuzionzstudios.mist.config.locale.Locale} instance being used for this plugin
+     */
+    public abstract Locale getPluginLocale();
 
 }

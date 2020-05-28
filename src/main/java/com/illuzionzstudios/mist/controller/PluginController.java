@@ -15,6 +15,9 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  * A tag that indicates a controller. A controller is class that handles things
  * of a certain type. Has a start and stop method
  *
+ * These can usually be an {@link Enum} object that has a single
+ * member, INSTANCE. That way you can simply call Controller.INSTANCE.<method>
+ *
  * @param <P> The instance of the plugin this controller is for
  */
 public interface PluginController<P extends SpigotPlugin> {
