@@ -48,14 +48,14 @@ public abstract class MinecraftScheduler {
      * This holds the set of registered synchronization services that are
      * currently ticking. Objects must be dismissed after being used
      */
-    protected volatile static Set<SynchronizationService> SYNC_SERVICE_REGISTRATION;
+    protected static volatile Set<SynchronizationService> SYNC_SERVICE_REGISTRATION;
 
     /**
      * These are the amount of synchronized ticks the application
      * has undergone. Async ticks are not counted as this will keep track
      * of total application time
      */
-    private static volatile AtomicLong synchronousTicks;
+    private static volatile AtomicLong synchronousTicks = new AtomicLong(0);
 
     /**
      * Instance of the {@link MinecraftScheduler}

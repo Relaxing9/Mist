@@ -317,7 +317,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract PluginSettings getPluginSettings();
 
     /**
-     * @return Get the {@link com.illuzionzstudios.mist.config.locale.Locale} instance being used for this plugin
+     * @return Get the {@link Locale} instance being used for this plugin
      */
     public abstract Locale getPluginLocale();
 
