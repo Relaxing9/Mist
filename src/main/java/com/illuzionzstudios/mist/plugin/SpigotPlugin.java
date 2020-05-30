@@ -12,6 +12,7 @@ package com.illuzionzstudios.mist.plugin;
 import com.illuzionzstudios.mist.Listeners;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.SpigotCommand;
+import com.illuzionzstudios.mist.command.SpigotCommandGroup;
 import com.illuzionzstudios.mist.config.PluginSettings;
 import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
@@ -320,5 +321,20 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @return Get the {@link Locale} instance being used for this plugin
      */
     public abstract Locale getPluginLocale();
+
+    /**
+     * @return Main {@link SpigotCommandGroup} for this plugin
+     */
+    public abstract SpigotCommandGroup getMainCommand();
+
+    /**
+     * Check if a given label is for the main plugin command
+     *
+     * @param label Label to check
+     * @return If it's an aliases for the main command
+     */
+    public static boolean isMainCommand(String label) {
+        return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
+    }
 
 }

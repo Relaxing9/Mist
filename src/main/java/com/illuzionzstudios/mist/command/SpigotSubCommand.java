@@ -9,24 +9,30 @@
  */
 package com.illuzionzstudios.mist.command;
 
+import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This command is apart of a command group. It acts as a sub label to
  * add extra functionality. For instance, "/customfishing rewards", rewards is the
  * sub label
+ *
+ * Acts as a normal command that runs based of a {@link SpigotCommandGroup}
  */
 public abstract class SpigotSubCommand extends SpigotCommand {
 
     /**
      * The registered sub labels, or aliases this command has
      */
-    private final ArrayList<String> subLabels = new ArrayList<>();
+    @Getter
+    private final String[] subLabels;
 
     /**
      * The latest sub label used when the sub command was run,
@@ -38,11 +44,72 @@ public abstract class SpigotSubCommand extends SpigotCommand {
 
     /**
      * Create a new {@link SpigotCommand} with certain labels
+     * Main command group found from {@link SpigotPlugin#getMainCommand()}
      *
-     * @param label   The main label for this command
+     * @param subLabel   The main label for this command
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
      */
-    protected SpigotSubCommand(@NotNull String label, String... aliases) {
-        super(label, aliases);
+    protected SpigotSubCommand(@NotNull String subLabel, String... aliases) {
+        this(getMainCommandGroup(), subLabel, aliases);
+    }
+
+    /**
+     * Create a new {@link SpigotCommand} with certain labels
+     *
+     * @param subLabel   The main label for this command
+     * @param aliases Additional labels that correspond to this {@link SpigotCommand}
+     */
+    protected SpigotSubCommand(SpigotCommandGroup parent, @NotNull String subLabel, String... aliases) {
+        super(parent.getLabel());
+
+        // Set sub labels
+        this.subLabels = aliases;
+
+        // Set main label
+        this.subLabel = subLabel;
+
+        // If the default perm was not changed, improve it
+        if (getRawPermission().equals(DEFAULT_PERMISSION_SYNTAX))
+            if (SpigotPlugin.isMainCommand(this.getMainLabel()))
+                setPermission(getRawPermission().replace("{label}", "{sublabel}")); // simply replace label with sublabel
+            else
+                setPermission(getRawPermission() + ".{sublabel}"); // append the sublabel at the end since this is not our main command
+    }
+
+    /**
+     * @return Main {@link SpigotCommandGroup} for the plugin
+     */
+    private static SpigotCommandGroup getMainCommandGroup() {
+        final SpigotCommandGroup main = SpigotPlugin.getInstance().getMainCommand();
+        Valid.checkNotNull(main, SpigotPlugin.getPluginName() + " does not define a main command group!");
+
+        return main;
+    }
+
+    /**
+     * The command group automatically displays all sub commands in the /{label} help|? menu.
+     * Shall we display the sub command in this menu?
+     *
+     * @return If to show in help
+     */
+    protected boolean showInHelp() {
+        return true;
+    }
+
+    /**
+     * Replace additional {sublabel} placeholder for this subcommand.
+     * See {@link SpigotCommand#replacePlaceholders(String)}
+     */
+    @Override
+    protected String replacePlaceholders(String message) {
+        return super.replacePlaceholders(message).replace("{sublabel}", getSubLabel());
+    }
+
+    /**
+     * Compare based on sub labels
+     */
+    @Override
+    public final boolean equals(Object obj) {
+        return obj instanceof SpigotCommand && Arrays.equals(((SpigotSubCommand) obj).subLabels, this.subLabels);
     }
 }

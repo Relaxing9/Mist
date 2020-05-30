@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This is an instance of a custom command for a {@link com.illuzionzstudios.mist.plugin.SpigotPlugin}
@@ -69,6 +70,14 @@ public abstract class SpigotCommand extends Command {
     @Getter
     @Setter
     private int minArguments = 0;
+
+    /**
+     * Should we automatically send usage message when the first argument
+     * equals to "help" or "?" ?
+     */
+    @Setter
+    @Getter
+    private boolean autoHandleHelp = true;
 
     //  -------------------------------------------------------------------------
     //  Values that get set upon execution
@@ -182,8 +191,9 @@ public abstract class SpigotCommand extends Command {
             if (getPermission() != null)
                 checkPerm(getPermission());
 
-            // Too little arguments
-            if (args.length < getMinArguments()) {
+            // Too little arguments and inform help
+            // TODO: Display other forms of help
+            if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && ("help".equals(args[0]) || "?".equals(args[0]))) {
                 if (!getUsage().trim().equalsIgnoreCase(""))
                     // Inform usage message
                     informError(Locale.Command.INVALID_USAGE.replace("{label}", label)
@@ -252,12 +262,29 @@ public abstract class SpigotCommand extends Command {
      */
     public final void checkPerm(@NonNull final String perm) throws CommandException {
         if (isPlayer() && !PlayerUtil.hasPerm(sender, perm))
-            throw new CommandException(getPermissionMessage().replace("{permission}", perm));
+            throw new CommandException(Objects.requireNonNull(getPermissionMessage()).replace("{permission}", perm));
     }
 
     // ----------------------------------------------------------------------
     // Parsers
     // ----------------------------------------------------------------------
+
+    /**
+     * Replaces placeholders in the message
+     *
+     * @param message Message to replace
+     * @return Message with placeholders handled
+     */
+    protected String replacePlaceholders(String message) {
+        // Replace basic labels
+        message = replaceBasicPlaceholders(message);
+
+        // Replace {X} with arguments
+        for (int i = 0; i < args.length; i++)
+            message = message.replace("{" + i + "}", args[i] != null ? args[i] : "");
+
+        return message;
+    }
 
     /**
      * Internal method for replacing {label} {sublabel} and {plugin.name} placeholders
@@ -268,6 +295,7 @@ public abstract class SpigotCommand extends Command {
     private String replaceBasicPlaceholders(final String message) {
         return message
                 .replace("{label}", getLabel())
+                .replace("{sublabel}", this instanceof SpigotSubCommand ? ((SpigotSubCommand) this).getSubLabels()[0] : super.getLabel())
                 .replace("{plugin.name}", SpigotPlugin.getPluginName().toLowerCase());
     }
 
