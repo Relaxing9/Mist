@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
 import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.exception.CommandException;
@@ -27,10 +28,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * This is an instance of a custom command for a {@link com.illuzionzstudios.mist.plugin.SpigotPlugin}
@@ -233,6 +231,24 @@ public abstract class SpigotCommand extends Command {
         }
     }
 
+    /**
+     * @param message Tell the command sender a single message
+     */
+    protected void tell(String message) {
+        getSender().sendMessage(Mist.colorize(message));
+    }
+
+    /**
+     * @param messages Tell the command sender a set of messages
+     */
+    protected void tell(String[] messages) {
+        if (getSender() != null) {
+            for (String message : messages) {
+                getSender().sendMessage(Mist.colorize(message));
+            }
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Convenience checks
     //
@@ -363,7 +379,6 @@ public abstract class SpigotCommand extends Command {
      * Get the permission without replacing {plugin.name}, {label} or {sublabel}
      *
      * @deprecated internal use only
-     * @return
      */
     @Deprecated
     public final String getRawPermission() {
@@ -428,5 +443,39 @@ public abstract class SpigotCommand extends Command {
         label = name;
 
         return super.setLabel(name);
+    }
+
+    /**
+     * Show tab completion suggestions when the given sender
+     * writes the command with the given arguments
+     *
+     * Tab completion is only shown if the sender has {@link #getPermission()}
+     */
+    @Override
+    public final List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) throws IllegalArgumentException {
+        this.sender = sender;
+        label = alias;
+        this.args = args;
+
+        if (hasPerm(getPermission())) {
+            return tabComplete();
+        }
+
+        return new ArrayList<>();
+    }
+
+    /**
+     * Override this method to support tab completing in your command.
+     *
+     * You can then use "sender", "label" or "args" fields from {@link SpigotCommand}
+     * class normally and return a list of tab completion suggestions.
+     *
+     * We already check for {@link #getPermission()} and only call this method if the
+     * sender has it.
+     *
+     * @return the list of suggestions to complete, or null to complete player names automatically
+     */
+    protected List<String> tabComplete() {
+        return null;
     }
 }

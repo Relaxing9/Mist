@@ -110,10 +110,28 @@ public abstract class Locale extends YamlConfig {
          */
         public static String INVALID_USAGE = "&cInvalid usage. Try /{label} {args}";
 
+        /**
+         * If they try use a sub command that doesn't exist
+         */
+        public static String INVALID_SUB = "&cThat command doesn't exist. Try /{label} help";
+
+        /**
+         * The optional arguments label
+         */
+        public static String LABEL_OPTIONAL_ARGS = "optional arguments";
+
+        /**
+         * The required arguments label
+         */
+        public static String LABEL_REQUIRED_ARGS = "required arguments";
+
         public static void init() {
             PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
             NO_PERMISSION = LOCALE_FILE.getString("Command.No Permission", NO_PERMISSION);
             INVALID_USAGE = LOCALE_FILE.getString("Command.Invalid Usage", INVALID_USAGE);
+            INVALID_SUB = LOCALE_FILE.getString("Command.Invalid Sub", INVALID_SUB);
+            LABEL_OPTIONAL_ARGS = LOCALE_FILE.getString("Command.Label Optional Args", LABEL_OPTIONAL_ARGS);
+            LABEL_REQUIRED_ARGS = LOCALE_FILE.getString("Command.Label Required Args", LABEL_REQUIRED_ARGS);
         }
     }
 

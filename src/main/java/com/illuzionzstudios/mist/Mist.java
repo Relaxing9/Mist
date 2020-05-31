@@ -67,6 +67,18 @@ public final class Mist {
 
     }
 
+    /**
+     * Static strings for aesthetics
+     */
+    public static final class Aesthetics {
+
+        /**
+         * Returns a long ------ smooth console line
+         */
+        public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
+
+    }
+
     //  -------------------------------------------------------------------------
     //  Static util methods
     //  -------------------------------------------------------------------------

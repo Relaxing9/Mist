@@ -46,27 +46,27 @@ public abstract class SpigotSubCommand extends SpigotCommand {
      * Create a new {@link SpigotCommand} with certain labels
      * Main command group found from {@link SpigotPlugin#getMainCommand()}
      *
-     * @param subLabel   The main label for this command
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
+     *                First label is the main label
      */
-    protected SpigotSubCommand(@NotNull String subLabel, String... aliases) {
-        this(getMainCommandGroup(), subLabel, aliases);
+    protected SpigotSubCommand(@NotNull String... aliases) {
+        this(getMainCommandGroup(), aliases);
     }
 
     /**
      * Create a new {@link SpigotCommand} with certain labels
      *
-     * @param subLabel   The main label for this command
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
+     *                First label is the main label
      */
-    protected SpigotSubCommand(SpigotCommandGroup parent, @NotNull String subLabel, String... aliases) {
+    protected SpigotSubCommand(SpigotCommandGroup parent, @NotNull String... aliases) {
         super(parent.getLabel());
 
         // Set sub labels
         this.subLabels = aliases;
 
         // Set main label
-        this.subLabel = subLabel;
+        this.subLabel = subLabels[0];
 
         // If the default perm was not changed, improve it
         if (getRawPermission().equals(DEFAULT_PERMISSION_SYNTAX))
