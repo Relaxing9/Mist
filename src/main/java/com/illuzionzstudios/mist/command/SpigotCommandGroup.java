@@ -228,7 +228,7 @@ public abstract class SpigotCommandGroup {
                     final String usage = colorizeUsage(subcommand.getUsage());
                     final String desc = subcommand.getDescription() != null ? subcommand.getDescription() : "";
 
-                    tell("  &7/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? " &e- " + desc : ""));
+                    tell("  &7/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? "&e- " + desc : ""));
 
                     shown++;
                 }
