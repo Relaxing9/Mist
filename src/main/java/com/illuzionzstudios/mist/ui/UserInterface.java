@@ -13,6 +13,7 @@ import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.ui.button.Button;
+import com.illuzionzstudios.mist.ui.button.type.ReturnBackButton;
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
@@ -112,12 +113,12 @@ public abstract class UserInterface {
     private Player viewer;
 
     /**
-     * See {@link #UserInterface(UserInterface)}
+     * See {@link #UserInterface(UserInterface, boolean)}
      *
      * Creates a {@link UserInterface} with no parent
      */
     protected UserInterface() {
-        this(null);
+        this(null, false);
     }
 
     /**
@@ -130,12 +131,13 @@ public abstract class UserInterface {
      * Note: The viewer is still null here
      *
      * @param parent The parent {@link UserInterface}
+     * @param makeNewInstance If the {@link ReturnBackButton} makes a new instance
+     *                        of the parent menu
      */
-    protected UserInterface(final UserInterface parent) {
+    protected UserInterface(final UserInterface parent, final boolean makeNewInstance) {
         this.parent = parent;
-        
-        // TODO: Actually make return
-        returnButton = parent != null ? Button.makeEmpty() : Button.makeEmpty();
+
+        returnButton = parent != null ? new ReturnBackButton(parent, makeNewInstance) : Button.makeEmpty();
     }
 
     //  -------------------------------------------------------------------------

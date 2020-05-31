@@ -133,7 +133,7 @@ public abstract class Button {
         void onClickInInterface(Player player, UserInterface ui, ClickType type);
 
         /**
-         * @return Simply returns a listener without functionlity
+         * @return Simply returns a listener without functionality
          */
         static ButtonListener ofNull() {
             return (i, j, k) -> {};
