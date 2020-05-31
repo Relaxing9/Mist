@@ -75,7 +75,7 @@ public final class Mist {
         /**
          * Returns a long ------ smooth console line
          */
-        public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
+        public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "                                                               ";
 
     }
 

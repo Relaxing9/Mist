@@ -146,8 +146,8 @@ public abstract class SpigotCommandGroup {
                 "&8" + Mist.Aesthetics.SMOOTH_LINE,
                 getHeaderPrefix() + "  " + SpigotPlugin.getPluginName() + " &7v" + SpigotPlugin.getPluginVersion(),
                 " ",
-                "&2  [] &f= " + Locale.Command.LABEL_OPTIONAL_ARGS,
-                "&6  <> &f= " + Locale.Command.LABEL_REQUIRED_ARGS,
+                "&2  [] &7= " + Locale.Command.LABEL_OPTIONAL_ARGS,
+                "&6  <> &7= " + Locale.Command.LABEL_REQUIRED_ARGS,
                 " "
         };
     }
@@ -192,7 +192,7 @@ public abstract class SpigotCommandGroup {
         protected void onCommand() {
             // Show our help
             // Assures arg[0] isn't null
-            if (args.length == 0) {
+            if (args.length == 0 || (args.length >= 1 && getHelpLabel().contains(args[0]))) {
                 tellSubCommandsHelp();
                 return;
             }
@@ -228,11 +228,14 @@ public abstract class SpigotCommandGroup {
                     final String usage = colorizeUsage(subcommand.getUsage());
                     final String desc = subcommand.getDescription() != null ? subcommand.getDescription() : "";
 
-                    tell(" &f/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? " &e- " + desc : ""));
+                    tell("  &7/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? " &e- " + desc : ""));
 
                     shown++;
                 }
             }
+
+            // End line
+            tell("&8" + Mist.Aesthetics.SMOOTH_LINE);
         }
 
         /**
@@ -242,7 +245,7 @@ public abstract class SpigotCommandGroup {
          * @return Formatted message
          */
         private String colorizeUsage(String message) {
-            return message == null ? "" : message.replace("<", "&6<").replace(">", "&6>&f").replace("[", "&2[").replace("]", "&2]&f");
+            return message == null ? "" : message.replace("<", "&6<").replace(">", "&6>&7").replace("[", "&2[").replace("]", "&2]&7");
         }
 
         /**
