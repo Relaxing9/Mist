@@ -120,6 +120,12 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     private final Listeners listeners = new Listeners();
 
+    /**
+     * The main command for this plugin, can be {@code null}
+     */
+    @Getter
+    protected SpigotCommandGroup mainCommand;
+
     //  -------------------------------------------------------------------------
     //  Plugin loading methods
     //  -------------------------------------------------------------------------
@@ -196,7 +202,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             Locale.loadLocale(this, getPluginLocale());
 
             // Enable our scheduler
-            new BukkitScheduler(this).start();
+            new BukkitScheduler(this).initialize();
 
             onReloadablesStart();
 
@@ -273,6 +279,9 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     private void unregisterReloadables() {
         // Stop ticking all tasks
         MinecraftScheduler.get().stopInvocation();
+
+        if (getMainCommand() != null && getMainCommand().isRegistered())
+            getMainCommand().unregister();
     }
 
     /**
@@ -323,9 +332,16 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract Locale getPluginLocale();
 
     /**
-     * @return Main {@link SpigotCommandGroup} for this plugin
+     * @param command Register a new {@link SpigotCommandGroup}
      */
-    public abstract SpigotCommandGroup getMainCommand();
+    protected void registerMainCommand(SpigotCommandGroup command, String... labels) {
+        // Unregister old command
+        if (this.mainCommand != null)
+            this.mainCommand.unregister();
+
+        this.mainCommand = command;
+        this.mainCommand.register(labels);
+    }
 
     /**
      * Check if a given label is for the main plugin command

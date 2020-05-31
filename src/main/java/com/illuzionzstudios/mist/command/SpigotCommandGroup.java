@@ -194,6 +194,7 @@ public abstract class SpigotCommandGroup {
             // Assures arg[0] isn't null
             if (args.length == 0) {
                 tellSubCommandsHelp();
+                return;
             }
 
             final String subArg = args[0];
