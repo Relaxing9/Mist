@@ -72,13 +72,6 @@ public abstract class PluginSettings extends YamlConfig {
     //  -------------------------------------------------------------------------
 
     /**
-     * These are the main command aliases for the plugin.
-     * For instance "customfishing, customf, cf". This way the user
-     * can change what main commands they want, but keep functionality
-     */
-    public static ConfigSetting MAIN_COMMAND_ALIASES;
-
-    /**
      * The locale type to use, for instance
      * "en_US"
      */
@@ -97,7 +90,6 @@ public abstract class PluginSettings extends YamlConfig {
         // Load settings file
         settings.load();
 
-        MAIN_COMMAND_ALIASES = new ConfigSetting(settings, "Main Command Aliases", plugin.getCommandAliases());
         LOCALE = new ConfigSetting(settings, "Locale", "en_US");
 
         // Load our other custom settings

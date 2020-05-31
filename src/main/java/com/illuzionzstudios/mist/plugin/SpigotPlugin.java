@@ -317,11 +317,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     //  -------------------------------------------------------------------------
 
     /**
-     * @return The main labels for the main plugin command. For instance, "customfishing", "customf"
-     */
-    public abstract List<String> getCommandAliases();
-
-    /**
      * @return Our custom implementation of {@link PluginSettings}
      */
     public abstract PluginSettings getPluginSettings();
