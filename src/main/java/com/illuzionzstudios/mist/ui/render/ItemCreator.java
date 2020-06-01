@@ -80,7 +80,7 @@ public final class ItemCreator {
      * The item flags
      */
     @Singular
-    private List<UItemFlag> flags;
+    private final List<UItemFlag> flags = new ArrayList<>();
 
     /**
      * If the {@link ItemStack} has the unbreakable flag
@@ -139,9 +139,6 @@ public final class ItemCreator {
         // Skip if trying to build on air
         if (material == UMaterial.AIR)
             return stack;
-
-        // Ensure flags exist
-        flags = flags != null ? flags : new ArrayList<>();
 
         // Set damage
         if (damage != -1) {
@@ -221,9 +218,9 @@ public final class ItemCreator {
         }
 
         // Finally apply metadata
-        item.setItemMeta(stackMeta);
+        stack.setItemMeta(stackMeta);
 
-        return item;
+        return stack;
     }
 
     /**

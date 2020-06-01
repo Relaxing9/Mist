@@ -9,6 +9,7 @@
  */
 package com.illuzionzstudios.mist.ui;
 
+import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
@@ -27,6 +28,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.awt.*;
@@ -259,6 +261,8 @@ public abstract class UserInterface {
      * @return Found button otherwise null
      */
     public final Button getButton(final ItemStack icon) {
+        if (!buttonsRegisteredViaReflection) registerButtons();
+
         if (icon != null) {
             for (final Button button : registeredButtons) {
                 // Make sure valid button
@@ -266,12 +270,26 @@ public abstract class UserInterface {
                 if (button.getItem() == null)
                     return null;
 
-                if (icon.isSimilar(button.getItem()))
+                if (equals(icon, button.getItem())) {
                     return button;
+                }
             }
         }
 
         return null;
+    }
+
+    private boolean equals(final ItemStack stack1, final ItemStack stack2) {
+        final ItemMeta meta1 = stack1.getItemMeta();
+        final ItemMeta meta2 = stack2.getItemMeta();
+
+        if (stack1.getType() != stack2.getType())
+            return false;
+
+        if (meta1 != null)
+            return meta1.equals(meta2);
+
+        return stack1.getAmount() == stack2.getAmount();
     }
 
     /**
@@ -320,7 +338,7 @@ public abstract class UserInterface {
         viewer = player;
 
         // If buttons didn't get registered, do it ourselves
-        if (buttonsRegisteredViaReflection)
+        if (!buttonsRegisteredViaReflection)
             registerButtons();
 
         // Render the menu

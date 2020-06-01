@@ -210,7 +210,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Register main events
             registerListener(this);
-            registerListener(InterfaceController.INSTANCE);
+            registerListener(new InterfaceController());
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error enabling plugin");
         }

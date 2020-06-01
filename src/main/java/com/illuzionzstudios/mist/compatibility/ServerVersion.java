@@ -40,11 +40,11 @@ public final class ServerVersion {
         v1_10(10),
         v1_9(9),
         v1_8(8),
-        v1_7(7),
-        v1_6(6),
-        v1_5(5),
-        v1_4(4),
-        v1_3_AND_BELOW(3);
+        v1_7(7, false),
+        v1_6(6, false),
+        v1_5(5, false),
+        v1_4(4, false),
+        v1_3_AND_BELOW(3, false);
 
         /**
          * The numeric version (the second part of the 1.x number)

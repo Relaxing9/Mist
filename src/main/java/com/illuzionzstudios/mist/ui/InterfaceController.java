@@ -31,13 +31,10 @@ import org.bukkit.inventory.ItemStack;
 /**
  * This controller handles events for {@link UserInterface}
  */
-public enum InterfaceController implements PluginController<SpigotPlugin>, Listener {
-    INSTANCE;
+public class InterfaceController implements PluginController<SpigotPlugin>, Listener {
 
     @Override
     public void initialize(SpigotPlugin plugin) {
-        // Register the events
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
