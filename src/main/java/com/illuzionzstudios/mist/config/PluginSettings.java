@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.Mist;
+import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
 /**
@@ -26,7 +27,7 @@ public abstract class PluginSettings extends YamlConfig {
      * @param plugin Make sure we pass owning plugin
      */
     public PluginSettings(SpigotPlugin plugin) {
-        super(plugin);
+        super(plugin, getSettingsFileName());
     }
 
     /**
@@ -35,6 +36,11 @@ public abstract class PluginSettings extends YamlConfig {
     protected static String getSettingsFileName() {
         return Mist.File.SETTINGS_NAME;
     }
+
+    /**
+     * The current loaded {@link PluginSettings} instance
+     */
+    public static YamlConfig SETTINGS_FILE;
 
     //  -------------------------------------------------------------------------
     //  Versioning
@@ -72,10 +78,21 @@ public abstract class PluginSettings extends YamlConfig {
     //  -------------------------------------------------------------------------
 
     /**
-     * The locale type to use, for instance
-     * "en_US"
+     * Main plugin settings
      */
-    public static ConfigSetting LOCALE;
+    public static class Settings {
+
+        /**
+         * The locale type to use, for instance
+         * "en_US"
+         */
+        public static String LOCALE = "en_US";
+
+        public static void init() {
+            LOCALE = SETTINGS_FILE.getString("Settings.Locale", LOCALE);
+            SETTINGS_FILE.set("Command.Player Only", LOCALE);
+        }
+    }
 
     /**
      * Load these {@link PluginSettings} into the server, setting values
@@ -89,8 +106,10 @@ public abstract class PluginSettings extends YamlConfig {
     public static void loadSettings(SpigotPlugin plugin, PluginSettings settings) {
         // Load settings file
         settings.load();
+        SETTINGS_FILE = settings;
 
-        LOCALE = new ConfigSetting(settings, "Locale", "en_US");
+        // Load all settings
+        Settings.init();
 
         // Load our other custom settings
         settings.loadSettings();
