@@ -12,7 +12,11 @@ package com.illuzionzstudios.mist;
 import org.bukkit.ChatColor;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Main library class to handle utils and other stuff
@@ -91,6 +95,18 @@ public final class Mist {
      */
     public static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    /**
+     * Convert {@link Iterable} to {@link List}
+     *
+     * @param iterable The iterable to convert
+     * @param <T> Type of object
+     * @return As a collection
+     */
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false)
+                        .collect(Collectors.toList());
     }
 
 }
