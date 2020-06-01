@@ -24,6 +24,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -621,7 +622,7 @@ public abstract class UserInterface {
      * Master method called when the interface is clicked on. Calls methods to be implemented
      * and handles click logic.
      *
-     * It passes down to {@link #onInterfaceClick(Player, int, ItemStack)}
+     * It passes down to {@link #onInterfaceClick(Player, int, ItemStack, InventoryClickEvent)}
      *
      * @param player The player clicking the menu
      * @param slot The slot that was clicked
@@ -630,12 +631,13 @@ public abstract class UserInterface {
      * @param cursor What {@link ItemStack} was on the cursor
      * @param clicked The clicked {@link ItemStack}
      * @param cancelled If the event was cancelled
+     * @param event The actual event if needed
      */
     protected void onInterfaceClick(final Player player, final int slot, final InventoryAction action, final ClickType click,
-                               final ItemStack cursor, final ItemStack clicked, final boolean cancelled) {
+                                    final ItemStack cursor, final ItemStack clicked, final boolean cancelled, final InventoryClickEvent event) {
         final InventoryView openedInventory = player.getOpenInventory();
 
-        onInterfaceClick(player, slot, clicked);
+        onInterfaceClick(player, slot, clicked, event);
 
         // Delay by 1 tick to get the accurate item in slot
         MinecraftScheduler.get().synchronize(() -> {
@@ -644,7 +646,7 @@ public abstract class UserInterface {
                 final Inventory topInventory = openedInventory.getTopInventory();
 
                 if (action.toString().contains("PLACE") || action.toString().equals("SWAP_WITH_CURSOR"))
-                    onItemPlace(player, slot, topInventory.getItem(slot));
+                    onItemPlace(player, slot, topInventory.getItem(slot), event);
             }
         }, 1);
     }
@@ -656,7 +658,9 @@ public abstract class UserInterface {
      * @param slot The slot that was clicked
      * @param clicked The clicked {@link ItemStack}
      */
-    protected void onInterfaceClick(final Player player, final int slot, final ItemStack clicked) {
+    protected void onInterfaceClick(final Player player, final int slot, final ItemStack clicked, final InventoryClickEvent event) {
+        // By default cancel moving items
+        event.setCancelled(true);
     }
 
     /**
@@ -666,7 +670,9 @@ public abstract class UserInterface {
      * @param slot The slot that was clicked
      * @param placed The {@link ItemStack} that was placed
      */
-    protected void onItemPlace(final Player player, final int slot, final ItemStack placed) {
+    protected void onItemPlace(final Player player, final int slot, final ItemStack placed, final InventoryClickEvent event) {
+        // By default cancel moving items
+        event.setCancelled(true);
     }
 
     /**
@@ -679,7 +685,9 @@ public abstract class UserInterface {
      * @param button The {@link Button} object clicked
      */
     protected void onButtonClick(final Player player, final int slot, final InventoryAction action,
-                                 final ClickType click, final Button button) {
+                                 final ClickType click, final Button button, final InventoryClickEvent event) {
+        // By default cancel moving items
+        event.setCancelled(true);
         button.getListener().onClickInInterface(player, this, click);
     }
 

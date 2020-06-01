@@ -24,6 +24,7 @@ import lombok.val;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
@@ -390,7 +391,7 @@ public abstract class PagedInterface<T> extends UserInterface {
     public final void onInterfaceClick(final Player player, final int slot,
                                   final InventoryAction action, final ClickType click,
                                   final ItemStack cursor, final ItemStack clicked,
-                                  final boolean cancelled) {
+                                  final boolean cancelled, final InventoryClickEvent event) {
         if (slot < getCurrentPageItems().size()) {
             final T obj = getCurrentPageItems().get(slot);
 
@@ -410,14 +411,14 @@ public abstract class PagedInterface<T> extends UserInterface {
     @Override
     public final void onButtonClick(final Player player, final int slot,
                                     final InventoryAction action, final ClickType click,
-                                    final Button button) {
-        super.onButtonClick(player, slot, action, click, button);
+                                    final Button button, final InventoryClickEvent event) {
+        super.onButtonClick(player, slot, action, click, button, event);
     }
 
     // Do not allow override
     @Override
     public final void onInterfaceClick(final Player player, final int slot,
-                                  final ItemStack clicked) {
+                                  final ItemStack clicked, final InventoryClickEvent event) {
         throw new PluginException("Simplest click unsupported");
     }
 

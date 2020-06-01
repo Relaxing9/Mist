@@ -88,10 +88,10 @@ public class InterfaceController implements PluginController<SpigotPlugin>, List
                         final Button button = userInterface.getButton(slotItem);
 
                         if (button != null)
-                            userInterface.onButtonClick(player, event.getSlot(), action, event.getClick(), button);
+                            userInterface.onButtonClick(player, event.getSlot(), action, event.getClick(), button, event);
                         else
                             userInterface.onInterfaceClick(player, event.getSlot(), action, event.getClick(), cursor, slotItem,
-                                    false);
+                                    false, event);
 
                     } catch (final Throwable t) {
                         // Notify of error
