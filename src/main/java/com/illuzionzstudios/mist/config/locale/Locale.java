@@ -27,7 +27,7 @@ public abstract class Locale extends YamlConfig {
      * @param plugin Make sure we pass owning plugin
      */
     public Locale(SpigotPlugin plugin) {
-        super(plugin);
+        super(plugin, "/locales", PluginSettings.LOCALE.getString() + ".lang");
     }
 
     /**
@@ -127,11 +127,22 @@ public abstract class Locale extends YamlConfig {
 
         public static void init() {
             PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
+            LOCALE_FILE.set("Command.Player Only", PLAYER_ONLY);
+
             NO_PERMISSION = LOCALE_FILE.getString("Command.No Permission", NO_PERMISSION);
+            LOCALE_FILE.set("Command.No Permission", NO_PERMISSION);
+
             INVALID_USAGE = LOCALE_FILE.getString("Command.Invalid Usage", INVALID_USAGE);
+            LOCALE_FILE.set("Command.Invalid Usage", INVALID_USAGE);
+
             INVALID_SUB = LOCALE_FILE.getString("Command.Invalid Sub", INVALID_SUB);
+            LOCALE_FILE.set("Command.Invalid Sub", INVALID_SUB);
+
             LABEL_OPTIONAL_ARGS = LOCALE_FILE.getString("Command.Label Optional Args", LABEL_OPTIONAL_ARGS);
+            LOCALE_FILE.set("Command.Label Optional Args", LABEL_OPTIONAL_ARGS);
+
             LABEL_REQUIRED_ARGS = LOCALE_FILE.getString("Command.Label Required Args", LABEL_REQUIRED_ARGS);
+            LOCALE_FILE.set("Command.Label Required Args", LABEL_REQUIRED_ARGS);
         }
     }
 

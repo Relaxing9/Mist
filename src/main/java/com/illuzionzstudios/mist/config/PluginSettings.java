@@ -32,7 +32,7 @@ public abstract class PluginSettings extends YamlConfig {
     /**
      * @return Get the file name for these settings, by default config.yml
      */
-    protected String getSettingsFileName() {
+    protected static String getSettingsFileName() {
         return Mist.File.SETTINGS_NAME;
     }
 
