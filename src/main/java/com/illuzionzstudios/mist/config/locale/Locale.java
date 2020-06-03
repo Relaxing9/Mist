@@ -91,6 +91,21 @@ public abstract class Locale extends YamlConfig {
     //  -------------------------------------------------------------------------
 
     /**
+     * General messages
+     */
+    public static class General {
+
+        /**
+         * The prefix to use before certain messages
+         */
+        public static String PLUGIN_PREFIX = "&d&lMist Plugin &8»&7";
+
+        public static void init() {
+            PLUGIN_PREFIX = loadMessage("command.player-only", PLUGIN_PREFIX);
+        }
+    }
+
+    /**
      * Messages relating to commands
      */
     public static class Command {
