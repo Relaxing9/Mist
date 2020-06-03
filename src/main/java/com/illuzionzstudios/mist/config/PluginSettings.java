@@ -90,7 +90,7 @@ public abstract class PluginSettings extends YamlConfig {
 
         public static void init() {
             LOCALE = SETTINGS_FILE.getString("Settings.Locale", LOCALE);
-            SETTINGS_FILE.set("Command.Player Only", LOCALE);
+            SETTINGS_FILE.set("Settings.Locale", LOCALE);
         }
     }
 
