@@ -27,7 +27,7 @@ public abstract class Locale extends YamlConfig {
      * @param plugin Make sure we pass owning plugin
      */
     public Locale(SpigotPlugin plugin) {
-        super(plugin, "/locales", PluginSettings.Settings.LOCALE + ".lang");
+        super(plugin, "/locales", PluginSettings.Settings.LOCALE.getString() + ".lang");
     }
 
     /**
@@ -45,7 +45,7 @@ public abstract class Locale extends YamlConfig {
      */
     @Override
     public final boolean load() {
-        return loadLocale(PluginSettings.Settings.LOCALE);
+        return loadLocale(PluginSettings.Settings.LOCALE.getString());
     }
 
     //  -------------------------------------------------------------------------
@@ -166,6 +166,7 @@ public abstract class Locale extends YamlConfig {
 
         // Load our other custom settings
         settings.loadLocale();
+        settings.saveChanges();
     }
 
     /**

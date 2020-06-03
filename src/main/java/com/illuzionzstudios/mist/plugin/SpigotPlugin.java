@@ -262,6 +262,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             onPluginPreReload();
             listeners.unregister();
 
+            // Load settings and locale
+            PluginSettings.loadSettings(this, getPluginSettings());
+            Locale.loadLocale(this, getPluginLocale());
+
             onPluginReload();
 
             onReloadablesStart();

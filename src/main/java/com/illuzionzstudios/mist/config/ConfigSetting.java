@@ -52,6 +52,15 @@ public class ConfigSetting {
         config.setDefault(key, defaultValue, commentStyle, comment);
     }
 
+    /**
+     * Set our value
+     *
+     * @param value Object to place as a value
+     */
+    public void set(@Nullable Object value) {
+        config.set(key, value);
+    }
+
     //  -------------------------------------------------------------------------
     //  Shorthand to get values from the config
     //  -------------------------------------------------------------------------
