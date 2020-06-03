@@ -166,6 +166,7 @@ public abstract class Locale extends YamlConfig {
         LOCALE_FILE = settings;
 
         // Load common messages
+        General.init();
         Command.init();
 
         // Load our other custom settings
