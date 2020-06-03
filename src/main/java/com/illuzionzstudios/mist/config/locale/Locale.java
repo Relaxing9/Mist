@@ -126,23 +126,12 @@ public abstract class Locale extends YamlConfig {
         public static String LABEL_REQUIRED_ARGS = "required arguments";
 
         public static void init() {
-            PLAYER_ONLY = LOCALE_FILE.getString("Command.Player Only", PLAYER_ONLY);
-            LOCALE_FILE.set("Command.Player Only", PLAYER_ONLY);
-
-            NO_PERMISSION = LOCALE_FILE.getString("Command.No Permission", NO_PERMISSION);
-            LOCALE_FILE.set("Command.No Permission", NO_PERMISSION);
-
-            INVALID_USAGE = LOCALE_FILE.getString("Command.Invalid Usage", INVALID_USAGE);
-            LOCALE_FILE.set("Command.Invalid Usage", INVALID_USAGE);
-
-            INVALID_SUB = LOCALE_FILE.getString("Command.Invalid Sub", INVALID_SUB);
-            LOCALE_FILE.set("Command.Invalid Sub", INVALID_SUB);
-
-            LABEL_OPTIONAL_ARGS = LOCALE_FILE.getString("Command.Label Optional Args", LABEL_OPTIONAL_ARGS);
-            LOCALE_FILE.set("Command.Label Optional Args", LABEL_OPTIONAL_ARGS);
-
-            LABEL_REQUIRED_ARGS = LOCALE_FILE.getString("Command.Label Required Args", LABEL_REQUIRED_ARGS);
-            LOCALE_FILE.set("Command.Label Required Args", LABEL_REQUIRED_ARGS);
+            PLAYER_ONLY = loadMessage("command.player-only", PLAYER_ONLY);
+            NO_PERMISSION = loadMessage("command.no-permission", NO_PERMISSION);
+            INVALID_USAGE = loadMessage("command.invalid-usage", INVALID_USAGE);
+            INVALID_SUB = loadMessage("command.invalid-sub", INVALID_SUB);
+            LABEL_OPTIONAL_ARGS = loadMessage("command.label-optional-args", LABEL_OPTIONAL_ARGS);
+            LABEL_REQUIRED_ARGS = loadMessage("command.label-required-args", LABEL_REQUIRED_ARGS);
         }
     }
 
@@ -174,5 +163,14 @@ public abstract class Locale extends YamlConfig {
      * in our own {@link Locale}
      */
     public abstract void loadLocale();
+
+    /**
+     * Shorthand to update key
+     */
+    private static String loadMessage(String key, String value) {
+        value = LOCALE_FILE.getString(key, value);
+        LOCALE_FILE.set(key, value);
+        return value;
+    }
 
 }

@@ -18,7 +18,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  * all plugins with this library will have. For instance locale, main command etc.
  * Typically used as the "config.yml"
  *
- * This should be implemented by our {@link com.illuzionzstudios.mist.plugin.SpigotPlugin} and
+ * This should be implemented by our {@link SpigotPlugin} and
  * define our own {@link ConfigSetting} specific to the plugin
  */
 public abstract class PluginSettings extends YamlConfig {
@@ -92,7 +92,7 @@ public abstract class PluginSettings extends YamlConfig {
 
         public static void init() {
             // Update to set
-            LOCALE.set(LOCALE.getObject());
+            loadSetting(LOCALE);
         }
     }
 
@@ -123,5 +123,12 @@ public abstract class PluginSettings extends YamlConfig {
      * in our own {@link PluginSettings}
      */
     public abstract void loadSettings();
+
+    /**
+     * Shorthand to update setting
+     */
+    private static void loadSetting(ConfigSetting setting) {
+        setting.set(setting.getObject());
+    }
 
 }
