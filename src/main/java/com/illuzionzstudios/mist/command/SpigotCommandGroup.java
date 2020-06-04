@@ -144,7 +144,9 @@ public abstract class SpigotCommandGroup {
         return new String[] {
                 "&8",
                 "&8" + Mist.Aesthetics.SMOOTH_LINE,
-                getHeaderPrefix() + "  " + SpigotPlugin.getPluginName() + " &7v" + SpigotPlugin.getPluginVersion(),
+                getHeaderPrefix() + "  " + SpigotPlugin.getPluginName() + " &7v" + SpigotPlugin.getPluginVersion()
+                + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
+                        ""),
                 " ",
                 "&2  [] &7= " + Locale.Command.LABEL_OPTIONAL_ARGS,
                 "&6  <> &7= " + Locale.Command.LABEL_REQUIRED_ARGS,
