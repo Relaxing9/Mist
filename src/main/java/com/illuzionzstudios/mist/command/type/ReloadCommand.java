@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist.command.type;
 
 import com.illuzionzstudios.mist.command.SpigotSubCommand;
+import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
 /**
@@ -31,5 +32,8 @@ public class ReloadCommand extends SpigotSubCommand {
 
         // Just call this method to reload
         INSTANCE.reload();
+
+        // Inform
+        tell(Locale.General.PLUGIN_RELOAD);
     }
 }

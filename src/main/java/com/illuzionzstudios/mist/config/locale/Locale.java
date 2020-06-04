@@ -100,8 +100,14 @@ public abstract class Locale extends YamlConfig {
          */
         public static String PLUGIN_PREFIX = "&d&lMist Plugin &8»&7";
 
+        /**
+         * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
+         */
+        public static String PLUGIN_RELOAD = "&7Reloaded the plugin (Configuration files & controllers)";
+
         public static void init() {
-            PLUGIN_PREFIX = loadMessage("command.player-only", PLUGIN_PREFIX);
+            PLUGIN_PREFIX = loadMessage("general.prefix", PLUGIN_PREFIX);
+            PLUGIN_RELOAD = loadMessage("general.reload", PLUGIN_RELOAD);
         }
     }
 
