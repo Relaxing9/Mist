@@ -349,10 +349,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @param command Register a new {@link SpigotCommandGroup}
      */
     protected void registerMainCommand(SpigotCommandGroup command, String... labels) {
-        // Unregister old command
-        if (this.mainCommand != null)
-            this.mainCommand.unregister();
-
         this.mainCommand = command;
         this.mainCommand.register(labels);
     }
