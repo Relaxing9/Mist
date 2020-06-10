@@ -261,7 +261,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * Attempt to reload the plugin
      */
     public final void reload() {
-        Logger.info(" ");
         Logger.info("Reloading plugin " + getPluginName() + " v" + getPluginVersion());
         Logger.info(" ");
 
@@ -287,7 +286,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error reloading plugin");
         } finally {
-            Logger.info(" ");
             reloading = false;
         }
     }
