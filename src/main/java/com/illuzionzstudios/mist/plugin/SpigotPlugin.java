@@ -198,6 +198,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         // Main enabled
         try {
             // Load settings and locale
+            // Try save config if found
+            try {
+                saveResource("config.yml", false);
+            } catch (Exception ignored) {
+            }
             PluginSettings.loadSettings(this, getPluginSettings());
             Locale.loadLocale(this, getPluginLocale());
 
@@ -213,6 +218,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             registerListener(new InterfaceController());
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error enabling plugin");
+
+            // Errors on startup could break the plugin,
+            // so just kill it
+            this.isEnabled = false;
+            setEnabled(false);
         }
     }
 
@@ -263,6 +273,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             listeners.unregister();
 
             // Load settings and locale
+            // Try save config if found
+            try {
+                saveResource("config.yml", false);
+            } catch (Exception ignored) {
+            }
             PluginSettings.loadSettings(this, getPluginSettings());
             Locale.loadLocale(this, getPluginLocale());
 

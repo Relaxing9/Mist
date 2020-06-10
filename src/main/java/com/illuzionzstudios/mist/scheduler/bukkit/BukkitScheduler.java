@@ -51,8 +51,9 @@ public class BukkitScheduler extends MinecraftScheduler {
 
     @Override
     public void stop() {
-        plugin.getServer().getScheduler().cancelTask(SYNC_SCHEDULER);
-        plugin.getServer().getScheduler().cancelTask(ASYNC_SCHEDULER);
+        // Stop invocation
+        stopTask(SYNC_SCHEDULER);
+        stopTask(ASYNC_SCHEDULER);
     }
 
     @Override

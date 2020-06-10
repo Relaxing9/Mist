@@ -86,13 +86,13 @@ public abstract class PluginSettings extends YamlConfig {
          * The locale type to use, for instance
          * "en_US"
          */
-        public static ConfigSetting LOCALE = new ConfigSetting(SETTINGS_FILE, "Settings.Locale", "en_US",
-                "The language file to use for the plugin",
-                "More language files (if available) can be found in the plugins locale folder.");
+        public static ConfigSetting LOCALE;
 
         public static void init() {
             // Update to set
-            loadSetting(LOCALE);
+            LOCALE = new ConfigSetting(SETTINGS_FILE, "Settings.Locale", "en_US",
+                    "The language file to use for the plugin",
+                    "More language files (if available) can be found in the plugins locale folder.");
         }
     }
 
@@ -123,12 +123,5 @@ public abstract class PluginSettings extends YamlConfig {
      * in our own {@link PluginSettings}
      */
     public abstract void loadSettings();
-
-    /**
-     * Shorthand to update setting
-     */
-    private static void loadSetting(ConfigSetting setting) {
-        setting.set(setting.getObject());
-    }
 
 }

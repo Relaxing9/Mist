@@ -189,7 +189,7 @@ public abstract class Locale extends YamlConfig {
     /**
      * Shorthand to update key
      */
-    private static String loadMessage(String key, String value) {
+    protected static String loadMessage(String key, String value) {
         value = LOCALE_FILE.getString(key, value);
         LOCALE_FILE.set(key, value);
         return value;

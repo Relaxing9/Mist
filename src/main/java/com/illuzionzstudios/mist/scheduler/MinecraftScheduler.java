@@ -14,8 +14,8 @@ import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.rate.Async;
 import com.illuzionzstudios.mist.scheduler.rate.Rate;
+import com.illuzionzstudios.mist.scheduler.rate.Sync;
 import com.illuzionzstudios.mist.scheduler.timer.PresetCooldown;
-import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -55,7 +55,7 @@ public abstract class MinecraftScheduler {
      * has undergone. Async ticks are not counted as this will keep track
      * of total application time
      */
-    private static volatile AtomicLong synchronousTicks = new AtomicLong(0);
+    private static final AtomicLong synchronousTicks = new AtomicLong();
 
     /**
      * Instance of the {@link MinecraftScheduler}
@@ -73,6 +73,7 @@ public abstract class MinecraftScheduler {
      * @return The current amount of ticks the application has undergone
      */
     public static long getCurrentTick() {
+        Logger.debug("Ticks: " + synchronousTicks.get());
         return synchronousTicks.get();
     }
 
@@ -189,8 +190,8 @@ public abstract class MinecraftScheduler {
         }
 
         // Increment current ticks passed
-        if (type.equals(Sync.class)) {
-            synchronousTicks.incrementAndGet();
+        if (type.equals(Sync.class) ) {
+            synchronousTicks.getAndIncrement();
         }
     }
 
