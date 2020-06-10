@@ -73,7 +73,6 @@ public abstract class MinecraftScheduler {
      * @return The current amount of ticks the application has undergone
      */
     public static long getCurrentTick() {
-        Logger.debug("Ticks: " + synchronousTicks.get());
         return synchronousTicks.get();
     }
 
