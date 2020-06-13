@@ -132,7 +132,7 @@ public class YamlConfig extends ConfigSection {
      */
     @Getter
     @Setter
-    private boolean loadComments = false;
+    private boolean loadComments = true;
 
     /**
      * Default comment styling applied to nodes that hold a normal value

@@ -166,10 +166,10 @@ public abstract class Locale extends YamlConfig {
      * @param settings The instance of {@link Locale} to load
      */
     public static void loadLocale(SpigotPlugin plugin, Locale settings) {
-        // Load settings loadLocale
-        settings.load();
         // Set instance
         LOCALE_FILE = settings;
+        // Load settings loadLocale
+        settings.load();
 
         // Load common messages
         General.init();

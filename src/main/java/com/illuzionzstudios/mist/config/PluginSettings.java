@@ -106,9 +106,9 @@ public abstract class PluginSettings extends YamlConfig {
      * @param settings The instance of {@link PluginSettings} to load
      */
     public static void loadSettings(SpigotPlugin plugin, PluginSettings settings) {
+        SETTINGS_FILE = settings;
         // Load settings file
         settings.load();
-        SETTINGS_FILE = settings;
 
         // Load all settings
         Settings.init();
