@@ -280,9 +280,15 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             PluginSettings.loadSettings(this, getPluginSettings());
             Locale.loadLocale(this, getPluginLocale());
 
+            // Restart tickers
+            MinecraftScheduler.get().initialize();
             onPluginReload();
 
             onReloadablesStart();
+
+            // Register main events
+            registerListener(this);
+            registerListener(new InterfaceController());
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error reloading plugin");
         } finally {
