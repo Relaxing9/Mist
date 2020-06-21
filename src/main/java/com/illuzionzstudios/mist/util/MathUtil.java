@@ -13,10 +13,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Utility class for mathematical operations.
@@ -230,6 +227,17 @@ public final class MathUtil {
             sum += val;
 
         return formatTwoDigitsD(sum / values.length);
+    }
+
+    /**
+     * Calculate if a given chance as decimal value is passed
+     * out of 100
+     *
+     * @param percent Decimal value chance
+     * @return If the odds were in it's favour
+     */
+    public static boolean chance(double percent) {
+        return Math.max(new Random().nextDouble(), 1) <= percent;
     }
 
     // ----------------------------------------------------------------------------------------------------
