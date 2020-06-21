@@ -195,4 +195,25 @@ public abstract class Locale extends YamlConfig {
         return value;
     }
 
+    /**
+     * Retrieve a message from the locale
+     *
+     * @param key Node key to search for
+     * @return The found message
+     */
+    public static Message getMessage(String key) {
+        return getMessage(key, key);
+    }
+
+    /**
+     * Retrieve a message from the locale
+     *
+     * @param key Node key to search for
+     * @param def The default message to use if not found
+     * @return The found message or default
+     */
+    public static Message getMessage(String key, String def) {
+        return new Message(LOCALE_FILE.getString(key, def));
+    }
+
 }
