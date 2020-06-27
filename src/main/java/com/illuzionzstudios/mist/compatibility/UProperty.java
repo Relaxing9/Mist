@@ -13,7 +13,6 @@ import com.illuzionzstudios.mist.util.TextUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.server.v1_15_R1.MinecraftVersion;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.meta.ItemMeta;
 

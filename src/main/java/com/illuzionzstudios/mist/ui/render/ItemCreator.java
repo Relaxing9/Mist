@@ -19,8 +19,6 @@ import com.illuzionzstudios.mist.util.Valid;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;
-import net.minecraft.server.v1_15_R1.MinecraftVersion;
-import net.minecraft.server.v1_15_R1.Tuple;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
