@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.ui.button.type;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.compatibility.UMaterial;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
@@ -59,7 +59,7 @@ public final class InterfaceButton extends Button {
      * @param name Name for the icon
      * @param lore Lore for the icon
      */
-    public InterfaceButton(final Class<? extends UserInterface> menuClass, final UMaterial material, final String name, final String... lore) {
+    public InterfaceButton(final Class<? extends UserInterface> menuClass, final XMaterial material, final String name, final String... lore) {
         this(null, () -> ReflectionUtil.instantiate(menuClass), ItemCreator.of(material, name, lore).hideTags(true).build().make(), false);
     }
 
@@ -91,7 +91,7 @@ public final class InterfaceButton extends Button {
      * @param name Name for the icon
      * @param lore Lore for the icon
      */
-    public InterfaceButton(final UserInterface menu, final UMaterial material, final String name, final String... lore) {
+    public InterfaceButton(final UserInterface menu, final XMaterial material, final String name, final String... lore) {
         this(menu, ItemCreator.of(material, name, lore));
     }
 

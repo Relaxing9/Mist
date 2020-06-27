@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.ui.render;
 
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.compatibility.UMaterial;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -124,7 +124,7 @@ public final class InterfaceDrawer {
      */
     public void setContent(ItemStack[] newContent) {
         for (int i = 0; i < content.length; i++)
-            content[i] = i < newContent.length ? newContent[i] : new ItemStack(UMaterial.AIR.getMaterial());
+            content[i] = i < newContent.length ? newContent[i] : new ItemStack(XMaterial.AIR.parseMaterial());
     }
 
     /**

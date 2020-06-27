@@ -9,7 +9,7 @@
  */
 package com.illuzionzstudios.mist.ui.button;
 
-import com.illuzionzstudios.mist.compatibility.UMaterial;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
 import lombok.AccessLevel;
@@ -34,7 +34,7 @@ public abstract class Button {
      * The material representing info button, see {@link #makeInfo(String...)}
      */
     @Setter
-    private static UMaterial infoButtonMaterial = UMaterial.NETHER_STAR;
+    private static XMaterial infoButtonMaterial = XMaterial.NETHER_STAR;
 
     /**
      * @return The implemented {@link ButtonListener} to give functionality

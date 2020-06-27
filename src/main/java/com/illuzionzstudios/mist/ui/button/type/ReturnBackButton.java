@@ -9,14 +9,13 @@
  */
 package com.illuzionzstudios.mist.ui.button.type;
 
-import com.illuzionzstudios.mist.compatibility.UMaterial;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
 import lombok.*;
 import org.bukkit.inventory.ItemStack;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public final class ReturnBackButton extends Button {
      */
     @Getter
     @Setter
-    private static UMaterial material = UMaterial.OAK_DOOR;
+    private static XMaterial material = XMaterial.OAK_DOOR;
 
     /**
      * The title of this button

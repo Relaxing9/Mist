@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Wrapper for cross-version for {@link org.bukkit.inventory.ItemFlag}
  */
-public enum UItemFlag {
+public enum XItemFlag {
 
     /**
      * Setting to show/hide enchants

@@ -11,10 +11,9 @@ package com.illuzionzstudios.mist.ui.render;
 
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
-import com.illuzionzstudios.mist.compatibility.UItemFlag;
-import com.illuzionzstudios.mist.compatibility.UMaterial;
-import com.illuzionzstudios.mist.compatibility.UProperty;
-import com.illuzionzstudios.mist.util.TextUtil;
+import com.illuzionzstudios.mist.compatibility.XItemFlag;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
+import com.illuzionzstudios.mist.compatibility.XProperty;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Builder;
 import lombok.NonNull;
@@ -40,9 +39,9 @@ public final class ItemCreator {
     private final ItemStack item;
 
     /**
-     * The {@link UMaterial} of the item
+     * The {@link XMaterial} of the item
      */
-    private final UMaterial material;
+    private final XMaterial material;
 
     /**
      * The amount of items in the stack
@@ -78,7 +77,7 @@ public final class ItemCreator {
      * The item flags
      */
     @Singular
-    private final List<UItemFlag> flags = new ArrayList<>();
+    private final List<XItemFlag> flags = new ArrayList<>();
 
     /**
      * If the {@link ItemStack} has the unbreakable flag
@@ -126,16 +125,16 @@ public final class ItemCreator {
     public ItemStack make() {
 
         // Make sure base item and material are set
-        Valid.checkBoolean((material != null && material.getMaterial() != null) || item != null, "Material or item must be set!");
+        Valid.checkBoolean((material != null && material.parseMaterial() != null) || item != null, "Material or item must be set!");
 
         // Actual item we're building on
-        ItemStack stack = item != null ? item.clone() : new ItemStack(material.getMaterial(), amount);
+        ItemStack stack = item != null ? item.clone() : new ItemStack(material.parseMaterial(), amount);
         final ItemMeta stackMeta = meta != null ? meta.clone() : stack.getItemMeta();
 
         Valid.checkNotNull(stackMeta, "Item metadata was somehow null");
 
         // Skip if trying to build on air
-        if (material == UMaterial.AIR)
+        if (material == XMaterial.AIR)
             return stack;
 
         // Set damage
@@ -157,7 +156,7 @@ public final class ItemCreator {
         if (glow) {
             stackMeta.addEnchant(Enchantment.DURABILITY, 1, true);
 
-            flags.add(UItemFlag.HIDE_ENCHANTS);
+            flags.add(XItemFlag.HIDE_ENCHANTS);
         }
 
         // Enchantments
@@ -181,8 +180,8 @@ public final class ItemCreator {
 
         // Unbreakable
         if (unbreakable) {
-            flags.add(UItemFlag.HIDE_ATTRIBUTES);
-            flags.add(UItemFlag.HIDE_UNBREAKABLE);
+            flags.add(XItemFlag.HIDE_ATTRIBUTES);
+            flags.add(XItemFlag.HIDE_UNBREAKABLE);
 
             if (ServerVersion.olderThan(ServerVersion.V.v1_12)) {
                 try {
@@ -194,13 +193,13 @@ public final class ItemCreator {
                     // Probably 1.7.10, tough luck
                 }
             } else {
-                UProperty.UNBREAKABLE.apply(stackMeta, true);
+                XProperty.UNBREAKABLE.apply(stackMeta, true);
             }
         }
 
         // Hide flags
         if (hideTags) {
-            for (final UItemFlag f : UItemFlag.values()) {
+            for (final XItemFlag f : XItemFlag.values()) {
                 if (!flags.contains(f)) {
                     flags.add(f);
                 }
@@ -208,7 +207,7 @@ public final class ItemCreator {
         }
 
         // Apply flags
-        for (final UItemFlag flag : flags) {
+        for (final XItemFlag flag : flags) {
             try {
                 stackMeta.addItemFlags(ItemFlag.valueOf(flag.toString()));
             } catch (final Throwable ignored) {
@@ -224,19 +223,19 @@ public final class ItemCreator {
     /**
      * Convenience method to get a new item creator with material, name and lore set
      *
-     * @param material The {@link UMaterial} to set
+     * @param material The {@link XMaterial} to set
      * @param name The name of the item
      * @param lore Collection of lore strings
      * @return THe builder with these properties
      */
-    public static ItemCreatorBuilder of(final UMaterial material, final String name, @NonNull final Collection<String> lore) {
+    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final Collection<String> lore) {
         return of(material, name, lore.toArray(new String[lore.size()]));
     }
 
     /**
-     * See {@link #of(UMaterial, String, Collection)}
+     * See {@link #of(XMaterial, String, Collection)}
      */
-    public static ItemCreatorBuilder of(final UMaterial material, final String name, @NonNull final String... lore) {
+    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final String... lore) {
         return ItemCreator.builder().material(material).name("&r" + name).lores(Arrays.asList(lore)).hideTags(true);
     }
 
@@ -246,7 +245,7 @@ public final class ItemCreator {
      * @param mat existing material
      * @return the new item creator
      */
-    public static ItemCreatorBuilder of(final UMaterial mat) {
+    public static ItemCreatorBuilder of(final XMaterial mat) {
         Valid.checkNotNull(mat, "Material cannot be null!");
 
         return ItemCreator.builder().material(mat);

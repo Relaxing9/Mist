@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.lang.reflect.Method;
 
 @RequiredArgsConstructor
-public enum UProperty {
+public enum XProperty {
 
     // ItemMeta
     /**

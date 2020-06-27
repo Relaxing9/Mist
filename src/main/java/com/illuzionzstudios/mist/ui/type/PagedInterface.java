@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.ui.type;
 
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.compatibility.UMaterial;
+import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
@@ -243,7 +243,7 @@ public abstract class PagedInterface<T> extends UserInterface {
                 final int str = currentPage - 1;
 
                 return ItemCreator.of(
-                        canGo ? UMaterial.LIME_DYE : UMaterial.GRAY_DYE)
+                        canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
                         .name(str == 0 ? "&7First Page" : "&8<< &fPage " + str)
                         .build().make();
             }
@@ -270,7 +270,7 @@ public abstract class PagedInterface<T> extends UserInterface {
                 final boolean last = currentPage == pages.size();
 
                 return ItemCreator.of(
-                        canGo ? UMaterial.LIME_DYE : UMaterial.GRAY_DYE)
+                        canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
                         .name(last
                                 ? "&7Last Page"
                                 : "Page " + (currentPage + 1) + " &8>>")
