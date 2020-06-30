@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  * Utility class to deal with {@link org.bukkit.inventory.ItemStack}.
  * This could be parsing the data or dealing with NBT data on the item
  */
-public class ItemStackUtil {
+public final class ItemStackUtil {
 
     /**
      * Serialize a {@link ItemStack} into a string blob
