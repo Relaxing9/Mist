@@ -25,6 +25,8 @@ public class ReloadCommand extends SpigotSubCommand {
 
     public ReloadCommand() {
         super("reload", "rl");
+
+        setDescription("Reload the plugin configurations");
     }
 
     @Override

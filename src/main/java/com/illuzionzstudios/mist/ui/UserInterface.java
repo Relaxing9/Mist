@@ -100,7 +100,7 @@ public abstract class UserInterface {
     /**
      * This is the title to display at the top of the interface
      */
-    private String title = "&7Menu";
+    private String title = "&8Menu";
 
     /**
      * This is the description of the menu that can be displayed
