@@ -17,7 +17,6 @@ import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
 import com.illuzionzstudios.mist.util.MathUtil;
-import com.illuzionzstudios.mist.util.PlayerUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.val;
@@ -27,7 +26,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -327,8 +325,10 @@ public abstract class PagedInterface<T> extends UserInterface {
      *            the clicked item
      * @param click
      *            the click type
+     * @param event
+     *            the click event
      */
-    protected abstract void onPageClick(Player player, T item, ClickType click);
+    protected abstract void onPageClick(Player player, T item, ClickType click, InventoryClickEvent event);
 
     /**
      * Utility: Shall we send update packet when the menu is clicked?
@@ -397,7 +397,7 @@ public abstract class PagedInterface<T> extends UserInterface {
 
             if (obj != null) {
                 final val prevType = player.getOpenInventory().getType();
-                onPageClick(player, obj, click);
+                onPageClick(player, obj, click, event);
 
                 if (updateButtonOnClick()
                         && prevType == player.getOpenInventory().getType())
