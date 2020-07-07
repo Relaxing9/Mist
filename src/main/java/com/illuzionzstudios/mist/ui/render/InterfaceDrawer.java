@@ -112,7 +112,9 @@ public final class InterfaceDrawer {
      * @param item The {@link ItemStack to set}
      */
     public void setItem(int slot, ItemStack item) {
-        content[slot] = item;
+        // Don't set out of bounds
+        if (slot >= 0)
+            content[slot] = item;
     }
 
     /**

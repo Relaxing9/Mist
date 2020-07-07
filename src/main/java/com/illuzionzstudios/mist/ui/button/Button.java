@@ -96,6 +96,17 @@ public abstract class Button {
     }
 
     /**
+     * Easily create a {@link SimpleButton}
+     *
+     * @param creator Creator for item to use
+     * @param listener Listener (usually as lambda)
+     * @return Created button to use
+     */
+    public static SimpleButton of(final ItemCreator creator, final ButtonListener listener) {
+        return new SimpleButton(creator.makeUIItem(), listener);
+    }
+
+    /**
      * Represents a "blank" button. This means it doesn't do anything
      * when clicked but just renders an item stack
      */
@@ -115,6 +126,26 @@ public abstract class Button {
         public ButtonListener getListener() {
             return ButtonListener.ofNull();
         }
+    }
+
+    /**
+     * A simple button that renders an item and does
+     * something when clicked
+     */
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class SimpleButton extends Button {
+
+        /**
+         * The {@link ItemStack} to render
+         */
+        @Getter
+        private final ItemStack item;
+
+        /**
+         * Listener to execute when clicked on
+         */
+        @Getter
+        private final ButtonListener listener;
     }
 
     /**
