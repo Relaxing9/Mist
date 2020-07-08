@@ -74,6 +74,24 @@ public final class TextUtil {
     }
 
     /**
+     * This will turn camelCase into PascalCase.
+     * For instance vanillaRewards becomes Vanilla Rewards
+     *
+     * @param text camelCase text
+     * @return PascalCase text
+     */
+    public static String convertCamelCase(String text) {
+        return formatText(text.replaceAll(
+                String.format("%s|%s|%s",
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ),
+                " "
+        ), true);
+    }
+
+    /**
      * Convert a string to an invisible colored string that's lore-safe <br />
      * (Safe to use as lore) <br />
      * Note: Do not use semi-colons in this string, or they will be lost when decoding!
