@@ -9,7 +9,9 @@
  */
 package com.illuzionzstudios.mist;
 
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -96,6 +98,28 @@ public final class Mist {
     public static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+
+    /**
+     * Sends the conversable a message later
+     *
+     * @param delayTicks
+     * @param conversable
+     * @param message
+     */
+    public static void tellLaterConversing(final Conversable conversable, final String message, final int delayTicks) {
+        MinecraftScheduler.get().synchronize(() -> tellConversing(conversable, message), delayTicks);
+    }
+
+    /**
+     * Sends the conversable player a colorized message
+     *
+     * @param conversable
+     * @param message
+     */
+    public static void tellConversing(final Conversable conversable, final String message) {
+        conversable.sendRawMessage(Mist.colorize(message).trim());
+    }
+
 
     /**
      * Convert {@link Iterable} to {@link List}
