@@ -136,7 +136,7 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
      * @return
      */
     protected ConversationPrefix getPrefix() {
-        return new SimplePrefix(Locale.General.PLUGIN_PREFIX);
+        return new SimplePrefix(Locale.General.PLUGIN_PREFIX + " ");
     }
 
     private final String addLastSpace(final String prefix) {
