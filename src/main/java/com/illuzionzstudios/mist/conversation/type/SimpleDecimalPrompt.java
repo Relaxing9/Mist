@@ -26,7 +26,6 @@ import java.util.function.Consumer;
  * A prompt that only accepts whole or decimal numbers
  */
 @NoArgsConstructor
-@AllArgsConstructor
 public class SimpleDecimalPrompt extends SimplePrompt {
 
     /**
@@ -40,6 +39,17 @@ public class SimpleDecimalPrompt extends SimplePrompt {
      */
     @Setter(value = AccessLevel.PROTECTED)
     private Consumer<Double> successAction;
+
+    public SimpleDecimalPrompt(String question, Consumer<Double> successAction) {
+        this(question, successAction, true);
+    }
+
+    public SimpleDecimalPrompt(String question, Consumer<Double> successAction, final boolean openMenu) {
+        super(openMenu);
+
+        this.question = question;
+        this.successAction = successAction;
+    }
 
     /**
      * The menu question
