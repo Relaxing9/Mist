@@ -22,6 +22,7 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -247,26 +248,25 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
 
                 final String question = currentPrompt.getPromptText(context);
 
-//                try {
-//                    final ExpiringMap<String, Void /*dont have expiring set class*/> askedQuestions = (ExpiringMap<String, Void>) context.getAllSessionData()
-//                            .getOrDefault("Asked_" + promptClass, ExpiringMap.builder().expiration(getTimeout(), TimeUnit.SECONDS).build());
-//
-//                    if (!askedQuestions.containsKey(question)) {
-//                        askedQuestions.put(question, null);
-//
-//                        context.setSessionData("Asked_" + promptClass, askedQuestions);
+                try {
+                    final HashMap<String, Void /*dont have expiring set class*/> askedQuestions = (HashMap<String, Void>) context.getAllSessionData()
+                            .getOrDefault("Asked_" + promptClass, new HashMap<>());
+
+                    if (!askedQuestions.containsKey(question)) {
+                        askedQuestions.put(question, null);
+
+                        context.setSessionData("Asked_" + promptClass, askedQuestions);
                         context.getForWhom().sendRawMessage(prefix.getPrefix(context) + question);
-//                    }
-//                } catch (final NoSuchMethodError ex) {
-//                    // Unfortunatelly old MC version detected
-//                }
+                    }
+                } catch (final NoSuchMethodError ex) {
+                    // Unfortunatelly old MC version detected
+                }
 
                 // Edit 2 - Save last prompt if it is our class
                 if (currentPrompt instanceof SimplePrompt)
                     lastSimplePrompt = ((SimplePrompt) currentPrompt).clone();
 
                 // Edit end
-
                 if (!currentPrompt.blocksForInput(context)) {
                     currentPrompt = currentPrompt.acceptInput(context, null);
                     outputNextPrompt();

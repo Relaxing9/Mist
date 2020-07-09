@@ -18,6 +18,7 @@ import com.illuzionzstudios.mist.util.Valid;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Singular;
+import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -65,7 +66,6 @@ public final class ItemCreator {
      */
     @Singular
     private final List<String> lores;
-
 
     /**
      * The enchants applied for the item mapped by level
@@ -174,7 +174,12 @@ public final class ItemCreator {
         if (lores != null && !lores.isEmpty()) {
             final List<String> coloredLores = new ArrayList<>();
 
-            lores.forEach(line -> coloredLores.add(Mist.colorize("&7" + line)));
+            lores.forEach(line -> {
+                // Colour and split by \n
+                List<String> lines = Arrays.asList(line.split("\\r?\\n"));
+                // Append '&7' before every line instead of ugly purple italics
+                lines.forEach(line2 -> coloredLores.add(Mist.colorize(ChatColor.GRAY + line2)));
+            });
             stackMeta.setLore(coloredLores);
         }
 
