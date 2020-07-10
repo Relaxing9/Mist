@@ -350,10 +350,10 @@ public class YamlConfig extends ConfigSection {
                 return true;
 
             } catch (Exception ex) {
-                Logger.displayError(ex, "Could not load file " + fileName);
+                // Couldn't find internal resource so just don't even load
             }
         } catch (Exception ex) {
-            Logger.displayError(ex, "Could not load file " + fileName);
+            // Couldn't find internal resource so just don't even load
         }
 
         return false;
