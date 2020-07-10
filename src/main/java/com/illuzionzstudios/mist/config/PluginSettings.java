@@ -42,6 +42,11 @@ public abstract class PluginSettings extends YamlConfig {
      */
     public static YamlConfig SETTINGS_FILE;
 
+    @Override
+    public final boolean load() {
+        return loadResourceToServer("", "config.yml");
+    }
+
     //  -------------------------------------------------------------------------
     //  Versioning
     //  -------------------------------------------------------------------------

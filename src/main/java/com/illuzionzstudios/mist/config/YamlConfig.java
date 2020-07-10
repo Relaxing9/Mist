@@ -307,16 +307,19 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
-     * Load a locale file from internal resources. If file doesn't already exist
-     * on the server, we create it.
+     * Loads an internal resource onto the server
+     * For instance file in resources/locales/en_US.lang will be loaded
+     * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
      *
-     * @param locale The locale name, eg "en_US"
+     * @param directory The directory to load from, "" if none
+     * @param fileName File name with extension to load
+     * @return If was found and loaded successfully
      */
-    protected final boolean loadLocale(final String locale) {
-        Objects.requireNonNull(locale, "Must provide a locale to load");
+    protected final boolean loadResourceToServer(final String directory, final String fileName) {
+        Objects.requireNonNull(fileName, "Must provide a file to load");
 
         // Internal path to locale
-        final String internalPath = "locales/" + locale + ".lang";
+        final String internalPath = (directory.trim().equalsIgnoreCase("") ? "" : directory + "/") + fileName;
         // Attempt to find resource
         final InputStream input = FileUtil.getInternalResource(internalPath);
 
@@ -331,11 +334,11 @@ public class YamlConfig extends ConfigSection {
                 // File exists, load that
                 if (existingFile.exists()) {
                     try (
-                    BufferedInputStream existingIn = new BufferedInputStream(new FileInputStream(existingFile));
-                    BufferedReader existingReader = new BufferedReader(new InputStreamReader(existingIn))) {
+                            BufferedInputStream existingIn = new BufferedInputStream(new FileInputStream(existingFile));
+                            BufferedReader existingReader = new BufferedReader(new InputStreamReader(existingIn))) {
                         load(existingReader);
                     } catch (Exception ex) {
-                        Logger.displayError(ex, "Locale " + locale + " exists but couldn't be loaded");
+                        Logger.displayError(ex, "File " + fileName + " exists but couldn't be loaded");
                     }
                 } else {
                     // Load from default
@@ -347,13 +350,23 @@ public class YamlConfig extends ConfigSection {
                 return true;
 
             } catch (Exception ex) {
-                Logger.displayError(ex, "Could not load locale " + locale);
+                Logger.displayError(ex, "Could not load file " + fileName);
             }
         } catch (Exception ex) {
-            Logger.displayError(ex, "Could not load locale " + locale);
+            Logger.displayError(ex, "Could not load file " + fileName);
         }
 
         return false;
+    }
+
+    /**
+     * Load a locale file from internal resources. If file doesn't already exist
+     * on the server, we create it.
+     *
+     * @param locale The locale name, eg "en_US"
+     */
+    protected final boolean loadLocale(final String locale) {
+        return loadResourceToServer("locales", locale + ".lang");
     }
 
     /**

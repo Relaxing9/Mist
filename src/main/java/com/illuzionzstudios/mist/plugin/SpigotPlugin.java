@@ -199,10 +199,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         try {
             // Load settings and locale
             // Try save config if found
-            try {
-                saveResource("config.yml", false);
-            } catch (Exception ignored) {
-            }
             PluginSettings.loadSettings(this, getPluginSettings());
             Locale.loadLocale(this, getPluginLocale());
 
@@ -273,10 +269,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Load settings and locale
             // Try save config if found
-            try {
-                saveResource("config.yml", false);
-            } catch (Exception ignored) {
-            }
             PluginSettings.loadSettings(this, getPluginSettings());
             Locale.loadLocale(this, getPluginLocale());
 
