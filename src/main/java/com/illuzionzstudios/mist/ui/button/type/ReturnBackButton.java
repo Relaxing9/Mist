@@ -68,7 +68,9 @@ public final class ReturnBackButton extends Button {
      */
     @Override
     public ButtonListener getListener() {
-        return ((player, ui, type) -> {
+        return ((player, ui, type, event) -> {
+            // When clicking don't move items
+            event.setCancelled(true);
             if (makeNewInstance)
                 parentInterface.newInstance().show(player);
             else

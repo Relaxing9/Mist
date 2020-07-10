@@ -226,7 +226,7 @@ public abstract class PagedInterface<T> extends UserInterface {
 
             @Override
             public ButtonListener getListener() {
-                return (player, ui, type) -> {
+                return (player, ui, type, event) -> {
                     if (canGo) {
                         currentPage = MathUtil.range(currentPage - 1, 1,
                                 pages.size());
@@ -253,7 +253,7 @@ public abstract class PagedInterface<T> extends UserInterface {
 
             @Override
             public ButtonListener getListener() {
-                return (player, ui, type) -> {
+                return (player, ui, type, event) -> {
                     if (canGo) {
                         currentPage = MathUtil.range(currentPage + 1, 1,
                                 pages.size());

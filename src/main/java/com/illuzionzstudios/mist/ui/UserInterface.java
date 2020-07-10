@@ -688,7 +688,7 @@ public abstract class UserInterface {
                                  final ClickType click, final Button button, final InventoryClickEvent event) {
         // By default cancel moving items
         event.setCancelled(true);
-        button.getListener().onClickInInterface(player, this, click);
+        button.getListener().onClickInInterface(player, this, click, event);
     }
 
     /**

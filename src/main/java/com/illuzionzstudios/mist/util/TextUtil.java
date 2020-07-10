@@ -74,6 +74,30 @@ public final class TextUtil {
     }
 
     /**
+     * Converts list of objects into a string separated by \n char.
+     * Takes the toString() form.
+     * For instance list of objects "one" and "two" becomes
+     * "one \ntwo"
+     *
+     * @param list List to convert
+     * @return As singular string
+     */
+    public static String listToString(List<?> list) {
+        StringBuilder builder = new StringBuilder();
+
+        list.forEach(object -> {
+            builder.append(object.toString());
+
+            // Last element check
+            if (!list.get(list.size() - 1).equals(object)) {
+                builder.append("\n");
+            }
+        });
+
+        return builder.toString();
+    }
+
+    /**
      * This will turn camelCase into PascalCase.
      * For instance vanillaRewards becomes Vanilla Rewards
      *

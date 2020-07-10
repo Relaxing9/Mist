@@ -129,7 +129,7 @@ public final class InterfaceButton extends Button {
 
     @Override
     public ButtonListener getListener() {
-        return ((player, ui, type) -> {
+        return ((player, ui, type, event) -> {
             if (interfaceLateBind != null) {
                 UserInterface menuToOpen;
 

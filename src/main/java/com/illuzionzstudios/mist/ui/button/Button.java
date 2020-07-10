@@ -19,6 +19,7 @@ import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -160,14 +161,15 @@ public abstract class Button {
          * @param player The {@link Player} who clicked
          * @param ui The instance of {@link UserInterface} that was clicked on
          * @param type How the button was clicked on
+         * @param event The click event should we need it
          */
-        void onClickInInterface(Player player, UserInterface ui, ClickType type);
+        void onClickInInterface(Player player, UserInterface ui, ClickType type, InventoryClickEvent event);
 
         /**
          * @return Simply returns a listener without functionality
          */
         static ButtonListener ofNull() {
-            return (i, j, k) -> {};
+            return (i, j, k, e) -> {};
         }
     }
 
