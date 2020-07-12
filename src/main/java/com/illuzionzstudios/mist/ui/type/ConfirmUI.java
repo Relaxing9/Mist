@@ -7,14 +7,15 @@
  * noncommercial uses permitted by copyright law. Any licensing of this software overrides
  * this statement.
  */
-package com.illuzionzstudios.customfishing.reward.ui;
+package com.illuzionzstudios.mist.ui.type;
 
-import com.illuzionzstudios.customfishing.settings.FishingLocale;
 import com.illuzionzstudios.mist.compatibility.XMaterial;
+import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.function.Consumer;
 
 /**
@@ -50,8 +51,8 @@ public class ConfirmUI extends UserInterface {
 
         denyButton = Button.of(ItemCreator.builder()
                 .material(XMaterial.RED_DYE)
-                .name(FishingLocale.getMessage("interface.deny.name").getMessage())
-                .lore(FishingLocale.getMessage("interface.deny.lore").getMessage())
+                .name(Locale.Interface.CONFIRM_CONFIRM_NAME)
+                .lore(Locale.Interface.CONFIRM_CONFIRM_LORE)
                 .glow(true)
                 .build(),
                 (player, ui, clickType, event) -> {
@@ -60,8 +61,8 @@ public class ConfirmUI extends UserInterface {
 
         confirmButton = Button.of(ItemCreator.builder()
                 .material(XMaterial.LIME_DYE)
-                .name(FishingLocale.getMessage("interface.confirm.name").getMessage())
-                .lore(FishingLocale.getMessage("interface.confirm.lore").getMessage())
+                .name(Locale.Interface.CONFIRM_DENY_NAME)
+                .lore(Locale.Interface.CONFIRM_DENY_LORE)
                 .glow(true)
                 .build(),
                 (player, ui, clickType, event) -> {

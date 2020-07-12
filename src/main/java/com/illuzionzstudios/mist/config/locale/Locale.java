@@ -9,7 +9,6 @@
  */
 package com.illuzionzstudios.mist.config.locale;
 
-import com.illuzionzstudios.mist.config.ConfigSetting;
 import com.illuzionzstudios.mist.config.PluginSettings;
 import com.illuzionzstudios.mist.config.YamlConfig;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
@@ -157,6 +156,97 @@ public abstract class Locale extends YamlConfig {
     }
 
     /**
+     * Language dealing with configuration
+     */
+    public static class Config {
+
+        /**
+         * Message sent prompting to enter a value
+         */
+        public static String ENTER_VALUE = "&7Enter a new value to set (Type 'cancel' to cancel)";
+
+        public static void init() {
+            ENTER_VALUE = loadMessage("config.enter-value", ENTER_VALUE);
+        }
+
+    }
+
+    /**
+     * Language dealing with interfaces
+     */
+    public static class Interface {
+
+        /**
+         * Name of the confirm icon in the confirm inventory
+         */
+        public static String CONFIRM_CONFIRM_NAME = "&a&lConfirm";
+
+        /**
+         * Lore of the confirm icon in the confirm inventory
+         */
+        public static String CONFIRM_CONFIRM_LORE = "&7&o(Click to confirm)";
+
+        /**
+         * Name of the deny icon in the confirm inventory
+         */
+        public static String CONFIRM_DENY_NAME = "&c&lDeny";
+
+        /**
+         * Lore of the deny icon in the confirm inventory
+         */
+        public static String CONFIRM_DENY_LORE = "&7&o(Click to deny)";
+
+        /**
+         * Name for an option in the options inventory
+         */
+        public static String OPTIONS_OPTION_NAME = "&d&l{valueName}";
+
+        /**
+         * Lore for an option in the options inventory
+         */
+        public static String OPTIONS_OPTION_LORE = "&7Value: {value}\n&r\n&7{description}\n&r\n&7&o(Left click to edit value)";
+
+        /**
+         * Name for displaying values in the edit list inventory
+         */
+        public static String LIST_VALUES_NAME = "&d&lCurrent Values";
+
+        /**
+         * Name for clearing values in the edit list inventory
+         */
+        public static String LIST_CLEAR_NAME = "&c&lClear Values";
+
+        /**
+         * Lore for clearing values in the edit list inventory
+         */
+        public static String LIST_CLEAR_LORE = "&7&o(Click to clear values)";
+
+        /**
+         * Name for adding values in the edit list inventory
+         */
+        public static String LIST_ADD_NAME = "&a&lAdd value";
+
+        /**
+         * Lore for adding values in the edit list inventory
+         */
+        public static String LIST_ADD_LORE = "&7&o(Click to add a value)";
+
+        public static void init() {
+            CONFIRM_CONFIRM_NAME = loadMessage("interface.confirm.confirm.name", CONFIRM_CONFIRM_NAME);
+            CONFIRM_CONFIRM_LORE = loadMessage("interface.confirm.confirm.lore", CONFIRM_CONFIRM_LORE);
+            CONFIRM_DENY_NAME = loadMessage("interface.confirm.deny.name", CONFIRM_DENY_NAME);
+            CONFIRM_DENY_LORE = loadMessage("interface.confirm.deny.lore", CONFIRM_DENY_LORE);
+            OPTIONS_OPTION_NAME = loadMessage("interface.options.option.name", OPTIONS_OPTION_NAME);
+            OPTIONS_OPTION_LORE = loadMessage("interface.options.option.lore", OPTIONS_OPTION_LORE);
+            LIST_VALUES_NAME = loadMessage("interface.list.values.name", LIST_VALUES_NAME);
+            LIST_CLEAR_NAME = loadMessage("interface.list.clear.name", LIST_CLEAR_NAME);
+            LIST_CLEAR_LORE = loadMessage("interface.list.clear.lore", LIST_CLEAR_LORE);
+            LIST_ADD_NAME = loadMessage("interface.list.add.name", LIST_ADD_NAME);
+            LIST_ADD_LORE = loadMessage("interface.list.add.lore", LIST_ADD_LORE);
+        }
+    }
+
+    /**
      * Load these {@link PluginSettings} into the server, setting values
      * if not there, or loading the values into memory
      *
@@ -174,6 +264,8 @@ public abstract class Locale extends YamlConfig {
         // Load common messages
         General.init();
         Command.init();
+        Config.init();
+        Interface.init();
 
         // Load our other custom settings
         settings.loadLocale();
