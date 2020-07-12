@@ -9,6 +9,8 @@
  */
 package com.illuzionzstudios.mist.config;
 
+import com.illuzionzstudios.mist.compatibility.XMaterial;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,5 +30,13 @@ public @interface Configurable {
      * @return Message in locale with this node
      */
     String description();
+
+    /**
+     * Represents the material for this option should
+     * we need to display in a menu
+     *
+     * @return {@link XMaterial} instance
+     */
+    XMaterial material() default XMaterial.PAPER;
 
 }
