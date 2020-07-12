@@ -337,7 +337,7 @@ public class ConfigureOptionsUI<T> extends UserInterface {
 
             // Finally construct button
             Button button = Button.of(ItemCreator.builder()
-                            .material(XMaterial.PAPER)
+                            .material(f.getAnnotation(Configurable.class).material())
                             .name(new Message(Locale.Interface.OPTIONS_OPTION_NAME)
                                     .processPlaceholder("valueName", TextUtil.convertCamelCase(f.getName())).getMessage())
                             .lore(new Message(Locale.Interface.OPTIONS_OPTION_LORE)
