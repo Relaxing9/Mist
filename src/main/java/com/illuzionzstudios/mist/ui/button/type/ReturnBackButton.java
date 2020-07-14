@@ -9,7 +9,7 @@
  */
 package com.illuzionzstudios.mist.ui.button.type;
 
-import com.illuzionzstudios.mist.compatibility.XMaterial;
+import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;

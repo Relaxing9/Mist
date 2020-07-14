@@ -9,8 +9,8 @@
  */
 package com.illuzionzstudios.mist.ui.type;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;

@@ -9,11 +9,10 @@
  */
 package com.illuzionzstudios.mist.conversation;
 
+import com.cryptomorin.xseries.XSound;
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.compatibility.XSound;
 import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
-import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
@@ -21,9 +20,7 @@ import lombok.Getter;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple way to communicate with the player

@@ -9,7 +9,7 @@
  */
 package com.illuzionzstudios.mist.ui.type;
 
-import com.illuzionzstudios.mist.compatibility.XMaterial;
+import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;

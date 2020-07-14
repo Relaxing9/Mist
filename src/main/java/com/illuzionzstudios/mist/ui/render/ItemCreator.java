@@ -9,10 +9,10 @@
  */
 package com.illuzionzstudios.mist.ui.render;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.compatibility.XItemFlag;
-import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.compatibility.XProperty;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Builder;

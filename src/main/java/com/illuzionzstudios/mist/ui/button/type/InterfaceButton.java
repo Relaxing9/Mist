@@ -9,8 +9,8 @@
  */
 package com.illuzionzstudios.mist.ui.button.type;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.compatibility.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
@@ -19,7 +19,6 @@ import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
-import java.awt.*;
 import java.util.concurrent.Callable;
 
 /**
