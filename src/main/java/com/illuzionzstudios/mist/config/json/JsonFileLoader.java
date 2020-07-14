@@ -38,19 +38,7 @@ public class JsonFileLoader {
      * @param fileName The file name without .json
      */
     public JsonFileLoader(String directory, String fileName) {
-        JsonObject tempObject;
-
-        file = new File(SpigotPlugin.getInstance().getDataFolder() + "/" + directory, fileName + ".json");
-
-        // Try assign JSON file
-        try {
-            tempObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException e) {
-            // If couldn't load, it becomes a new object
-            tempObject = new JsonObject();
-        }
-
-        json = tempObject;
+        this(new File(SpigotPlugin.getInstance().getDataFolder() + "/" + directory, fileName + ".json"));
     }
 
     /**
