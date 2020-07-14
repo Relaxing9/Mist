@@ -9,14 +9,12 @@
  */
 package com.illuzionzstudios.mist.config.json;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * Simply used to load a {@link com.google.gson.JsonObject} from a {@link java.io.File}
@@ -53,6 +51,51 @@ public class JsonFileLoader {
         }
 
         json = tempObject;
+    }
+
+    /**
+     * @param file File to load from
+     */
+    public JsonFileLoader(File file) {
+        this.file = file;
+        JsonObject tempObject;
+
+        // Try assign JSON file
+        try {
+            tempObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            // If couldn't load, it becomes a new object
+            tempObject = new JsonObject();
+        }
+
+        json = tempObject;
+    }
+
+    /**
+     * Used to save our {@link JsonObject} to disk
+     * at {@link #file}
+     *
+     * @return If was saved successfully
+     */
+    public boolean save() {
+        try {
+            FileWriter writer = new FileWriter(file);
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+            JsonParser jp = new JsonParser();
+            JsonElement je = jp.parse(json.toString());
+            String prettyJsonString = gson.toJson(je);
+
+            writer.write(prettyJsonString);
+
+            writer.flush();
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            Logger.displayError(e, "Could not save reward to disk: " + file.getName());
+        }
+
+        return false;
     }
 
     /**
