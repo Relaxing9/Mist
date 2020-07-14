@@ -34,6 +34,12 @@ public class JsonFileLoader {
     protected final File file;
 
     /**
+     * Name of the file without extensions
+     */
+    @Getter
+    protected final String name;
+
+    /**
      * @param directory The directory from plugin folder
      * @param fileName The file name without .json
      */
@@ -57,6 +63,8 @@ public class JsonFileLoader {
         }
 
         json = tempObject;
+        // Get name without extension
+        this.name = file.getName().split("\\.")[0];
     }
 
     /**
