@@ -237,7 +237,7 @@ public final class MathUtil {
      * @return If the odds were in it's favour
      */
     public static boolean chance(double percent) {
-        return Math.max(new Random().nextInt(100), 100) <= percent;
+        return new Random().nextInt(100) <= percent;
     }
 
     // ----------------------------------------------------------------------------------------------------
