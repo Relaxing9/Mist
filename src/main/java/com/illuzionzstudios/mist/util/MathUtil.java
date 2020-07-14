@@ -233,11 +233,11 @@ public final class MathUtil {
      * Calculate if a given chance as decimal value is passed
      * out of 100
      *
-     * @param percent Decimal value chance
+     * @param percent Chance as whole number to 100
      * @return If the odds were in it's favour
      */
     public static boolean chance(double percent) {
-        return Math.max(new Random().nextDouble(), 1) <= percent;
+        return Math.max(new Random().nextInt(100), 100) <= percent;
     }
 
     // ----------------------------------------------------------------------------------------------------
