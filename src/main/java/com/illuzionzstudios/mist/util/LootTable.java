@@ -19,11 +19,6 @@ import java.util.Random;
 public class LootTable<T> {
 
     /**
-     * Random instance for chances
-     */
-    private Random random = new Random();
-
-    /**
      * Stored rewards in our table
      */
     private List<Pair<T, Double>> lootTable = new LinkedList<>();
@@ -49,6 +44,7 @@ public class LootTable<T> {
      */
     public T pick() {
         double currentItemUpperBound = 0;
+        Random random = new Random();
 
         double nextValue = (totalWeight - 0) * random.nextDouble();
         for (Pair<T, Double> itemAndWeight : lootTable) {
