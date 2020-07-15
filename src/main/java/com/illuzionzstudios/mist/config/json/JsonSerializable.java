@@ -17,7 +17,7 @@ import java.io.Serializable;
  * Define an object that can be serialized into a
  * {@link com.google.gson.JsonObject} and de-serialized from
  */
-public interface JsonSerializable<T> extends Serializable {
+public interface JsonSerializable extends Serializable {
 
     /**
      * @return Object turned into a {@link JsonObject}
