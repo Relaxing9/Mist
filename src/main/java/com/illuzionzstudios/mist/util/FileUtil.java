@@ -13,6 +13,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
@@ -51,6 +52,19 @@ public final class FileUtil {
             }
 
         return is;
+    }
+
+    /**
+     * Recursively delete a directory and all contents
+     *
+     * @param dir File path to directory
+     */
+    private void purgeDirectory(File dir) {
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory())
+                purgeDirectory(file);
+            file.delete();
+        }
     }
 
 }
