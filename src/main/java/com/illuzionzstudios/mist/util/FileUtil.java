@@ -59,7 +59,7 @@ public final class FileUtil {
      *
      * @param dir File path to directory
      */
-    private void purgeDirectory(File dir) {
+    public static void purgeDirectory(File dir) {
         for (File file : dir.listFiles()) {
             if (file.isDirectory())
                 purgeDirectory(file);
