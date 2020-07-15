@@ -68,6 +68,24 @@ public class JsonFileLoader {
     }
 
     /**
+     * Serialize a {@link JsonSerializable} object
+     * See {@link #serialize(JsonObject)}
+     */
+    public boolean serialize(JsonSerializable<?> object) {
+        return serialize(object.serialize());
+    }
+
+    /**
+     * Serialize a {@link JsonObject} to this file
+     *
+     * @param object {@link JsonObject to serialize}
+     */
+    public boolean serialize(JsonObject object) {
+        this.json = object;
+        return save();
+    }
+
+    /**
      * Used to save our {@link JsonObject} to disk
      * at {@link #file}
      *
