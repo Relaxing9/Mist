@@ -106,7 +106,7 @@ public class JsonFileLoader {
             writer.close();
             return true;
         } catch (IOException e) {
-            Logger.displayError(e, "Could not save reward to disk: " + file.getName());
+            Logger.displayError(e, "Could not save file to disk: " + file.getName());
         }
 
         return false;
