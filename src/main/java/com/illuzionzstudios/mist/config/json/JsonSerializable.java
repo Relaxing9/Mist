@@ -25,8 +25,10 @@ public interface JsonSerializable<T> extends Serializable {
     JsonObject serialize();
 
     /**
+     * Implemented statically
+     *
      * @return T from a {@link JsonObject}. Usually from {@link #serialize()}
      */
-    T deserialize(JsonObject json);
+//    T deserialize(JsonObject json);
 
 }

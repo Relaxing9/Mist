@@ -22,22 +22,40 @@ import java.util.List;
 public class JsonDirectoryLoader {
 
     /**
+     * The directory that is being loaded
+     */
+    @Getter
+    public final String directory;
+
+    /**
      * All file loaders for .json files in directory
      */
     @Getter
     private final List<JsonFileLoader> loaders;
 
     /**
+     * Whether directory trying to load from existed or not
+     * and had to create it
+     */
+    private boolean hadToCreateDirectory = false;
+
+    /**
      * @param directory to load from
      */
     public JsonDirectoryLoader(String directory) {
+        this.directory = directory;
         loaders = new ArrayList<>();
 
         // Reward directory
         File dir = new File(SpigotPlugin.getInstance().getDataFolder().getPath() + File.separator + directory);
 
         // Ensure exists
-        if (dir.listFiles() == null || !dir.exists()) return;
+        if (dir.listFiles() == null || !dir.exists()) {
+            // Can't create directory, FATAL
+            if (!dir.mkdirs()) return;
+
+            hadToCreateDirectory = true;
+        }
 
         // Go through files
         for (File file : dir.listFiles()) {
@@ -49,6 +67,13 @@ public class JsonDirectoryLoader {
                 // Add to cache
                 loaders.add(new JsonFileLoader(name, directory));
         }
+    }
+
+    /**
+     * @return {@link #hadToCreateDirectory}
+     */
+    public boolean hadToCreateDirectory() {
+        return hadToCreateDirectory;
     }
 
 }
