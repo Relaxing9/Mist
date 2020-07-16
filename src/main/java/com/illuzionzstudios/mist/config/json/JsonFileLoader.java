@@ -71,7 +71,7 @@ public class JsonFileLoader {
      * Serialize a {@link JsonSerializable} object
      * See {@link #serialize(JsonObject)}
      */
-    public boolean serialize(JsonSerializable<?> object) {
+    public boolean serialize(JsonSerializable object) {
         return serialize(object.serialize());
     }
 
