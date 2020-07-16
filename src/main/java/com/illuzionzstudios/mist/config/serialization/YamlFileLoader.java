@@ -10,11 +10,12 @@
 package com.illuzionzstudios.mist.config.serialization;
 
 import com.google.gson.*;
+import com.illuzionzstudios.mist.config.ConfigSection;
 import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.*;
 
-public class YamlFileLoader extends FileLoader<YamlConfig> {
+public class YamlFileLoader extends FileLoader<ConfigSection> {
 
     /**
      * @param directory The directory from plugin folder
@@ -31,13 +32,15 @@ public class YamlFileLoader extends FileLoader<YamlConfig> {
      * @return If was saved successfully
      */
     public boolean save() {
-        if (file.exists()) object.load();
-        return object.save();
+        YamlConfig config = new YamlConfig(file);
+        if (file.exists()) config.load();
+        return config.save();
     }
 
     @Override
-    public YamlConfig loadObject(File file) {
-        return new YamlConfig(file);
+    public ConfigSection loadObject(File file) {
+        YamlConfig config = new YamlConfig(file);
+        return config.getRoot();
     }
 
     /**
@@ -47,7 +50,7 @@ public class YamlFileLoader extends FileLoader<YamlConfig> {
      * @param fileName The file name without .json
      * @return Found JsonObject or a new {@link JsonObject}
      */
-    public static YamlConfig of(String directory, String fileName) {
+    public static ConfigSection of(String directory, String fileName) {
         return new YamlFileLoader(directory, fileName).getObject();
     }
 
