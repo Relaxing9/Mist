@@ -67,4 +67,21 @@ public class RandomNumberGenerator {
         return (random.nextInt(((int) upper - (int) lower) + 1) + lower) + precision;
     }
 
+    /**
+     * Parse a string into a {@link RandomNumberGenerator}.
+     * Syntax is "{lower}-{upper}". If just one number is provided, it is used
+     * as the upper bound with lower being 1.
+     *
+     * @param string String as "{lower}-{upper}"
+     * @return {@link RandomNumberGenerator} with those bounds
+     */
+    public static RandomNumberGenerator parse(String string) {
+        // Create tokens
+        String[] tokens = string.split("-");
+
+        // Else use first element as upper
+        return tokens[1] != null ? new RandomNumberGenerator(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]))
+                : new RandomNumberGenerator(1, Double.parseDouble(tokens[0]));
+    }
+
 }
