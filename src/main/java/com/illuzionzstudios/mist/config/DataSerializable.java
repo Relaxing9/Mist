@@ -7,7 +7,7 @@
  * noncommercial uses permitted by copyright law. Any licensing of this software overrides
  * this statement.
  */
-package com.illuzionzstudios.mist.config.json;
+package com.illuzionzstudios.mist.config;
 
 import com.google.gson.JsonObject;
 
@@ -15,19 +15,19 @@ import java.io.Serializable;
 
 /**
  * Define an object that can be serialized into a
- * {@link com.google.gson.JsonObject} and de-serialized from
+ * {@param T} and de-serialized from
  */
-public interface JsonSerializable extends Serializable {
+public interface DataSerializable<T> {
 
     /**
-     * @return Object turned into a {@link JsonObject}
+     * @return Object turned into a {@param T}
      */
-    JsonObject serialize();
+    T serialize();
 
     /**
      * Implemented statically
      *
-     * @return T from a {@link JsonObject}. Usually from {@link #serialize()}
+     * @return T from a {@param T}. Usually from {@link #serialize()}
      */
 //    T deserialize(JsonObject json);
 

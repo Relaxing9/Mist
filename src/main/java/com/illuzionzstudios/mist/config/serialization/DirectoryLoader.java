@@ -7,19 +7,28 @@
  * noncommercial uses permitted by copyright law. Any licensing of this software overrides
  * this statement.
  */
-package com.illuzionzstudios.mist.config.json;
+package com.illuzionzstudios.mist.config.serialization;
 
+import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.config.serialization.JsonFileLoader;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Loads all .json files from a directory
+ * Loads all files from a directory
+ * @param <T> The type of file to load
  */
-public class JsonDirectoryLoader {
+public class DirectoryLoader<T extends FileLoader<?>> {
+
+    /**
+     * Instance of our class for creating objects
+     */
+    private final Class<T> clazz;
 
     /**
      * The directory that is being loaded
@@ -31,7 +40,7 @@ public class JsonDirectoryLoader {
      * All file loaders for .json files in directory
      */
     @Getter
-    private final List<JsonFileLoader> loaders;
+    private final List<T> loaders;
 
     /**
      * Whether directory trying to load from existed or not
@@ -41,8 +50,10 @@ public class JsonDirectoryLoader {
 
     /**
      * @param directory to load from
+     * @param clazz The class for the file loader
      */
-    public JsonDirectoryLoader(String directory) {
+    public DirectoryLoader(Class<T> clazz, String directory) {
+        this.clazz = clazz;
         this.directory = directory;
         loaders = new ArrayList<>();
 
@@ -62,10 +73,17 @@ public class JsonDirectoryLoader {
             // Get name without extension
             String name = file.getName().split("\\.")[0];
 
-            // Only load .json files
-            if (file.getName().split("\\.")[1].equalsIgnoreCase("json"))
-                // Add to cache
-                loaders.add(new JsonFileLoader(name, directory));
+            try {
+                T loader = clazz.getConstructor(String.class, String.class).newInstance(name, directory);
+
+                // Specific files
+                if (file.getName().split("\\.")[1].equalsIgnoreCase(loader.getExtension()))
+                    // Add to cache
+                    loaders.add(loader);
+            } catch (Exception e) {
+                Logger.displayError(e, "Could not not load file " + file.getName());
+            }
+
         }
     }
 

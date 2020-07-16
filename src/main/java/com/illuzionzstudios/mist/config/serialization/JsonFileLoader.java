@@ -7,83 +7,26 @@
  * noncommercial uses permitted by copyright law. Any licensing of this software overrides
  * this statement.
  */
-package com.illuzionzstudios.mist.config.json;
+package com.illuzionzstudios.mist.config.serialization;
 
 import com.google.gson.*;
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.plugin.SpigotPlugin;
-import lombok.Getter;
 
 import java.io.*;
 
 /**
  * Simply used to load a {@link com.google.gson.JsonObject} from a {@link java.io.File}
  */
-public class JsonFileLoader {
-
-    /**
-     * Our JSON object to get properties from
-     */
-    @Getter
-    protected JsonObject json;
-
-    /**
-     * File location for template on disk
-     */
-    @Getter
-    protected final File file;
-
-    /**
-     * Name of the file without extensions
-     */
-    @Getter
-    protected final String name;
+public class JsonFileLoader extends FileLoader<JsonObject> {
 
     /**
      * @param directory The directory from plugin folder
      * @param fileName The file name without .json
      */
     public JsonFileLoader(String directory, String fileName) {
-        this(new File(SpigotPlugin.getInstance().getDataFolder() + "/" + directory, fileName + ".json"));
+        super(directory, fileName, "json");
     }
 
-    /**
-     * @param file File to load from
-     */
-    public JsonFileLoader(File file) {
-        this.file = file;
-        JsonObject tempObject;
-
-        // Try assign JSON file
-        try {
-            tempObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException e) {
-            // If couldn't load, it becomes a new object
-            tempObject = new JsonObject();
-        }
-
-        json = tempObject;
-        // Get name without extension
-        this.name = file.getName().split("\\.")[0];
-    }
-
-    /**
-     * Serialize a {@link JsonSerializable} object
-     * See {@link #serialize(JsonObject)}
-     */
-    public boolean serialize(JsonSerializable object) {
-        return serialize(object.serialize());
-    }
-
-    /**
-     * Serialize a {@link JsonObject} to this file
-     *
-     * @param object {@link JsonObject to serialize}
-     */
-    public boolean serialize(JsonObject object) {
-        this.json = object;
-        return save();
-    }
 
     /**
      * Used to save our {@link JsonObject} to disk
@@ -91,13 +34,14 @@ public class JsonFileLoader {
      *
      * @return If was saved successfully
      */
+    @Override
     public boolean save() {
         try {
             FileWriter writer = new FileWriter(file);
 
             Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             JsonParser jp = new JsonParser();
-            JsonElement je = jp.parse(json.toString());
+            JsonElement je = jp.parse(object.toString());
             String prettyJsonString = gson.toJson(je);
 
             writer.write(prettyJsonString);
@@ -112,6 +56,21 @@ public class JsonFileLoader {
         return false;
     }
 
+    @Override
+    public JsonObject loadObject(File file) {
+        JsonObject tempObject;
+
+        // Try assign JSON file
+        try {
+            tempObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            // If couldn't load, it becomes a new object
+            tempObject = new JsonObject();
+        }
+
+        return tempObject;
+    }
+
     /**
      * Shorthand way to get {@link JsonObject} from a file
      *
@@ -120,7 +79,7 @@ public class JsonFileLoader {
      * @return Found JsonObject or a new {@link JsonObject}
      */
     public static JsonObject of(String directory, String fileName) {
-        return new JsonFileLoader(directory, fileName).getJson();
+        return new JsonFileLoader(directory, fileName).getObject();
     }
 
 }
