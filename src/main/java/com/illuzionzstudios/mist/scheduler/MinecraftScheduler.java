@@ -142,8 +142,7 @@ public abstract class MinecraftScheduler {
                         try {
                             method.invoke(service.source);
                         } catch (Exception e) {
-                            Logger.severe("Interrupted synchronization invocation: ");
-                            e.printStackTrace();
+                            Logger.displayError(e, "Error in internal plugin scheduler");
                         }
 
                         // Took too long
