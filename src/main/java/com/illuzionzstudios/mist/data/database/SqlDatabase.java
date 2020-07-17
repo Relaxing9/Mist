@@ -10,16 +10,16 @@
 package com.illuzionzstudios.mist.data.database;
 
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.data.controller.BukkitPlayerController;
 import com.illuzionzstudios.mist.data.player.AbstractPlayer;
 import com.illuzionzstudios.mist.data.player.OfflinePlayer;
+import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
+import com.illuzionzstudios.mist.util.UUIDFetcher;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -58,23 +58,113 @@ public class SqlDatabase implements Database {
      */
     private final String password;
 
+    /**
+     * Table to store our player data
+     */
+    private final String tableName = SpigotPlugin.getPluginName() + "Data";
+
     @Override
     public HashMap<String, Object> getFields(AbstractPlayer player) {
-        return null;
+        HashMap<String, Object> data = new HashMap<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE uuid = ?");
+
+            statement.setString(1, player.getUUID().toString());
+            ResultSet set = statement.executeQuery();
+            ResultSetMetaData meta = set.getMetaData();
+            set.next();
+
+            int columnIndex = 0;
+            while (true) {
+                try {
+                    columnIndex++;
+                    // Get field value
+                    String queryingField = meta.getColumnName(columnIndex);
+                    data.put(queryingField, set.getObject(queryingField));
+                } catch (Exception ex) {
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.displayError(ex, "Error preforming SQL operation");
+        }
+
+        return data;
     }
 
     @Override
     public Object getFieldValue(AbstractPlayer player, String queryingField) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT ? FROM " + tableName + " WHERE uuid = ?");
+
+            statement.setString(1, queryingField);
+            statement.setString(2, player.getUUID().toString());
+            ResultSet set = statement.executeQuery();
+
+            set.next();
+            return set.getObject(queryingField);
+        } catch (Exception ex) {
+            Logger.displayError(ex, "Error preforming SQL operation");
+        }
         return null;
     }
 
     @Override
     public void setFieldValue(AbstractPlayer player, String queryingField, Object value) {
+        try {
+            // Try create column if doesn't exist
+            PreparedStatement createColumn = connection.prepareStatement("IF COL_LENGTH(?, ?) IS NULL" +
+                    " BEGIN" +
+                    " ALTER TABLE " + tableName +
+                    " ADD ? varchar(255)" +
+                    " END");
+            createColumn.setString(1, tableName);
+            createColumn.setString(2, queryingField);
+            createColumn.setString(3, queryingField);
 
+            // Attempt to set value
+            PreparedStatement statement = connection.prepareStatement("IF EXISTS (SELECT * FROM " + tableName + " WHERE uuid = ?)" +
+                    " BEGIN" +
+                    " UPDATE " + tableName + " SET ? = ? WHERE uuid = ?" +
+                    " END" +
+                    " ELSE" +
+                    " BEGIN" +
+                    " INSERT INTO " + tableName + " (uuid, ?) VALUES (?, ?)" +
+                    " END");
+
+            statement.setString(1, player.getUUID().toString());
+            statement.setString(2, queryingField);
+            statement.setObject(3, value);
+            statement.setString(4, player.getUUID().toString());
+            statement.setString(5, queryingField);
+            statement.setString(6, player.getUUID().toString());
+            statement.setObject(7, value);
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            Logger.displayError(ex, "Error preforming SQL operation");
+        }
     }
 
     @Override
     public List<OfflinePlayer> getSavedPlayers() {
+        try {
+            List<OfflinePlayer> players = new ArrayList<>();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + tableName);
+            ResultSet set = statement.executeQuery();
+
+            // Go through and construct from ids
+            while (set.next()) {
+                String uuidString = set.getString("uuid");
+                OfflinePlayer player = BukkitPlayerController.INSTANCE.getOfflinePlayer(UUID.fromString(uuidString), UUIDFetcher.getName(UUID.fromString(uuidString)));
+                players.add(player);
+            }
+
+            return players;
+        } catch (Exception ex) {
+            Logger.displayError(ex, "Error preforming SQL operation");
+        }
+
         return null;
     }
 
@@ -101,6 +191,20 @@ public class SqlDatabase implements Database {
             } catch (Exception ex) {
                 Logger.displayError(ex, "Couldn't connect to database");
                 status.set(false);
+            }
+        }, 0);
+
+        // Try create data table if doesn't exist
+        MinecraftScheduler.get().desynchronize(() -> {
+            if (isAlive()) {
+                try {
+                    PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `" + tableName + "` (" +
+                            " `uuid` varchar(255) NOT NULL," +
+                            "PRIMARY KEY  (`uuid`))");
+                    statement.executeUpdate();
+                } catch (Exception ex) {
+                    Logger.displayError(ex, "Error preforming SQL operation");
+                }
             }
         }, 0);
 

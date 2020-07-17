@@ -66,7 +66,7 @@ public abstract class AbstractPlayer {
     /**
      * If the player data has been loaded into the cache
      */
-    private AtomicBoolean loaded = new AtomicBoolean(false);
+    private final AtomicBoolean loaded = new AtomicBoolean(false);
 
     public AbstractPlayer(UUID uuid, String name) {
         this.uuid = uuid;
@@ -188,9 +188,7 @@ public abstract class AbstractPlayer {
      */
     public void clearAllData() {
         // Clear loaded/cached data
-        this.cachedData.forEach((key, data) -> {
-            PlayerDataController.get().getDatabase().setFieldValue(this, key, null);
-        });
+        this.cachedData.forEach((key, data) -> PlayerDataController.get().getDatabase().setFieldValue(this, key, null));
 
         // Now clear cached data as not to save it
         this.cachedData.clear();
