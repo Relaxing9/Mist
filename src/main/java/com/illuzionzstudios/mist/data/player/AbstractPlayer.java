@@ -129,12 +129,15 @@ public abstract class AbstractPlayer {
 
         // Loading stored data into cache
         // Simply insert into cached data
-        PlayerDataController.get().getDatabase().getFields(this).forEach(this.cachedData::put);
+        MinecraftScheduler.get().desynchronize(() -> {
+            // Async fetch data
+            PlayerDataController.get().getDatabase().getFields(this).forEach(this.cachedData::put);
 
-        // If stored data is empty, try upload cached data first
-        if (PlayerDataController.get().getDatabase().getFields(this).isEmpty()) {
-            upload();
-        }
+            // If stored data is empty, try upload cached data first
+            if (PlayerDataController.get().getDatabase().getFields(this).isEmpty()) {
+                upload();
+            }
+        }, 0);
 
         this.loaded.set(true);
         PlayerDataController.get().applyDefaultData(this);

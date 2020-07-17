@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Database stored in flat files
  */
-public class YAMLDatabase implements Database {
+public class YamlDatabase implements Database {
 
     @Override
     public HashMap<String, Object> getFields(AbstractPlayer player) {
