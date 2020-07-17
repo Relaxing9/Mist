@@ -15,6 +15,10 @@ import com.illuzionzstudios.mist.command.SpigotCommand;
 import com.illuzionzstudios.mist.command.SpigotCommandGroup;
 import com.illuzionzstudios.mist.config.PluginSettings;
 import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.data.controller.BukkitPlayerController;
+import com.illuzionzstudios.mist.data.controller.PlayerDataController;
+import com.illuzionzstudios.mist.data.database.Database;
+import com.illuzionzstudios.mist.data.player.BukkitPlayer;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import com.illuzionzstudios.mist.ui.InterfaceController;
@@ -127,6 +131,16 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     protected SpigotCommandGroup mainCommand;
 
     //  -------------------------------------------------------------------------
+    //  Player data - Only loaded if we choose to use player data
+    //  -------------------------------------------------------------------------
+
+    /**
+     * Our player controller for our player data objects
+     * Also used as a flag if we want to use player data
+     */
+    protected BukkitPlayerController<SpigotPlugin, ?> playerController;
+
+    //  -------------------------------------------------------------------------
     //  Plugin loading methods
     //  -------------------------------------------------------------------------
 
@@ -212,6 +226,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             // Register main events
             registerListener(this);
             registerListener(new InterfaceController());
+
+            // Connect to database and allow player data
+            if (playerController != null) {
+                playerController.initialize(this);
+            }
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error enabling plugin");
 
@@ -248,6 +267,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             Logger.displayError(t, "Error closing menu inventories for players..");
 
             t.printStackTrace();
+        }
+
+        // Try save all player data
+        if (playerController != null) {
+            playerController.stop(this);
         }
 
         Objects.requireNonNull(INSTANCE, "Plugin " + getName() + " has already been shutdown!");
@@ -326,6 +350,22 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     public String[] getStartupLogo() {
         return null;
+    }
+
+    /**
+     * Opt in to using custom player data.
+     *
+     * This is optional because we don't to load and save
+     * data if we don't need it
+     *
+     * @param playerClass The class for our custom player data
+     * @param database The type of database to use to save data
+     * @param playerController Our custom player controller for operations
+     */
+    protected void initializePlayerData(Class<? extends BukkitPlayer> playerClass, Database database, BukkitPlayerController<SpigotPlugin, ?> playerController) {
+        this.playerController = playerController;
+
+        new PlayerDataController<>().initialize(playerClass, database);
     }
 
     //  -------------------------------------------------------------------------

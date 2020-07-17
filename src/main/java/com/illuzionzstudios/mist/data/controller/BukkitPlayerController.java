@@ -24,6 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -131,8 +132,6 @@ public abstract class BukkitPlayerController<P extends SpigotPlugin, BP extends 
             return;
         }
 
-//        Logger.info("%s is logging into the server", event.getName());
-
         BP player = this.handleLogin(event.getUniqueId(), event.getName());
     }
 
@@ -140,14 +139,10 @@ public abstract class BukkitPlayerController<P extends SpigotPlugin, BP extends 
      * As a player logs in
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public final void onPlayerLogin(org.bukkit.event.player.PlayerLoginEvent event) {
+    public final void onPlayerLogin(PlayerLoginEvent event) {
         BP player = getPlayer(event.getPlayer());
 
-        if (org.bukkit.event.player.PlayerLoginEvent.Result.KICK_FULL.equals(event.getResult())) {
-            event.allow();
-        }
-
-        if (event.getResult() != org.bukkit.event.player.PlayerLoginEvent.Result.ALLOWED) {
+        if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
             if (player != null) {
                 handleLogout(player);
             }

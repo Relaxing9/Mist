@@ -167,7 +167,6 @@ public abstract class AbstractPlayerController<P extends AbstractPlayer> {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-//            Logger.info("%s has sucessfully been logged out.", player.getName());
             MinecraftScheduler.get().dismissSynchronizationService(player);
             players.remove(player);
         }
