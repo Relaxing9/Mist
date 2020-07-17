@@ -187,7 +187,7 @@ public class ConfigSection extends MemoryConfiguration {
      */
     protected void onChange() {
         // Also call change on main root section
-        if (root != null) {
+        if (root != null && root != this) {
             root.onChange();
         }
     }

@@ -15,7 +15,7 @@ import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.*;
 
-public class YamlFileLoader extends FileLoader<ConfigSection> {
+public class YamlFileLoader extends FileLoader<YamlConfig> {
 
     /**
      * @param directory The directory from plugin folder
@@ -32,15 +32,16 @@ public class YamlFileLoader extends FileLoader<ConfigSection> {
      * @return If was saved successfully
      */
     public boolean save() {
-        YamlConfig config = new YamlConfig(file);
-        if (file.exists()) config.load();
-        return config.save();
+        object.load();
+        return object.saveChanges();
     }
 
     @Override
-    public ConfigSection loadObject(File file) {
+    public YamlConfig loadObject() {
         YamlConfig config = new YamlConfig(file);
-        return config.getRoot();
+        config.load();
+        config.saveChanges();
+        return config;
     }
 
     /**

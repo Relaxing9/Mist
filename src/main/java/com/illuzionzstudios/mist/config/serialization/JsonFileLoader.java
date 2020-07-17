@@ -57,7 +57,7 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
     }
 
     @Override
-    public JsonObject loadObject(File file) {
+    public JsonObject loadObject() {
         JsonObject tempObject;
 
         // Try assign JSON file

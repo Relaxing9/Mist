@@ -9,6 +9,7 @@
  */
 package com.illuzionzstudios.mist.ui.render;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
@@ -71,7 +72,7 @@ public final class ItemCreator {
      * The enchants applied for the item mapped by level
      */
     @Singular
-    private final Map<Enchantment, Integer> enchants;
+    private final Map<XEnchantment, Integer> enchants;
 
     /**
      * The item flags
@@ -161,8 +162,8 @@ public final class ItemCreator {
 
         // Enchantments
         if (enchants != null) {
-            for (final Enchantment ench : enchants.keySet()) {
-                stackMeta.addEnchant(ench, enchants.get(ench), true);
+            for (final XEnchantment ench : enchants.keySet()) {
+                stackMeta.addEnchant(ench.parseEnchantment(), enchants.get(ench), true);
             }
         }
 

@@ -230,7 +230,8 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         try {
             onPluginDisable();
         } catch (final Throwable t) {
-            Logger.info("&cPlugin might not shut down property. Got " + t.getClass().getSimpleName() + ": " + t.getMessage());
+            Logger.warn("Plugin might not shut down property. Got " + t.getClass().getSimpleName() + ": " + t.getMessage());
+            t.printStackTrace();
         }
 
         unregisterReloadables();

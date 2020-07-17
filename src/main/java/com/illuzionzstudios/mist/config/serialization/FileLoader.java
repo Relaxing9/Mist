@@ -61,7 +61,7 @@ public abstract class FileLoader<T> {
     public FileLoader(File file, String extension) {
         this.file = file;
 
-        object = loadObject(file);
+        object = loadObject();
 
         // Get name without extension
         this.name = file.getName().split("\\.")[0];
@@ -94,8 +94,8 @@ public abstract class FileLoader<T> {
     public abstract boolean save();
 
     /**
-     * @param file Load basic object to memory from disk
+     * Load basic object to memory from disk
      */
-    public abstract T loadObject(File file);
+    public abstract T loadObject();
 
 }

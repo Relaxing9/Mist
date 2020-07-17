@@ -74,7 +74,7 @@ public class DirectoryLoader<T extends FileLoader<?>> {
             String name = file.getName().split("\\.")[0];
 
             try {
-                T loader = clazz.getConstructor(String.class, String.class).newInstance(name, directory);
+                T loader = clazz.getConstructor(String.class, String.class).newInstance(directory, name);
 
                 // Specific files
                 if (file.getName().split("\\.")[1].equalsIgnoreCase(loader.getExtension()))
