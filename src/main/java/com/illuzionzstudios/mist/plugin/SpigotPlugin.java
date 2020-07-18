@@ -26,11 +26,10 @@ import com.illuzionzstudios.mist.ui.UserInterface;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.awt.*;
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -138,7 +137,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * Our player controller for our player data objects
      * Also used as a flag if we want to use player data
      */
-    protected BukkitPlayerController<SpigotPlugin, ?> playerController;
+    protected BukkitPlayerController<SpigotPlugin, ? extends BukkitPlayer> playerController;
 
     //  -------------------------------------------------------------------------
     //  Plugin loading methods
@@ -218,6 +217,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Enable our scheduler
             new BukkitScheduler(this).initialize();
+            InterfaceController.INSTANCE.initialize(this);
 
             onReloadablesStart();
 
@@ -225,7 +225,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Register main events
             registerListener(this);
-            registerListener(new InterfaceController());
+            registerListener(InterfaceController.INSTANCE);
 
             // Connect to database and allow player data
             if (playerController != null) {
@@ -255,19 +255,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         unregisterReloadables();
 
-        // Try close inventories
-        try {
-            for (final Player online : getServer().getOnlinePlayers()) {
-                final UserInterface userInterface = UserInterface.getInterface(online);
-
-                if (userInterface != null)
-                    online.closeInventory();
-            }
-        } catch (final Throwable t) {
-            Logger.displayError(t, "Error closing menu inventories for players..");
-
-            t.printStackTrace();
-        }
+        InterfaceController.INSTANCE.stop(this);
 
         // Try save all player data
         if (playerController != null) {
@@ -299,13 +287,14 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Restart tickers
             MinecraftScheduler.get().initialize();
+            InterfaceController.INSTANCE.initialize(this);
             onPluginReload();
 
             onReloadablesStart();
 
             // Register main events
             registerListener(this);
-            registerListener(new InterfaceController());
+            registerListener(InterfaceController.INSTANCE);
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error reloading plugin");
         } finally {
@@ -319,6 +308,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     private void unregisterReloadables() {
         // Stop ticking all tasks
         MinecraftScheduler.get().stopInvocation();
+        InterfaceController.INSTANCE.stop(this);
 
         if (getMainCommand() != null && getMainCommand().isRegistered())
             getMainCommand().unregister();
@@ -362,7 +352,8 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @param database The type of database to use to save data
      * @param playerController Our custom player controller for operations
      */
-    protected void initializePlayerData(Class<? extends BukkitPlayer> playerClass, Database database, BukkitPlayerController<SpigotPlugin, ?> playerController) {
+    protected <BP extends BukkitPlayer> void initializePlayerData(Class<? extends BukkitPlayer> playerClass, Database database,
+                                                               BukkitPlayerController<SpigotPlugin, BP> playerController) {
         this.playerController = playerController;
 
         new PlayerDataController<>().initialize(playerClass, database);

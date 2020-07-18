@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist.controller;
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import org.bukkit.plugin.Plugin;
 
 /**
  * A tag that indicates a controller. A controller is class that handles things
@@ -20,7 +21,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  *
  * @param <P> The instance of the plugin this controller is for
  */
-public interface PluginController<P extends SpigotPlugin> {
+public interface PluginController<P extends Plugin> {
 
     /**
      * Starts up our controller

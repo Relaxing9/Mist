@@ -13,6 +13,9 @@ import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.controller.PluginController;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
+import com.illuzionzstudios.mist.scheduler.rate.Rate;
+import com.illuzionzstudios.mist.scheduler.rate.Sync;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ClickLocation;
 import org.bukkit.Bukkit;
@@ -31,14 +34,43 @@ import org.bukkit.inventory.ItemStack;
 /**
  * This controller handles events for {@link UserInterface}
  */
-public class InterfaceController implements PluginController<SpigotPlugin>, Listener {
+public enum InterfaceController implements PluginController<SpigotPlugin>, Listener {
+    INSTANCE;
 
     @Override
     public void initialize(SpigotPlugin plugin) {
+        MinecraftScheduler.get().registerSynchronizationService(this);
     }
 
     @Override
     public void stop(SpigotPlugin plugin) {
+        MinecraftScheduler.get().dismissSynchronizationService(this);
+
+        // Try close inventories
+        try {
+            for (final Player online : Bukkit.getServer().getOnlinePlayers()) {
+                final UserInterface userInterface = UserInterface.getInterface(online);
+
+                if (userInterface != null)
+                    online.closeInventory();
+            }
+        } catch (final Throwable t) {
+            Logger.displayError(t, "Error closing menu inventories for players..");
+
+            t.printStackTrace();
+        }
+    }
+
+    /**
+     * Tick all interfaces
+     */
+    @Sync(rate = Rate.TICK)
+    public void tick() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            UserInterface userInterface = UserInterface.getInterface(player);
+
+            if (userInterface != null) userInterface.tick();
+        }
     }
 
     /**

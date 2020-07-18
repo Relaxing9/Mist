@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Controls all Bukkit players
  */
-public abstract class BukkitPlayerController<P extends SpigotPlugin, BP extends BukkitPlayer> extends AbstractPlayerController<BP> implements Listener, PluginController<P> {
+public abstract class BukkitPlayerController<P extends Plugin, BP extends BukkitPlayer> extends AbstractPlayerController<BP> implements Listener, PluginController<P> {
 
     /**
      * Instances

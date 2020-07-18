@@ -10,6 +10,7 @@ package com.illuzionzstudios.mist.data.controller;
  * this statement.
  */
 
+import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.data.PlayerData;
 import com.illuzionzstudios.mist.data.database.Database;
 import com.illuzionzstudios.mist.data.player.AbstractPlayer;
@@ -75,7 +76,9 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
         this.database = database;
 
         // Connect now
-        this.database.connect();
+        if (this.database.connect()) {
+            Logger.info("Connected to database successfully");
+        }
     }
 
     /**

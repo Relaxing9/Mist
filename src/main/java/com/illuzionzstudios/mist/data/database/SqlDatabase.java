@@ -19,7 +19,10 @@ import com.illuzionzstudios.mist.util.UUIDFetcher;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -29,39 +32,33 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SqlDatabase implements Database {
 
     /**
-     * Our connection to handle SQL operations
-     */
-    protected Connection connection;
-
-    /**
      * Host server of the database
      */
     private final String host;
-
     /**
      * Port to connect to
      */
     private final int port;
-
     /**
      * Database to use
      */
     private final String database;
-
     /**
      * Connection username
      */
     private final String username;
-
     /**
      * Connection password
      */
     private final String password;
-
     /**
      * Table to store our player data
      */
     private final String tableName = SpigotPlugin.getPluginName() + "Data";
+    /**
+     * Our connection to handle SQL operations
+     */
+    protected Connection connection;
 
     @Override
     public HashMap<String, Object> getFields(AbstractPlayer player) {
@@ -81,6 +78,7 @@ public class SqlDatabase implements Database {
                     columnIndex++;
                     // Get field value
                     String queryingField = meta.getColumnName(columnIndex);
+                    Logger.debug("Getting all fields: " + queryingField);
                     data.put(queryingField, set.getObject(queryingField));
                 } catch (Exception ex) {
                     break;
@@ -185,18 +183,17 @@ public class SqlDatabase implements Database {
                         status.set(false);
                     }
                     Class.forName("com.mysql.jdbc.Driver");
-                    connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+                    connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password
+                    + "?useSSL=false");
                     status.set(true);
                 }
             } catch (Exception ex) {
                 Logger.displayError(ex, "Couldn't connect to database");
                 status.set(false);
             }
-        }, 0);
 
-        // Try create data table if doesn't exist
-        MinecraftScheduler.get().desynchronize(() -> {
             if (isAlive()) {
+                Logger.debug("Creating Table");
                 try {
                     PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `" + tableName + "` (" +
                             " `uuid` varchar(255) NOT NULL," +
@@ -213,20 +210,12 @@ public class SqlDatabase implements Database {
 
     @Override
     public boolean disconnect() {
-        AtomicBoolean status = new AtomicBoolean(false);
-
-        // Disconnect async
-        MinecraftScheduler.get().desynchronize(() -> {
-            try {
-                connection.close();
-                status.set(true);
-            } catch (Exception ex) {
-                Logger.displayError(ex, "Error disconnecting from database");
-                status.set(false);
-            }
-        }, 0);
-
-        return status.get();
+        try {
+            connection.close();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
@@ -237,7 +226,7 @@ public class SqlDatabase implements Database {
         MinecraftScheduler.get().desynchronize(() -> {
             try {
                 status.set(!connection.isClosed());
-            } catch (SQLException throwables) {
+            } catch (Exception ex) {
                 status.set(false);
             }
         }, 0);

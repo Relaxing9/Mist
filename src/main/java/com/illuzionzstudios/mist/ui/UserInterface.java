@@ -13,6 +13,7 @@ import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
+import com.illuzionzstudios.mist.scheduler.Tickable;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.button.type.ReturnBackButton;
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
@@ -44,7 +45,7 @@ import java.util.List;
  * able to navigate through the menu easily. We can also have a parent menu
  * that can be returned to.
  */
-public abstract class UserInterface {
+public abstract class UserInterface implements Tickable {
 
     //  -------------------------------------------------------------------------
     //  Static variables
@@ -338,6 +339,8 @@ public abstract class UserInterface {
         // Set our viewer
         viewer = player;
 
+        preDisplay();
+
         // If buttons didn't get registered, do it ourselves
         if (!buttonsRegisteredViaReflection)
             registerButtons();
@@ -374,6 +377,12 @@ public abstract class UserInterface {
     }
 
     /**
+     * Run any last minute registering before the interface is displayed
+     */
+    protected void preDisplay() {
+    }
+
+    /**
      * Called automatically before the menu is displayed but after all items have
      * been drawn
      *
@@ -391,6 +400,14 @@ public abstract class UserInterface {
     protected final void restart() {
         registerButtons();
         redraw();
+    }
+
+    /**
+     * Tick rendering
+     * To be overridden
+     */
+    @Override
+    public void tick() {
     }
 
     /**
