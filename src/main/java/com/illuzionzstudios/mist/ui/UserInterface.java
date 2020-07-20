@@ -398,6 +398,7 @@ public abstract class UserInterface implements Tickable {
      * and redrawing all items
      */
     protected final void restart() {
+        preDisplay();
         registerButtons();
         redraw();
     }
