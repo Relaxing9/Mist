@@ -31,7 +31,7 @@ public final class ServerVersion {
      * The version wrapper
      */
     public enum V {
-        v1_16(16, false),
+        v1_16(16),
         v1_15(15),
         v1_14(14),
         v1_13(13),

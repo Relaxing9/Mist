@@ -146,7 +146,7 @@ public abstract class MinecraftScheduler {
                         }
 
                         // Took too long
-                        if (System.currentTimeMillis() - start > Mist.Scheduler.TIME_WARNING_THRESHOLD
+                        if (System.currentTimeMillis() - start > Mist.TIME_WARNING_THRESHOLD
                                 && type.equals(Sync.class)) {
                             Logger.severe("WARNING: Synchronization block took way too long to invoke! (" + (System.currentTimeMillis() - start) + "ms)");
                             Logger.severe("Block " + method.getName() + "() in " + service.source.getClass());

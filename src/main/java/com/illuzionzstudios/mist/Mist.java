@@ -32,58 +32,30 @@ public final class Mist {
     //  -------------------------------------------------------------------------
 
     /**
-     * Core options relating to the plugin
+     * Core revision version, meaning each major refactor or change,
+     * we increment this number
      */
-    public static final class Core {
-
-        /**
-         * Core revision version, meaning each major refactor or change,
-         * we increment this number
-         */
-        public static final int CORE_VERSION = 1;
-
-        /**
-         * The actual version of this core. Each new release, set a new version
-         */
-        public static final String VERSION = "1.0a";
-
-    }
+    public static final int CORE_VERSION = 1;
 
     /**
-     * Options relating to file parsing
+     * The actual version of this core. Each new release, set a new version
      */
-    public static final class File {
-
-        /**
-         * The name (with extension) for the main config file
-         */
-        public static final String SETTINGS_NAME = "config.yml";
-
-    }
+    public static final String VERSION = "1.0a";
 
     /**
-     * Options relating to the ticker
+     * The name (with extension) for the main config file
      */
-    public static final class Scheduler {
-
-        /**
-         * Amount of ticks for a invocation to pause before warning
-         */
-        public static final long TIME_WARNING_THRESHOLD = 100;
-
-    }
+    public static final String SETTINGS_NAME = "config.yml";
 
     /**
-     * Static strings for aesthetics
+     * Amount of ticks for a invocation to pause before warning
      */
-    public static final class Aesthetics {
+    public static final long TIME_WARNING_THRESHOLD = 100;
 
-        /**
-         * Returns a long ------ smooth console line
-         */
-        public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "                                                               ";
-
-    }
+    /**
+     * Returns a long ------ smooth console line
+     */
+    public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "                                                               ";
 
     //  -------------------------------------------------------------------------
     //  Static util methods
@@ -125,12 +97,12 @@ public final class Mist {
      * Convert {@link Iterable} to {@link List}
      *
      * @param iterable The iterable to convert
-     * @param <T> Type of object
+     * @param <T>      Type of object
      * @return As a collection
      */
     public static <T> List<T> toList(Iterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false)
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
 }

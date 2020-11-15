@@ -24,6 +24,11 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 public abstract class PluginSettings extends YamlConfig {
 
     /**
+     * The current loaded {@link PluginSettings} instance
+     */
+    public static YamlConfig SETTINGS_FILE;
+
+    /**
      * @param plugin Make sure we pass owning plugin
      */
     public PluginSettings(SpigotPlugin plugin) {
@@ -34,49 +39,13 @@ public abstract class PluginSettings extends YamlConfig {
      * @return Get the file name for these settings, by default config.yml
      */
     protected static String getSettingsFileName() {
-        return Mist.File.SETTINGS_NAME;
+        return Mist.SETTINGS_NAME;
     }
-
-    /**
-     * The current loaded {@link PluginSettings} instance
-     */
-    public static YamlConfig SETTINGS_FILE;
 
     @Override
     public final boolean load() {
         return loadResourceToServer("", "config.yml");
     }
-
-    //  -------------------------------------------------------------------------
-    //  Versioning
-    //  -------------------------------------------------------------------------
-
-    /**
-     * This is the loaded config version, found under the "Version" key
-     * We can use this for compatibility between versions
-     */
-    protected static int VERSION;
-
-    /**
-     * Here we want to update the current configuration version set
-     * in the config to the static version in the code.
-     *
-     * Note: Call {@code super#preLoad} when overriding
-     */
-    @Override
-    protected void postLoad() {
-        // Load version first so we can use it later
-        if ((VERSION = getInt("Version")) != getConfigVersion())
-            set("Version", getConfigVersion());
-    }
-
-    /**
-     * Return the very latest config version
-     * Any changes here must also be made to the "Version" key in your settings file.
-     *
-     * @return Current latest config version
-     */
-    protected abstract int getConfigVersion();
 
     //  -------------------------------------------------------------------------
     //  Main config settings provided by default
@@ -107,10 +76,9 @@ public abstract class PluginSettings extends YamlConfig {
      *
      * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
      *
-     * @param plugin The {@link SpigotPlugin} to load settings for
      * @param settings The instance of {@link PluginSettings} to load
      */
-    public static void loadSettings(SpigotPlugin plugin, PluginSettings settings) {
+    public static void loadSettings(PluginSettings settings) {
         SETTINGS_FILE = settings;
         // Load settings file
         settings.load();

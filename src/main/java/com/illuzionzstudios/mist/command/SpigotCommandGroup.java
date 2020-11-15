@@ -143,7 +143,7 @@ public abstract class SpigotCommandGroup {
     protected String[] getHelpHeader() {
         return new String[] {
                 "&8",
-                "&8" + Mist.Aesthetics.SMOOTH_LINE,
+                "&8" + Mist.SMOOTH_LINE,
                 getHeaderPrefix() + "  " + SpigotPlugin.getPluginName() + " &7v" + SpigotPlugin.getPluginVersion()
                 + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
                         ""),
@@ -237,7 +237,7 @@ public abstract class SpigotCommandGroup {
             }
 
             // End line
-            tell("&8" + Mist.Aesthetics.SMOOTH_LINE);
+            tell("&8" + Mist.SMOOTH_LINE);
         }
 
         /**

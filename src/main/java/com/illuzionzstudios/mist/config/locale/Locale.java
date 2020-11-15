@@ -48,37 +48,7 @@ public abstract class Locale extends YamlConfig {
     }
 
     //  -------------------------------------------------------------------------
-    //  Versioning
-    //  -------------------------------------------------------------------------
 
-    /**
-     * This is the loaded config version, found under the "Version" key
-     * We can use this for compatibility between versions
-     */
-    protected static int VERSION;
-
-    /**
-     * Here we want to update the current configuration version set
-     * in the config to the static version in the code.
-     *
-     * Note: Call {@code super#preLoad} when overriding
-     */
-    @Override
-    protected void postLoad() {
-        // Load version first so we can use it later
-        if ((VERSION = getInt("Version")) != getConfigVersion())
-            set("Version", getConfigVersion());
-    }
-
-    /**
-     * Return the very latest config version
-     * Any changes here must also be made to the "Version" key in your settings file.
-     *
-     * @return Current latest config version
-     */
-    protected abstract int getConfigVersion();
-
-    //  -------------------------------------------------------------------------
     //  Main messages provided by default
     //  If these are found in the locale, we use those, otherwise use these
     //  defaults
@@ -105,8 +75,11 @@ public abstract class Locale extends YamlConfig {
         public static String PLUGIN_RELOAD = "&7Reloaded the plugin (Configuration files & controllers)";
 
         public static void init() {
-            PLUGIN_PREFIX = loadMessage("general.prefix", PLUGIN_PREFIX);
-            PLUGIN_RELOAD = loadMessage("general.reload", PLUGIN_RELOAD);
+            if (LOCALE_FILE.isSet("general.prefix"))
+                PLUGIN_PREFIX = LOCALE_FILE.getString("general.prefix");
+
+            if (LOCALE_FILE.isSet("general.reload"))
+                PLUGIN_RELOAD = LOCALE_FILE.getString("general.reload");
         }
     }
 
@@ -146,12 +119,23 @@ public abstract class Locale extends YamlConfig {
         public static String LABEL_REQUIRED_ARGS = "required arguments";
 
         public static void init() {
-            PLAYER_ONLY = loadMessage("command.player-only", PLAYER_ONLY);
-            NO_PERMISSION = loadMessage("command.no-permission", NO_PERMISSION);
-            INVALID_USAGE = loadMessage("command.invalid-usage", INVALID_USAGE);
-            INVALID_SUB = loadMessage("command.invalid-sub", INVALID_SUB);
-            LABEL_OPTIONAL_ARGS = loadMessage("command.label-optional-args", LABEL_OPTIONAL_ARGS);
-            LABEL_REQUIRED_ARGS = loadMessage("command.label-required-args", LABEL_REQUIRED_ARGS);
+            if (LOCALE_FILE.isSet("command.player-only"))
+                PLAYER_ONLY = LOCALE_FILE.getString("command.player-only");
+
+            if (LOCALE_FILE.isSet("command.no-permission"))
+                NO_PERMISSION = LOCALE_FILE.getString("command.no-permission");
+
+            if (LOCALE_FILE.isSet("command.invalid-usage"))
+                INVALID_USAGE = LOCALE_FILE.getString("command.invalid-usage");
+
+            if (LOCALE_FILE.isSet("command.invalid-sub"))
+                INVALID_SUB = LOCALE_FILE.getString("command.invalid-sub");
+
+            if (LOCALE_FILE.isSet("command.label-optional-args"))
+                LABEL_OPTIONAL_ARGS = LOCALE_FILE.getString("command.label-optional-args");
+
+            if (LOCALE_FILE.isSet("command.label-required-args"))
+                LABEL_REQUIRED_ARGS = LOCALE_FILE.getString("command.label-required-args");
         }
     }
 
@@ -166,9 +150,9 @@ public abstract class Locale extends YamlConfig {
         public static String ENTER_VALUE = "&7Enter a new value to set (Type 'cancel' to cancel)";
 
         public static void init() {
-            ENTER_VALUE = loadMessage("config.enter-value", ENTER_VALUE);
+            if (LOCALE_FILE.isSet("config.enter-value"))
+                ENTER_VALUE = LOCALE_FILE.getString("config.enter-value");
         }
-
     }
 
     /**
@@ -232,17 +216,38 @@ public abstract class Locale extends YamlConfig {
         public static String LIST_ADD_LORE = "&7&o(Click to add a value)";
 
         public static void init() {
-            CONFIRM_CONFIRM_NAME = loadMessage("interface.confirm.confirm.name", CONFIRM_CONFIRM_NAME);
-            CONFIRM_CONFIRM_LORE = loadMessage("interface.confirm.confirm.lore", CONFIRM_CONFIRM_LORE);
-            CONFIRM_DENY_NAME = loadMessage("interface.confirm.deny.name", CONFIRM_DENY_NAME);
-            CONFIRM_DENY_LORE = loadMessage("interface.confirm.deny.lore", CONFIRM_DENY_LORE);
-            OPTIONS_OPTION_NAME = loadMessage("interface.options.option.name", OPTIONS_OPTION_NAME);
-            OPTIONS_OPTION_LORE = loadMessage("interface.options.option.lore", OPTIONS_OPTION_LORE);
-            LIST_VALUES_NAME = loadMessage("interface.list.values.name", LIST_VALUES_NAME);
-            LIST_CLEAR_NAME = loadMessage("interface.list.clear.name", LIST_CLEAR_NAME);
-            LIST_CLEAR_LORE = loadMessage("interface.list.clear.lore", LIST_CLEAR_LORE);
-            LIST_ADD_NAME = loadMessage("interface.list.add.name", LIST_ADD_NAME);
-            LIST_ADD_LORE = loadMessage("interface.list.add.lore", LIST_ADD_LORE);
+            if (LOCALE_FILE.isSet("interface.confirm.confirm.name"))
+                CONFIRM_CONFIRM_NAME = LOCALE_FILE.getString("interface.confirm.confirm.name");
+
+            if (LOCALE_FILE.isSet("interface.confirm.confirm.lore"))
+                CONFIRM_CONFIRM_LORE = LOCALE_FILE.getString("interface.confirm.confirm.lore");
+
+            if (LOCALE_FILE.isSet("interface.confirm.deny.name"))
+                CONFIRM_DENY_NAME = LOCALE_FILE.getString("interface.confirm.deny.name");
+
+            if (LOCALE_FILE.isSet("interface.confirm.deny.lore"))
+                CONFIRM_DENY_LORE = LOCALE_FILE.getString("interface.confirm.deny.lore");
+
+            if (LOCALE_FILE.isSet("interface.options.option.name"))
+                OPTIONS_OPTION_NAME = LOCALE_FILE.getString("interface.options.option.name");
+
+            if (LOCALE_FILE.isSet("interface.options.option.lore"))
+                OPTIONS_OPTION_LORE = LOCALE_FILE.getString("interface.options.option.lore");
+
+            if (LOCALE_FILE.isSet("interface.list.values.name"))
+                LIST_VALUES_NAME = LOCALE_FILE.getString("interface.list.values.name");
+
+            if (LOCALE_FILE.isSet("interface.list.clear.name"))
+                LIST_CLEAR_NAME = LOCALE_FILE.getString("interface.list.clear.name");
+
+            if (LOCALE_FILE.isSet("interface.list.clear.lore"))
+                LIST_CLEAR_LORE = LOCALE_FILE.getString("interface.list.clear.lore");
+
+            if (LOCALE_FILE.isSet("interface.list.add.name"))
+                LIST_ADD_NAME = LOCALE_FILE.getString("interface.list.add.name");
+
+            if (LOCALE_FILE.isSet("interface.list.add.lore"))
+                LIST_ADD_LORE = LOCALE_FILE.getString("interface.list.add.lore");
         }
     }
 
@@ -252,10 +257,9 @@ public abstract class Locale extends YamlConfig {
      *
      * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
      *
-     * @param plugin The {@link SpigotPlugin} to load settings for
      * @param settings The instance of {@link Locale} to load
      */
-    public static void loadLocale(SpigotPlugin plugin, Locale settings) {
+    public static void loadLocale(Locale settings) {
         // Set instance
         LOCALE_FILE = settings;
         // Load settings loadLocale
@@ -277,15 +281,6 @@ public abstract class Locale extends YamlConfig {
      * in our own {@link Locale}
      */
     public abstract void loadLocale();
-
-    /**
-     * Shorthand to update key
-     */
-    protected static String loadMessage(String key, String value) {
-        value = LOCALE_FILE.getString(key, value);
-        LOCALE_FILE.set(key, value);
-        return value;
-    }
 
     /**
      * Retrieve a message from the locale

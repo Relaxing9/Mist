@@ -209,9 +209,9 @@ public class YamlConfig extends ConfigSection {
     public File getFile() {
         if (file == null) {
             if (directory != null) {
-                this.file = new File(plugin.getDataFolder() + directory, fileName != null ? fileName : Mist.File.SETTINGS_NAME);
+                this.file = new File(plugin.getDataFolder() + directory, fileName != null ? fileName : Mist.SETTINGS_NAME);
             } else {
-                this.file = new File(plugin.getDataFolder(), fileName != null ? fileName : Mist.File.SETTINGS_NAME);
+                this.file = new File(plugin.getDataFolder(), fileName != null ? fileName : Mist.SETTINGS_NAME);
             }
         }
         return file;
