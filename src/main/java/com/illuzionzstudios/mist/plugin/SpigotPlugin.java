@@ -23,9 +23,13 @@ import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import com.illuzionzstudios.mist.ui.InterfaceController;
 import com.illuzionzstudios.mist.ui.UserInterface;
+import com.illuzionzstudios.mist.util.UpdateChecker;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -221,6 +225,9 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             onReloadablesStart();
 
+            // Check update
+            UpdateChecker.checkVersion(Bukkit.getServer().getConsoleSender());
+
             onPluginEnable();
 
             // Register main events
@@ -374,6 +381,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract Locale getPluginLocale();
 
     /**
+     * @return Plugin's id for update checking on spigot
+     */
+    public abstract int getPluginId();
+
+    /**
      * @param command Register a new {@link SpigotCommandGroup}
      */
     protected void registerMainCommand(SpigotCommandGroup command, String... labels) {
@@ -389,6 +401,14 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     public static boolean isMainCommand(String label) {
         return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
+    }
+
+    /**
+     * Check for updates
+     */
+    @EventHandler
+    public void checkUpdates(PlayerJoinEvent event) {
+        UpdateChecker.checkVersion(event.getPlayer());
     }
 
 }

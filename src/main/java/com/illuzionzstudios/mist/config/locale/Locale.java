@@ -252,6 +252,24 @@ public abstract class Locale extends YamlConfig {
     }
 
     /**
+     * Language dealing with updates
+     */
+    public static class Update {
+
+        /**
+         * The message if a new version is found
+         */
+        public static String AVAILABLE = "&7You're on a &e{status} version of &e{plugin_name}&7.\n"
+                + "&7Current version: &e{current}&7; New version: &e{new}\n"
+                + "&7URL: &ehttps://spigotmc.org/resources/{resource_id}/.";
+
+        public static void init() {
+            if (LOCALE_FILE.isSet("update.available"))
+                AVAILABLE = LOCALE_FILE.getString("update.available");
+        }
+    }
+
+    /**
      * Load these {@link PluginSettings} into the server, setting values
      * if not there, or loading the values into memory
      *
