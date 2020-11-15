@@ -66,6 +66,7 @@ public final class UpdateChecker {
                     .processPlaceholder("current", SpigotPlugin.getPluginVersion())
                     .processPlaceholder("new", name)
                     .processPlaceholder("status", version.name().toLowerCase())
+                    .processPlaceholder("resource_id", SpigotPlugin.getInstance().getPluginId())
                     .sendMessage(sender);
         });
     }

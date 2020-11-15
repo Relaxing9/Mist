@@ -259,9 +259,9 @@ public abstract class Locale extends YamlConfig {
         /**
          * The message if a new version is found
          */
-        public static String AVAILABLE = "&7You're on a &e{status} version of &e{plugin_name}&7.\n"
-                + "&7Current version: &e{current}&7; New version: &e{new}\n"
-                + "&7URL: &ehttps://spigotmc.org/resources/{resource_id}/.";
+        public static String AVAILABLE = "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
+                + "&2Current version: &a{current}&2; New version: &a{new}\n"
+                + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.";
 
         public static void init() {
             if (LOCALE_FILE.isSet("update.available"))
@@ -288,6 +288,7 @@ public abstract class Locale extends YamlConfig {
         Command.init();
         Config.init();
         Interface.init();
+        Update.init();
 
         // Load our other custom settings
         settings.loadLocale();
