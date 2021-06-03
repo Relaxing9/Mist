@@ -59,8 +59,6 @@ public final class ServerVersion {
 
         /**
          * Creates new enum for a MC version that is tested
-         *
-         * @param version
          */
         V(int version) {
             this(version, true);
@@ -68,9 +66,6 @@ public final class ServerVersion {
 
         /**
          * Creates new enum for a MC version
-         *
-         * @param version
-         * @param tested
          */
         V(int version, boolean tested) {
             this.ver = version;
@@ -81,8 +76,6 @@ public final class ServerVersion {
          * Attempts to get the version from number
          *
          * @throws RuntimeException if number not found
-         * @param number
-         * @return
          */
         protected static V parse(int number) {
             for (final V v : values())
@@ -95,9 +88,6 @@ public final class ServerVersion {
 
     /**
      * Does the current Minecraft version equal the given version?
-     *
-     * @param version
-     * @return
      */
     public static boolean equals(V version) {
         return compareWith(version) == 0;
@@ -105,9 +95,6 @@ public final class ServerVersion {
 
     /**
      * Is the current Minecraft version older than the given version?
-     *
-     * @param version
-     * @return
      */
     public static boolean olderThan(V version) {
         return compareWith(version) < 0;
@@ -115,9 +102,6 @@ public final class ServerVersion {
 
     /**
      * Is the current Minecraft version newer than the given version?
-     *
-     * @param version
-     * @return
      */
     public static boolean newerThan(V version) {
         return compareWith(version) > 0;
@@ -125,9 +109,6 @@ public final class ServerVersion {
 
     /**
      * Is the current Minecraft version at equals or newer than the given version?
-     *
-     * @param version
-     * @return
      */
     public static boolean atLeast(V version) {
         return equals(version) || newerThan(version);
@@ -183,9 +164,7 @@ public final class ServerVersion {
                 Valid.checkBoolean(found == 1, "Minecraft Version checker malfunction. Could not detect your server version. Detected: " + numericVersion + " Current: " + curr);
 
                 current = V.parse(Integer.parseInt(numericVersion.split("\\.")[1]));
-
-            } else
-                current = V.v1_3_AND_BELOW;
+            } else current = V.v1_3_AND_BELOW;
 
         } catch (final Throwable t) {
             Logger.displayError(t, "Error detecting your Minecraft version. Check your server compatibility.");

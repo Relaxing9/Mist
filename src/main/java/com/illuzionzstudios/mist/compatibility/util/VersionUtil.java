@@ -1,17 +1,11 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.compatibility.util;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -27,20 +21,15 @@ import java.util.Map;
  * Contains a lot of static methods in order to make our plugin
  * work from {@version 1.8.8} to the latest version
  */
+@UtilityClass
 public final class VersionUtil {
-
-    /**
-     * Don't create instance as just static methods
-     */
-    private VersionUtil() {
-    }
 
     /**
      * Injects an existing command into the command map
      *
      * @param command The {@link Command} instance to register
      */
-    public static void registerCommand(final Command command) {
+    public void registerCommand(final Command command) {
         final CommandMap commandMap = getCommandMap();
 
         if (commandMap == null) return;
@@ -55,7 +44,7 @@ public final class VersionUtil {
      *
      * @param label the label
      */
-    public static void unregisterCommand(final String label) {
+    public void unregisterCommand(final String label) {
         unregisterCommand(label, true);
     }
 
@@ -66,7 +55,7 @@ public final class VersionUtil {
      * @param label          the label
      * @param removeAliases, also remove aliases?
      */
-    public static void unregisterCommand(final String label, final boolean removeAliases) {
+    public void unregisterCommand(final String label, final boolean removeAliases) {
         try {
             // Unregister the commandMap from the command itself.
             final PluginCommand command = Bukkit.getPluginCommand(label);
@@ -96,8 +85,10 @@ public final class VersionUtil {
         }
     }
 
-    // Return servers command map
-    private static SimpleCommandMap getCommandMap() {
+    /**
+     * @return Server's command map
+     */
+    private SimpleCommandMap getCommandMap() {
         try {
             return (SimpleCommandMap) ReflectionUtil.getOBCClass("CraftServer").getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
         } catch (final ReflectiveOperationException ex) {

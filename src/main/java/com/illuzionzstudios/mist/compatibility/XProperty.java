@@ -1,12 +1,3 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.compatibility;
 
 import com.illuzionzstudios.mist.util.TextUtil;
@@ -18,6 +9,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Method;
 
+/**
+ * Some properties of things.
+ * TODO: I think this needs to be tweaked does it actually have any use?
+ */
 @RequiredArgsConstructor
 public enum XProperty {
 
@@ -68,9 +63,6 @@ public enum XProperty {
      * Apply the property to the entity. Class must be compatible with {@link #requiredClass}
      *
      * Example: SILENT.apply(myZombieEntity, true)
-     *
-     * @param instance
-     * @param key
      */
     public final void apply(Object instance, Object key) {
         Valid.checkBoolean(requiredClass.isAssignableFrom(instance.getClass()), this + " accepts " + requiredClass.getSimpleName() + ", not " + instance.getClass().getSimpleName());
@@ -84,16 +76,12 @@ public enum XProperty {
         } catch (final ReflectiveOperationException e) {
             if (e instanceof NoSuchMethodException && ServerVersion.olderThan(ServerVersion.V.values()[0])) {
                 // Pass through TODO
-            } else
-                e.printStackTrace();
+            } else e.printStackTrace();
         }
     }
 
     /**
      * Can this property be used on this server for the given class? Class must be compatible with {@link #requiredClass}
-     *
-     * @param clazz
-     * @return
      */
     public final boolean isAvailable(Class<?> clazz) {
         try {
@@ -107,7 +95,7 @@ public enum XProperty {
     }
 
     // Automatically returns the correct getter or setter method for class
-    private final Method getMethod(Class<?> clazz) throws ReflectiveOperationException {
+    private Method getMethod(Class<?> clazz) throws ReflectiveOperationException {
         return clazz.getMethod("set" + (toString().equals("AI") ? "AI" : TextUtil.formatText(toString().toLowerCase(), true)), setterMethodType);
     }
 
