@@ -10,6 +10,7 @@
 package com.illuzionzstudios.mist;
 
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
+import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
 
@@ -25,11 +26,6 @@ import java.util.stream.StreamSupport;
  * Will contain a lot of static utils for our convenience
  */
 public final class Mist {
-
-    //  -------------------------------------------------------------------------
-    //  Static final settings across the plugin
-    //  Stored in internal classes relating to their category
-    //  -------------------------------------------------------------------------
 
     /**
      * Core revision version, meaning each major refactor or change,
@@ -57,26 +53,8 @@ public final class Mist {
      */
     public static final String SMOOTH_LINE = ChatColor.STRIKETHROUGH + "                                                               ";
 
-    //  -------------------------------------------------------------------------
-    //  Static util methods
-    //  -------------------------------------------------------------------------
-
-    /**
-     * Simply turn a message into a colored version with {@link ChatColor#COLOR_CHAR}
-     *
-     * @param message The original method without colors
-     * @return The newly colored message
-     */
-    public static String colorize(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
     /**
      * Sends the conversable a message later
-     *
-     * @param delayTicks
-     * @param conversable
-     * @param message
      */
     public static void tellLaterConversing(final Conversable conversable, final String message, final int delayTicks) {
         MinecraftScheduler.get().synchronize(() -> tellConversing(conversable, message), delayTicks);
@@ -84,12 +62,9 @@ public final class Mist {
 
     /**
      * Sends the conversable player a colorized message
-     *
-     * @param conversable
-     * @param message
      */
     public static void tellConversing(final Conversable conversable, final String message) {
-        conversable.sendRawMessage(Mist.colorize(message).trim());
+        conversable.sendRawMessage(TextUtil.formatText(message).trim());
     }
 
 

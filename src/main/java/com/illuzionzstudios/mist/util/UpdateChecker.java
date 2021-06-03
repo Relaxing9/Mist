@@ -40,10 +40,8 @@ public final class UpdateChecker {
                 String fetchedVersion = Resources.toString(httpURLConnection.getURL(), Charset.defaultCharset());
 
                 boolean latestVersion = fetchedVersion.equalsIgnoreCase(currentVersion);
-
                 MinecraftScheduler.get().synchronize(() -> callback.accept(latestVersion ? VersionType.LATEST : VersionType.OUTDATED, latestVersion ? currentVersion : fetchedVersion));
             } catch (IOException exception) {
-                exception.printStackTrace();
                 MinecraftScheduler.get().synchronize(() -> callback.accept(VersionType.UNKNOWN, null));
             }
         });

@@ -1,15 +1,7 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Mist;
+import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.Valid;
@@ -105,7 +97,6 @@ public abstract class SpigotCommandGroup {
      */
     public final String getLabel() {
         Valid.checkBoolean(isRegistered(), "Main command has not yet been set!");
-
         return mainCommand.getMainLabel();
     }
 
@@ -182,7 +173,6 @@ public abstract class SpigotCommandGroup {
 
             // Let everyone view info
             setPermission(null);
-
             setAutoHandleHelp(false);
         }
 
@@ -191,12 +181,12 @@ public abstract class SpigotCommandGroup {
          * Also handle execution of sub commands
          */
         @Override
-        protected void onCommand() {
+        protected ReturnType onCommand() {
             // Show our help
             // Assures arg[0] isn't null
-            if (args.length == 0 || (args.length >= 1 && getHelpLabel().contains(args[0]))) {
+            if (args.length == 0 || getHelpLabel().contains(args[0])) {
                 tellSubCommandsHelp();
-                return;
+                return ReturnType.SUCCESS;
             }
 
             final String subArg = args[0];
@@ -212,6 +202,8 @@ public abstract class SpigotCommandGroup {
                 // Couldn't find sub command
                 tell(Locale.Command.INVALID_SUB.replace("{label}", getMainLabel()));
             }
+
+            return ReturnType.SUCCESS;
         }
 
         /**
@@ -221,9 +213,6 @@ public abstract class SpigotCommandGroup {
             // Send the header
             tell(getHelpHeader());
 
-            // Amount of subs shown
-            int shown = 0;
-
             for (final SpigotSubCommand subcommand : subCommands) {
                 if (subcommand.showInHelp() && hasPerm(subcommand.getPermission())) {
 
@@ -231,8 +220,6 @@ public abstract class SpigotCommandGroup {
                     final String desc = subcommand.getDescription() != null ? subcommand.getDescription() : "";
 
                     tell("  &7/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? "&e- " + desc : ""));
-
-                    shown++;
                 }
             }
 

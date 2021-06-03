@@ -1,12 +1,3 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist;
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
@@ -100,10 +91,7 @@ public final class Logger {
      * @param errorMessage The error message/cause for this error
      */
     public static void displayError(final Throwable throwable, String errorMessage) {
-        severe("An error occurred for " + SpigotPlugin.getPluginName() + " v" + SpigotPlugin.getPluginVersion());
-        severe(" ");
-        severe(errorMessage);
-        severe(" ");
+        severe("An error occurred for " + SpigotPlugin.getPluginName() + " v" + SpigotPlugin.getPluginVersion() + ": " + errorMessage);
         severe("Report the following error:");
         throwable.printStackTrace();
     }

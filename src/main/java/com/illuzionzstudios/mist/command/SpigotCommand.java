@@ -10,10 +10,9 @@
 package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.Mist;
+import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
 import com.illuzionzstudios.mist.config.locale.Locale;
-import com.illuzionzstudios.mist.exception.CommandException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.PlayerUtil;
 import com.illuzionzstudios.mist.util.TextUtil;
@@ -175,7 +174,7 @@ public abstract class SpigotCommand extends Command {
      * Also contains various error handling scenarios
      */
     @Override
-    public final boolean execute(final CommandSender sender, final String label, final String[] args) {
+    public final boolean execute(@NotNull final CommandSender sender, @NotNull final String label, @NotNull final String[] args) {
 
         // Update variables
         this.sender = sender;
@@ -186,28 +185,35 @@ public abstract class SpigotCommand extends Command {
         try {
 
             // Check permissions
-            if (getPermission() != null)
-                checkPerm(getPermission());
+            if (getPermission() != null) {
+                if (!hasPerm(getPermission())) {
+                    // Inform
+                    tell(Objects.requireNonNull(getPermissionMessage()).replace("permission", getPermission()));
+                    return true;
+                }
+            }
 
             // Too little arguments and inform help
-            // TODO: Display other forms of help
             if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && ("help".equals(args[0]) || "?".equals(args[0]))) {
                 if (!getUsage().trim().equalsIgnoreCase(""))
                     // Inform usage message
-                    informError(Locale.Command.INVALID_USAGE.replace("{label}", label)
-                        .replace("{args}", String.join(" ", args)));
+                    tell(Locale.Command.INVALID_USAGE.replace("{label}", label).replace("{args}", String.join(" ", args)));
                 return true;
             }
 
             // Finally execute command
-            onCommand();
+            ReturnType response = onCommand();
 
-        } catch (final CommandException ex) {
-            if (ex.getMessages() != null)
-                informError(ex.getMessages());
+            // TODO: Implement properly once new lang system is written
+            if (response == ReturnType.NO_PERMISSION) {
+                tell("&cYou don't have enough permissions to do this...");
+            } else if (response == ReturnType.PLAYER_ONLY) {
+                tell(Locale.Command.PLAYER_ONLY);
+            } else if (response == ReturnType.UNKNOWN_ERROR) {
+                tell("&cThis was not supposed to happen...");
+            }
         } catch (final Throwable ex) {
-            informError("&cFatal error occurred trying to execute command /" + getLabel(),
-                    "&cPlease contact an administrator to resolve the issue");
+            tell("&cFatal error occurred trying to execute command /" + getLabel(), "&cPlease contact an administrator to resolve the issue");
             Logger.displayError(ex, "Failed to execute command /" + getLabel() + " " + String.join(" ", args));
         }
 
@@ -218,67 +224,25 @@ public abstract class SpigotCommand extends Command {
      * This is invoked when the command is run. All dynamic information about the command
      * can be accessed via the class and doesn't need to be passed to here
      */
-    protected abstract void onCommand();
-
-    /**
-     * A simple util method to log error messages to the {@link CommandSender}
-     *
-     * @param messages The messages to send
-     */
-    private void informError(final String... messages) {
-        for (final String message : messages) {
-            getSender().sendMessage(TextUtil.formatText(message));
-        }
-    }
+    protected abstract ReturnType onCommand();
 
     /**
      * @param message Tell the command sender a single message
      */
     protected void tell(String message) {
-        getSender().sendMessage(Mist.colorize(message));
+        if (getSender() != null)
+            getSender().sendMessage(TextUtil.formatText(message));
     }
 
     /**
      * @param messages Tell the command sender a set of messages
      */
-    protected void tell(String[] messages) {
+    protected void tell(final String... messages) {
         if (getSender() != null) {
-            for (String message : messages) {
-                getSender().sendMessage(Mist.colorize(message));
+            for (final String message : messages) {
+                getSender().sendMessage(TextUtil.formatText(message));
             }
         }
-    }
-
-    // ----------------------------------------------------------------------
-    // Convenience checks
-    //
-    // Here is how they work: When you command is executed, simply call any
-    // of these checks. If they fail, an error will be thrown inside of
-    // which will be a message for the player.
-    //
-    // We catch that error and send the message to the player without any
-    // harm or console errors to your plugin. That is intended and saves time.
-    // ----------------------------------------------------------------------
-
-    /**
-     * Checks if the sender is a console
-     *
-     * @throws CommandException If is console
-     */
-    protected final void checkConsole() throws CommandException {
-        if (!isPlayer())
-            throw new CommandException("&c" + Locale.Command.PLAYER_ONLY);
-    }
-
-    /**
-     * Checks if the player has the given permission
-     *
-     * @param perm Permission to check
-     * @throws CommandException If player didn't have said permission
-     */
-    public final void checkPerm(@NonNull final String perm) throws CommandException {
-        if (isPlayer() && !PlayerUtil.hasPerm(sender, perm))
-            throw new CommandException(Objects.requireNonNull(getPermissionMessage()).replace("{permission}", perm));
     }
 
     // ----------------------------------------------------------------------
@@ -286,7 +250,9 @@ public abstract class SpigotCommand extends Command {
     // ----------------------------------------------------------------------
 
     /**
-     * Replaces placeholders in the message
+     * Replaces placeholders in the message with arguments. For instance if the message is
+     * "set user {0} to {1} rank" it will take the first args and become maybe
+     * "set user IlluzionzDev to Owner rank".
      *
      * @param message Message to replace
      * @return Message with placeholders handled
@@ -320,11 +286,15 @@ public abstract class SpigotCommand extends Command {
     // ----------------------------------------------------------------------
 
     /**
+     * Checks if the sender is a console
+     */
+    protected final boolean checkConsole() {
+        return !isPlayer();
+    }
+
+    /**
      * A convenience check for quickly determining if the sender has a given
      * permission.
-     *
-     * TIP: For a more complete check use {@link #checkPerm(String)} that
-     * will automatically return your command if they lack the permission.
      *
      * @param permission Permission to check
      * @return If player does have permission
@@ -363,7 +333,7 @@ public abstract class SpigotCommand extends Command {
      * By default we check if the player has the permission you set in setPermission.
      *
      * If that is null, we check for the following:
-     * {yourpluginname}.command.{label} for {@link SpigotCommand}
+     * {plugin.name}.command.{label} for {@link SpigotCommand}
      *
      * We handle lacking permissions automatically and return with an no-permission message
      * when the player lacks it.
@@ -441,7 +411,6 @@ public abstract class SpigotCommand extends Command {
     @Override
     public final boolean setLabel(@NotNull final String name) {
         label = name;
-
         return super.setLabel(name);
     }
 
@@ -451,10 +420,11 @@ public abstract class SpigotCommand extends Command {
      *
      * Tab completion is only shown if the sender has {@link #getPermission()}
      */
+    @NotNull
     @Override
-    public final List<String> tabComplete(final CommandSender sender, final String alias, final String[] args) throws IllegalArgumentException {
+    public final List<String> tabComplete(@NotNull final CommandSender sender, @NotNull final String alias, @NotNull final String[] args) throws IllegalArgumentException {
         this.sender = sender;
-        label = alias;
+        this.label = alias;
         this.args = args;
 
         if (hasPerm(getPermission())) {
