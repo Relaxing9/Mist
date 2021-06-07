@@ -161,6 +161,19 @@ public final class TextUtil {
         return s.replaceAll(ChatColor.COLOR_CHAR + ";" + ChatColor.COLOR_CHAR + "|" + ChatColor.COLOR_CHAR, "");
     }
 
+    /**
+     * Util method to get amount of ' ' chars in {@link String} before the first non-space char
+     */
+    public static int getOffset(String s) {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; ++i) {
+            if (chars[i] != ' ') {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static Charset detectCharset(File f, Charset def) {
         byte[] buffer = new byte[2048];
         int read = -1;

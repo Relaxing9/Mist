@@ -1,12 +1,3 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.Mist;
@@ -32,14 +23,7 @@ public abstract class PluginSettings extends YamlConfig {
      * @param plugin Make sure we pass owning plugin
      */
     public PluginSettings(SpigotPlugin plugin) {
-        super(plugin, getSettingsFileName());
-    }
-
-    /**
-     * @return Get the file name for these settings, by default config.yml
-     */
-    protected static String getSettingsFileName() {
-        return Mist.SETTINGS_NAME;
+        super(plugin, Mist.SETTINGS_NAME);
     }
 
     @Override
@@ -52,23 +36,10 @@ public abstract class PluginSettings extends YamlConfig {
     //  -------------------------------------------------------------------------
 
     /**
-     * Main plugin settings
+     * The locale type to use, for instance
+     * "en_US"
      */
-    public static class Settings {
-
-        /**
-         * The locale type to use, for instance
-         * "en_US"
-         */
-        public static ConfigSetting LOCALE;
-
-        public static void init() {
-            // Update to set
-            LOCALE = new ConfigSetting(SETTINGS_FILE, "Settings.Locale", "en_US",
-                    "The language file to use for the plugin",
-                    "More language files (if available) can be found in the plugins locale folder.");
-        }
-    }
+    public static ConfigSetting LOCALE;
 
     /**
      * Load these {@link PluginSettings} into the server, setting values
@@ -84,7 +55,9 @@ public abstract class PluginSettings extends YamlConfig {
         settings.load();
 
         // Load all settings
-        Settings.init();
+        LOCALE = new ConfigSetting(SETTINGS_FILE, "Settings.Locale", "en_US",
+                "The language file to use for the plugin",
+                "More language files (if available) can be found in the plugins locale folder.");
 
         // Load our other custom settings
         settings.loadSettings();

@@ -1,13 +1,4 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
-package com.illuzionzstudios.mist.config.serialization;
+package com.illuzionzstudios.mist.config.serialization.loader;
 
 import com.google.gson.*;
 import com.illuzionzstudios.mist.Logger;
@@ -26,7 +17,6 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
     public JsonFileLoader(String directory, String fileName) {
         super(directory, fileName, "json");
     }
-
 
     /**
      * Used to save our {@link JsonObject} to disk
@@ -57,7 +47,7 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
     }
 
     @Override
-    public JsonObject loadObject() {
+    public JsonObject loadObject(final File file) {
         JsonObject tempObject;
 
         // Try assign JSON file

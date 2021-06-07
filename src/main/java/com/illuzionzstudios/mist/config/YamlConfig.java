@@ -1,17 +1,9 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
+import com.illuzionzstudios.mist.config.format.CommentStyle;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.FileUtil;
 import com.illuzionzstudios.mist.util.TextUtil;
@@ -40,8 +32,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * This is the main configuration file class. Handles loading
- * anything from disk and writing to disk
+ * Handles a {@link ConfigSection} as a YAML file. This means being a file
+ * and having a file location along with saving, reading, and writing utils.
  */
 public class YamlConfig extends ConfigSection {
 
@@ -139,14 +131,14 @@ public class YamlConfig extends ConfigSection {
      */
     @Getter
     @Setter
-    private Comment.CommentStyle defaultNodeCommentFormat = Comment.CommentStyle.SIMPLE;
+    private CommentStyle defaultNodeCommentFormat = CommentStyle.SIMPLE;
 
     /**
      * Default comment styling applied to nodes that hold a {@link ConfigSection}
      */
     @Getter
     @Setter
-    private Comment.CommentStyle defaultSectionCommentFormat = Comment.CommentStyle.SPACED;
+    private CommentStyle defaultSectionCommentFormat = CommentStyle.SPACED;
 
     /**
      * Extra lines to put between root nodes, as in a "\n"
@@ -226,7 +218,7 @@ public class YamlConfig extends ConfigSection {
         if (description.length == 0) {
             headerComment = null;
         } else {
-            headerComment = new Comment(Comment.CommentStyle.BLOCKED, description);
+            headerComment = new Comment(CommentStyle.BLOCKED, description);
         }
     }
 
@@ -239,7 +231,7 @@ public class YamlConfig extends ConfigSection {
         if (description.length == 0) {
             footerComment = null;
         } else {
-            footerComment = new Comment(Comment.CommentStyle.BLOCKED, description);
+            footerComment = new Comment(CommentStyle.BLOCKED, description);
         }
     }
 
@@ -268,7 +260,8 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
-     * Clear all nodes and values in this config in memory
+     * Clear all nodes and values in this config in memory.
+     * DOES NOT SAVE TO DISK.
      *
      * @param clearDefaults If to also invoke {@link #clearDefaults()}
      */
@@ -291,7 +284,6 @@ public class YamlConfig extends ConfigSection {
 
     //  -------------------------------------------------------------------------
     //  File Loading
-    //  TODO: Add JavaDoc
     //  -------------------------------------------------------------------------
 
     /**
@@ -310,6 +302,10 @@ public class YamlConfig extends ConfigSection {
      * Loads an internal resource onto the server
      * For instance file in resources/locales/en_US.lang will be loaded
      * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
+     *
+     * Main applications are implementing this {@link YamlConfig} into a custom
+     * object, for instance implementing a specific type of config. This way if we have
+     * any defaults in the plugin we can load to the server.
      *
      * @param directory The directory to load from, "" if none
      * @param fileName File name with extension to load
@@ -333,9 +329,8 @@ public class YamlConfig extends ConfigSection {
 
                 // File exists, load that
                 if (existingFile.exists()) {
-                    try (
-                            BufferedInputStream existingIn = new BufferedInputStream(new FileInputStream(existingFile));
-                            BufferedReader existingReader = new BufferedReader(new InputStreamReader(existingIn))) {
+                    try (BufferedInputStream existingIn = new BufferedInputStream(new FileInputStream(existingFile));
+                         BufferedReader existingReader = new BufferedReader(new InputStreamReader(existingIn))) {
                         load(existingReader);
                     } catch (Exception ex) {
                         Logger.displayError(ex, "File " + fileName + " exists but couldn't be loaded");
@@ -348,7 +343,6 @@ public class YamlConfig extends ConfigSection {
                 }
 
                 return true;
-
             } catch (Exception ex) {
                 // Couldn't find internal resource so just don't even load
             }
@@ -425,9 +419,9 @@ public class YamlConfig extends ConfigSection {
     }
 
     public void loadFromString(@NotNull String contents) throws InvalidConfigurationException {
-        Map input;
+        Map<?, ?> input;
         try {
-            input = (Map) this.yaml.load(contents);
+            input = this.yaml.load(contents);
         } catch (YAMLException e2) {
             throw new InvalidConfigurationException(e2);
         } catch (ClassCastException e3) {
@@ -458,7 +452,7 @@ public class YamlConfig extends ConfigSection {
     }
 
     protected void parseComments(@NotNull String contents, @NotNull Map<?, ?> input) {
-        // if starts with a comment, load all nonbreaking comments as a header
+        // If starts with a comment, load all non-breaking comments as a header
         // then load all comments and assign to the next valid node loaded
         // (Only load comments that are on their own line)
 
@@ -467,8 +461,8 @@ public class YamlConfig extends ConfigSection {
         boolean insideScalar = false;
         boolean firstNode = true;
         int index = 0;
-        LinkedList<String> currentPath = new LinkedList();
-        ArrayList<String> commentBlock = new ArrayList();
+        LinkedList<String> currentPath = new LinkedList<>();
+        ArrayList<String> commentBlock = new ArrayList<>();
         try {
             while ((line = in.readLine()) != null) {
                 if (line.isEmpty()) {
@@ -486,7 +480,7 @@ public class YamlConfig extends ConfigSection {
                 }
 
                 // check to see if this is a line that we can process
-                int lineOffset = getOffset(line);
+                int lineOffset = TextUtil.getOffset(line);
                 insideScalar &= lineOffset <= index;
                 Matcher m;
                 if (!insideScalar && (m = yamlNode.matcher(line)).find()) {
@@ -519,11 +513,14 @@ public class YamlConfig extends ConfigSection {
                 footerComment = Comment.loadComment(commentBlock);
                 commentBlock.clear();
             }
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
         }
 
     }
 
+    /**
+     * Delete all nodes and values that aren't default values
+     */
     public void deleteNonDefaultSettings() {
         // Delete old config values (thread-safe)
         List<String> defaultKeys = Arrays.asList(defaults.keySet().toArray(new String[0]));
@@ -534,11 +531,19 @@ public class YamlConfig extends ConfigSection {
         }
     }
 
+    /**
+     * Every time we change the file through code save it to disk
+     */
     @Override
     protected void onChange() {
         saveChanges();
     }
 
+    /**
+     * Save current values in memory to the file on disk
+     *
+     * @return If it saved correctly
+     */
     public boolean saveChanges() {
         boolean saved = true;
         if (changed || hasNewDefaults()) {
@@ -548,7 +553,11 @@ public class YamlConfig extends ConfigSection {
         return saved;
     }
 
-    boolean hasNewDefaults() {
+    /**
+     * @return If has default values defined by no values
+     * have been set at those nodes.
+     */
+    public boolean hasNewDefaults() {
         if (file != null && !file.exists()) return true;
         for (String def : defaults.keySet()) {
             if (!values.containsKey(def)) return true;
@@ -592,7 +601,7 @@ public class YamlConfig extends ConfigSection {
             yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             StringWriter str = new StringWriter();
             if (headerComment != null) {
-                headerComment.writeComment(str, 0, Comment.CommentStyle.BLOCKED);
+                headerComment.writeComment(str, 0, CommentStyle.BLOCKED);
                 str.write("\n"); // add one space after the header
             }
             String dump = yaml.dump(this.getValues(false));
@@ -601,7 +610,7 @@ public class YamlConfig extends ConfigSection {
             }
             if (footerComment != null) {
                 str.write("\n");
-                footerComment.writeComment(str, 0, Comment.CommentStyle.BLOCKED);
+                footerComment.writeComment(str, 0, CommentStyle.BLOCKED);
             }
             return str.toString();
         } catch (Throwable ex) {
@@ -626,7 +635,7 @@ public class YamlConfig extends ConfigSection {
             }
 
             // check to see if this is a line that we can process
-            int lineOffset = getOffset(line);
+            int lineOffset = TextUtil.getOffset(line);
             insideScalar &= lineOffset <= index;
             Matcher m;
             if (!insideScalar && (m = yamlNode.matcher(line)).find()) {
@@ -654,7 +663,7 @@ public class YamlConfig extends ConfigSection {
                     }
 
                     // formatting style for this node
-                    Comment.CommentStyle style = comment.getStyling();
+                    CommentStyle style = comment.getStyling();
                     if (style == null) {
                         // check to see what type of node this is
                         if (!m.group(3).trim().isEmpty()) {
@@ -687,19 +696,6 @@ public class YamlConfig extends ConfigSection {
             out.write(line);
             out.write("\n");
         }
-    }
-
-    /**
-     * Util method to get amount of ' ' chars in {@link String}
-     */
-    protected static int getOffset(String s) {
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; ++i) {
-            if (chars[i] != ' ') {
-                return i;
-            }
-        }
-        return -1;
     }
 
 }

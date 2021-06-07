@@ -1,34 +1,18 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
-package com.illuzionzstudios.mist.config.serialization;
+package com.illuzionzstudios.mist.config.serialization.loader;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.config.serialization.JsonFileLoader;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Loads all files from a directory
+ * Loads all files from a directory with a certain file loader
  * @param <T> The type of file to load
  */
 public class DirectoryLoader<T extends FileLoader<?>> {
-
-    /**
-     * Instance of our class for creating objects
-     */
-    private final Class<T> clazz;
 
     /**
      * The directory that is being loaded
@@ -37,35 +21,25 @@ public class DirectoryLoader<T extends FileLoader<?>> {
     public final String directory;
 
     /**
-     * All file loaders for .json files in directory
+     * All file loaders for files in directory. From these we can then create the objects
      */
     @Getter
     private final List<T> loaders;
-
-    /**
-     * Whether directory trying to load from existed or not
-     * and had to create it
-     */
-    private boolean hadToCreateDirectory = false;
 
     /**
      * @param directory to load from
      * @param clazz The class for the file loader
      */
     public DirectoryLoader(Class<T> clazz, String directory) {
-        this.clazz = clazz;
         this.directory = directory;
         loaders = new ArrayList<>();
 
         // Reward directory
         File dir = new File(SpigotPlugin.getInstance().getDataFolder().getPath() + File.separator + directory);
 
-        // Ensure exists
+        // If doesn't exist and has to create no point loading
         if (dir.listFiles() == null || !dir.exists()) {
-            // Can't create directory, FATAL
-            if (!dir.mkdirs()) return;
-
-            hadToCreateDirectory = true;
+            return;
         }
 
         // Go through files
@@ -76,7 +50,7 @@ public class DirectoryLoader<T extends FileLoader<?>> {
             try {
                 T loader = clazz.getConstructor(String.class, String.class).newInstance(directory, name);
 
-                // Specific files
+                // Make sure the file extension matches the loader
                 if (file.getName().split("\\.")[1].equalsIgnoreCase(loader.getExtension()))
                     // Add to cache
                     loaders.add(loader);
@@ -85,13 +59,6 @@ public class DirectoryLoader<T extends FileLoader<?>> {
             }
 
         }
-    }
-
-    /**
-     * @return {@link #hadToCreateDirectory}
-     */
-    public boolean hadToCreateDirectory() {
-        return hadToCreateDirectory;
     }
 
 }

@@ -1,12 +1,3 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.ui.type;
 
 import com.cryptomorin.xseries.XMaterial;
@@ -48,6 +39,8 @@ import java.util.List;
  * A maximum of 54 options per object
  * <p>
  *
+ * TODO: Find a better way to modify things like this
+ *
  * @param <T> Type of item to configure for
  *            All public non-final fields will appear for configuration
  *            <p>
@@ -65,6 +58,7 @@ import java.util.List;
  *            <p>
  *            Else a blank menu appears with no options to configure
  */
+@Deprecated
 public class ConfigureOptionsUI<T> extends UserInterface {
 
     /**

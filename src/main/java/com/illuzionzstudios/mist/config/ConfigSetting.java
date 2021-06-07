@@ -1,15 +1,6 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.config;
 
-import com.illuzionzstudios.mist.config.format.Comment;
+import com.illuzionzstudios.mist.config.format.CommentStyle;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +11,8 @@ import java.util.List;
  * This represents a set option in a {@link YamlConfig}
  * It provides convenience to getting and setting this value. This way
  * we don't always have to make calls to the {@link YamlConfig} object
- * and can just access this.
+ * and can just access this. This is usually for values that we know will be in
+ * the config not for custom configurations. For instance the language to use
  */
 public class ConfigSetting {
 
@@ -46,7 +38,7 @@ public class ConfigSetting {
         config.setDefault(key, defaultValue, comment);
     }
 
-    public ConfigSetting(@NotNull YamlConfig config, @NotNull String key, @NotNull Object defaultValue, Comment.CommentStyle commentStyle, String... comment) {
+    public ConfigSetting(@NotNull YamlConfig config, @NotNull String key, @NotNull Object defaultValue, CommentStyle commentStyle, String... comment) {
         this.config = config;
         this.key = key;
         config.setDefault(key, defaultValue, commentStyle, comment);

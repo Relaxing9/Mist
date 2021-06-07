@@ -1,15 +1,6 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
-package com.illuzionzstudios.mist.config.serialization;
+package com.illuzionzstudios.mist.config.serialization.loader;
 
-import com.illuzionzstudios.mist.config.DataSerializable;
+import com.illuzionzstudios.mist.config.serialization.DataSerializable;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 
@@ -18,12 +9,12 @@ import java.io.*;
 /**
  * An interface to load certain types of files
  *
- * @param <T> Type of object being loaded
+ * @param <T> Type of data object being loaded
  */
 public abstract class FileLoader<T> {
 
     /**
-     * Our T object to get properties from
+     * Our data object to get properties from
      */
     @Getter
     protected T object;
@@ -48,20 +39,20 @@ public abstract class FileLoader<T> {
 
     /**
      * @param directory The directory from plugin folder
-     * @param fileName The file name without .json
+     * @param fileName The file name without extension
      * @param extension File extension to use
      */
-    public FileLoader(String directory, String fileName, String extension) {
+    public FileLoader(final String directory, final String fileName, final String extension) {
         this(new File(SpigotPlugin.getInstance().getDataFolder() + "/" + directory, fileName + "." + extension), extension);
     }
 
     /**
      * @param file File to load from
      */
-    public FileLoader(File file, String extension) {
+    public FileLoader(final File file, final String extension) {
         this.file = file;
 
-        object = loadObject();
+        object = loadObject(file);
 
         // Get name without extension
         this.name = file.getName().split("\\.")[0];
@@ -69,9 +60,9 @@ public abstract class FileLoader<T> {
     }
 
     /**
-     * Serialize a {@link com.illuzionzstudios.mist.config.DataSerializable} object
+     * Serialize a {@link DataSerializable} object and save to disk
      */
-    public boolean serialize(DataSerializable<T> object) {
+    public boolean serialize(final DataSerializable<T> object) {
         return serialize(object.serialize());
     }
 
@@ -80,7 +71,7 @@ public abstract class FileLoader<T> {
      *
      * @param object {@link T to serialize}
      */
-    public boolean serialize(T object) {
+    public boolean serialize(final T object) {
         this.object = object;
         return save();
     }
@@ -96,6 +87,6 @@ public abstract class FileLoader<T> {
     /**
      * Load basic object to memory from disk
      */
-    public abstract T loadObject();
+    public abstract T loadObject(final File file);
 
 }

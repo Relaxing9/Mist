@@ -1,17 +1,8 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.config.format.Comment;
+import com.illuzionzstudios.mist.config.format.CommentStyle;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -19,11 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
- * A section of memory that relates to a configuration
+ * A section of memory that relates to a configuration. This configuration
+ * is usually a YAML file which is split into different memory sections
+ *
  * See {@link MemoryConfiguration}
  */
 public class ConfigSection extends MemoryConfiguration {
@@ -162,7 +157,7 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * Setup the config section in another {@link ConfigSection}
      *
-     * @param root The absolute root {@link ConfigSection}
+     * @param root The absolute root {@link ConfigSection} (Main file)
      * @param parent The {@link ConfigSection} just above {@link this}
      * @param nodeKey See {@link #nodeKey}
      * @param isDefault See {@link #isDefault}
@@ -190,6 +185,8 @@ public class ConfigSection extends MemoryConfiguration {
         if (root != null && root != this) {
             root.onChange();
         }
+        // Reset
+        this.changed = false;
     }
 
     /**
@@ -274,10 +271,10 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * See {@link #createDefaultSection(String, String...)}
      *
-     * @param style The custom {@link com.illuzionzstudios.mist.config.format.Comment.CommentStyle} for the comments
+     * @param style The custom {@link CommentStyle} for the comments
      */
     @NotNull
-    public ConfigSection createDefaultSection(@NotNull String path, Comment.CommentStyle style, String... comment) {
+    public ConfigSection createDefaultSection(@NotNull String path, CommentStyle style, String... comment) {
         createNodePath(path, true);
 
         // Create the section
@@ -300,21 +297,21 @@ public class ConfigSection extends MemoryConfiguration {
     //  -------------------------------------------------------------------------
 
     /**
-     * See {@link #setComment(String, Comment)} and construct {@link Comment} from paramaters
+     * See {@link #setComment(String, Comment)} and construct {@link Comment} from parameters
      * 
      * @param commentStyle The styling for the comment
      * @param lines The lines to set
      */
     @NotNull
-    public ConfigSection setComment(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, String... lines) {
+    public ConfigSection setComment(@NotNull String path, @Nullable CommentStyle commentStyle, String... lines) {
         return setComment(path, lines != null ? new Comment(commentStyle, lines) : null);
     }
 
     /**
-     * See {@link #setComment(String, Comment.CommentStyle, String...)}
+     * See {@link #setComment(String, CommentStyle, String...)}
      */
     @NotNull
-    public ConfigSection setComment(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, @Nullable List<String> lines) {
+    public ConfigSection setComment(@NotNull String path, @Nullable CommentStyle commentStyle, @Nullable List<String> lines) {
         return setComment(path, lines != null ? new Comment(commentStyle, lines) : null);
     }
 
@@ -359,19 +356,19 @@ public class ConfigSection extends MemoryConfiguration {
     }
 
     /**
-     * See {@link #setDefaultComment(String, Comment.CommentStyle, List)}
+     * See {@link #setDefaultComment(String, CommentStyle, List)}
      */
     @NotNull
-    public ConfigSection setDefaultComment(@NotNull String path, Comment.CommentStyle commentStyle, String... lines) {
+    public ConfigSection setDefaultComment(@NotNull String path, CommentStyle commentStyle, String... lines) {
         return setDefaultComment(path, commentStyle, lines.length == 0 ? null : Arrays.asList(lines));
     }
 
     /**
-     * See {@link #setDefaultComment(String, List)} but we set {@link com.illuzionzstudios.mist.config.format.Comment.CommentStyle}
+     * See {@link #setDefaultComment(String, List)} but we set {@link CommentStyle}
      * for the comments
      */
     @NotNull
-    public ConfigSection setDefaultComment(@NotNull String path, Comment.CommentStyle commentStyle, @Nullable List<String> lines) {
+    public ConfigSection setDefaultComment(@NotNull String path, CommentStyle commentStyle, @Nullable List<String> lines) {
         setDefaultComment(fullPath + path, new Comment(commentStyle, lines));
         return this;
     }
@@ -442,7 +439,7 @@ public class ConfigSection extends MemoryConfiguration {
     }
 
     /**
-     * @return A new {@link ConfigSection} under this as a default section
+     * @return A new {@link ConfigSection} with this as a parent as a default section
      */
     @Override
     public ConfigSection getDefaults() {
@@ -479,7 +476,7 @@ public class ConfigSection extends MemoryConfiguration {
      * {@link ConfigSection}. For instance if there is "foo.bar" and "bar.foo", will return foo and bar.
      * If the deep option is set, will return foo foo.bar bar bar.foo
      *
-     * @param deep If to recursive search for nodes
+     * @param deep If to recursive search for nodes otherwise returns full paths
      * @return A set of path nodes as a {@link String}
      */
     @NotNull
@@ -527,46 +524,30 @@ public class ConfigSection extends MemoryConfiguration {
         Objects.requireNonNull(root.defaults, "Root config has invalid default values map");
         Objects.requireNonNull(root.values, "Root config has invalid values map");
 
+        Function<Integer, Collector<Map.Entry<String, Object>, ?, LinkedHashMap<String, Object>>> collectorFunction = pathIndex1 -> Collectors.toMap(
+                e -> !e.getKey().endsWith(String.valueOf(root.pathSeparator)) ? e.getKey().substring(pathIndex1 + 1) : e.getKey().substring(pathIndex1 + 1, e.getKey().length() - 1),
+                Map.Entry::getValue,
+                (v1, v2) -> {
+                    throw new IllegalStateException();
+                }, // never going to be merging keys
+                LinkedHashMap::new);
+
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         int pathIndex = fullPath.lastIndexOf(root.pathSeparator);
         if (deep) {
-            result.putAll((Map<String, Object>) root.defaults.entrySet().stream()
+            result.putAll(root.defaults.entrySet().stream()
                     .filter(k -> k.getKey().startsWith(fullPath))
-                    .collect(Collectors.toMap(
-                            e -> !e.getKey().endsWith(String.valueOf(root.pathSeparator)) ? e.getKey().substring(pathIndex + 1) : e.getKey().substring(pathIndex + 1, e.getKey().length() - 1),
-                            e -> e.getValue(),
-                            (v1, v2) -> {
-                                throw new IllegalStateException();
-                            }, // never going to be merging keys
-                            LinkedHashMap::new)));
-            result.putAll((Map<String, Object>) root.values.entrySet().stream()
+                    .collect(collectorFunction.apply(pathIndex)));
+            result.putAll(root.values.entrySet().stream()
                     .filter(k -> k.getKey().startsWith(fullPath))
-                    .collect(Collectors.toMap(
-                            e -> !e.getKey().endsWith(String.valueOf(root.pathSeparator)) ? e.getKey().substring(pathIndex + 1) : e.getKey().substring(pathIndex + 1, e.getKey().length() - 1),
-                            e -> e.getValue(),
-                            (v1, v2) -> {
-                                throw new IllegalStateException();
-                            }, // never going to be merging keys
-                            LinkedHashMap::new)));
+                    .collect(collectorFunction.apply(pathIndex)));
         } else {
-            result.putAll((Map<String, Object>) root.defaults.entrySet().stream()
+            result.putAll(root.defaults.entrySet().stream()
                     .filter(k -> k.getKey().startsWith(fullPath) && k.getKey().lastIndexOf(root.pathSeparator) == pathIndex)
-                    .collect(Collectors.toMap(
-                            e -> !e.getKey().endsWith(String.valueOf(root.pathSeparator)) ? e.getKey().substring(pathIndex + 1) : e.getKey().substring(pathIndex + 1, e.getKey().length() - 1),
-                            e -> e.getValue(),
-                            (v1, v2) -> {
-                                throw new IllegalStateException();
-                            }, // never going to be merging keys
-                            LinkedHashMap::new)));
-            result.putAll((Map<String, Object>) root.values.entrySet().stream()
+                    .collect(collectorFunction.apply(pathIndex)));
+            result.putAll(root.values.entrySet().stream()
                     .filter(k -> k.getKey().startsWith(fullPath) && k.getKey().lastIndexOf(root.pathSeparator) == pathIndex)
-                    .collect(Collectors.toMap(
-                            e -> !e.getKey().endsWith(String.valueOf(root.pathSeparator)) ? e.getKey().substring(pathIndex + 1) : e.getKey().substring(pathIndex + 1, e.getKey().length() - 1),
-                            e -> e.getValue(),
-                            (v1, v2) -> {
-                                throw new IllegalStateException();
-                            }, // never going to be merging keys
-                            LinkedHashMap::new)));
+                    .collect(collectorFunction.apply(pathIndex)));
         }
         return result;
     }
@@ -613,7 +594,7 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * See {@link #contains(String)}
      *
-     * @param ignoreDefault If to not check the defaults aswell
+     * @param ignoreDefault If to not check the defaults as well
      */
     @Override
     public boolean contains(@NotNull String path, boolean ignoreDefault) {
@@ -733,7 +714,7 @@ public class ConfigSection extends MemoryConfiguration {
      * memory and make sure if we set anything null, it's removed
      *
      * @param path Path to set value at
-     * @param value Object to place as a value
+     * @param value Object to place as a value. Setting to {@code null} removes value from memory
      */
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
@@ -769,7 +750,7 @@ public class ConfigSection extends MemoryConfiguration {
     }
 
     /**
-     * See {@link #set(String, Object)} and {@link #setComment(String, Comment.CommentStyle, String...)}
+     * See {@link #set(String, Object)} and {@link #setComment(String, CommentStyle, String...)}
      */
     @NotNull
     public ConfigSection set(@NotNull String path, @Nullable Object value, String... comment) {
@@ -790,16 +771,16 @@ public class ConfigSection extends MemoryConfiguration {
      * See {@link #set(String, Object, List)} but set comment styling
      */
     @NotNull
-    public ConfigSection set(@NotNull String path, @Nullable Object value, @Nullable Comment.CommentStyle commentStyle, String... comment) {
+    public ConfigSection set(@NotNull String path, @Nullable Object value, @Nullable CommentStyle commentStyle, String... comment) {
         set(path, value);
         return setComment(path, commentStyle, comment);
     }
 
     /**
-     * See {@link #set(String, Object, Comment.CommentStyle, String...)}
+     * See {@link #set(String, Object, CommentStyle, String...)}
      */
     @NotNull
-    public ConfigSection set(@NotNull String path, @Nullable Object value, @Nullable Comment.CommentStyle commentStyle, List<String> comment) {
+    public ConfigSection set(@NotNull String path, @Nullable Object value, @Nullable CommentStyle commentStyle, List<String> comment) {
         set(path, value);
         return setComment(path, commentStyle, comment);
     }
@@ -832,19 +813,19 @@ public class ConfigSection extends MemoryConfiguration {
     }
 
     /**
-     * See {@link #set(String, Object, Comment.CommentStyle, String...)} but default
+     * See {@link #set(String, Object, CommentStyle, String...)} but default
      */
     @NotNull
-    public ConfigSection setDefault(@NotNull String path, @Nullable Object value, Comment.CommentStyle commentStyle, String... comment) {
+    public ConfigSection setDefault(@NotNull String path, @Nullable Object value, CommentStyle commentStyle, String... comment) {
         addDefault(path, value);
         return setDefaultComment(path, commentStyle, comment);
     }
 
     /**
-     * See {@link #setDefault(String, Object, Comment.CommentStyle, String...)}
+     * See {@link #setDefault(String, Object, CommentStyle, String...)}
      */
     @NotNull
-    public ConfigSection setDefault(@NotNull String path, @Nullable Object value, Comment.CommentStyle commentStyle, List<String> comment) {
+    public ConfigSection setDefault(@NotNull String path, @Nullable Object value, CommentStyle commentStyle, List<String> comment) {
         addDefault(path, value);
         return setDefaultComment(path, commentStyle, comment);
     }
@@ -888,17 +869,17 @@ public class ConfigSection extends MemoryConfiguration {
     }
 
     @NotNull
-    public ConfigSection createSection(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, String... comment) {
-        return createSection(path, commentStyle, comment.length == 0 ? (List) null : Arrays.asList(comment));
+    public ConfigSection createSection(@NotNull String path, @Nullable CommentStyle commentStyle, String... comment) {
+        return createSection(path, commentStyle, comment.length == 0 ? null : Arrays.asList(comment));
     }
 
     /**
-     * See {@link #createSection(String)} and {@link #set(String, Object, Comment.CommentStyle, String...)}
+     * See {@link #createSection(String)} and {@link #set(String, Object, CommentStyle, String...)}
      *
      * Except we are doing this on a new {@link ConfigSection}
      */
     @NotNull
-    public ConfigSection createSection(@NotNull String path, @Nullable Comment.CommentStyle commentStyle, @Nullable List<String> comment) {
+    public ConfigSection createSection(@NotNull String path, @Nullable CommentStyle commentStyle, @Nullable List<String> comment) {
         Objects.requireNonNull(root.values, "Root config has invalid values map");
 
         createNodePath(path, false);
