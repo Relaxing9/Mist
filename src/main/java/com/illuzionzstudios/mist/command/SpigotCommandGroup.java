@@ -2,7 +2,7 @@ package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.command.response.ReturnType;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
@@ -139,8 +139,8 @@ public abstract class SpigotCommandGroup {
                 + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
                         ""),
                 " ",
-                "&2  [] &7= " + Locale.Command.LABEL_OPTIONAL_ARGS,
-                "&6  <> &7= " + Locale.Command.LABEL_REQUIRED_ARGS,
+                "&2  [] &7= " + PluginLocale.Command.LABEL_OPTIONAL_ARGS,
+                "&6  <> &7= " + PluginLocale.Command.LABEL_REQUIRED_ARGS,
                 " "
         };
     }
@@ -200,7 +200,7 @@ public abstract class SpigotCommandGroup {
                 command.execute(sender, getLabel(), args.length == 1 ? new String[] {} : Arrays.copyOfRange(args, 1, args.length));
             } else {
                 // Couldn't find sub command
-                tell(Locale.Command.INVALID_SUB.replace("{label}", getMainLabel()));
+                tell(PluginLocale.Command.INVALID_SUB.replace("{label}", getMainLabel()));
             }
 
             return ReturnType.SUCCESS;

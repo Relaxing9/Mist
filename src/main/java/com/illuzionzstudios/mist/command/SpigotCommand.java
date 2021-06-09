@@ -12,13 +12,12 @@ package com.illuzionzstudios.mist.command;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.PlayerUtil;
 import com.illuzionzstudios.mist.util.TextUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -197,7 +196,7 @@ public abstract class SpigotCommand extends Command {
             if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && ("help".equals(args[0]) || "?".equals(args[0]))) {
                 if (!getUsage().trim().equalsIgnoreCase(""))
                     // Inform usage message
-                    tell(Locale.Command.INVALID_USAGE.replace("{label}", label).replace("{args}", String.join(" ", args)));
+                    tell(PluginLocale.Command.INVALID_USAGE.replace("{label}", label).replace("{args}", String.join(" ", args)));
                 return true;
             }
 
@@ -208,7 +207,7 @@ public abstract class SpigotCommand extends Command {
             if (response == ReturnType.NO_PERMISSION) {
                 tell("&cYou don't have enough permissions to do this...");
             } else if (response == ReturnType.PLAYER_ONLY) {
-                tell(Locale.Command.PLAYER_ONLY);
+                tell(PluginLocale.Command.PLAYER_ONLY);
             } else if (response == ReturnType.UNKNOWN_ERROR) {
                 tell("&cThis was not supposed to happen...");
             }
@@ -326,7 +325,7 @@ public abstract class SpigotCommand extends Command {
      */
     @Override
     public final String getPermissionMessage() {
-        return super.getPermissionMessage() != null && !super.getPermissionMessage().trim().equals("") ? super.getPermissionMessage() : Locale.Command.NO_PERMISSION;
+        return super.getPermissionMessage() != null && !super.getPermissionMessage().trim().equals("") ? super.getPermissionMessage() : PluginLocale.Command.NO_PERMISSION;
     }
 
     /**

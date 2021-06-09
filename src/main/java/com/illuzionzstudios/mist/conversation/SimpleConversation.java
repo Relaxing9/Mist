@@ -11,7 +11,7 @@ package com.illuzionzstudios.mist.conversation;
 
 import com.cryptomorin.xseries.XSound;
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.util.Valid;
@@ -134,7 +134,7 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
      * @return
      */
     protected ConversationPrefix getPrefix() {
-        return new SimplePrefix(Locale.General.PLUGIN_PREFIX + " ");
+        return new SimplePrefix(PluginLocale.General.PLUGIN_PREFIX + " ");
     }
 
     private final String addLastSpace(final String prefix) {

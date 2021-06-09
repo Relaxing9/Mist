@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.Mist;
-import com.illuzionzstudios.mist.config.locale.Locale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
 /**

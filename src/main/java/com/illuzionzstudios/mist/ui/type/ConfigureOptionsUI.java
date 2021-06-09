@@ -3,7 +3,7 @@ package com.illuzionzstudios.mist.ui.type;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.illuzionzstudios.mist.config.Configurable;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.conversation.SimpleConversation;
 import com.illuzionzstudios.mist.conversation.SimplePrompt;
@@ -124,7 +124,7 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             Button.ButtonListener listener = Button.ButtonListener.ofNull();
 
             // Message to indicate to input a value
-            String enterValueMessage = Locale.Config.ENTER_VALUE;
+            String enterValueMessage = PluginLocale.Config.ENTER_VALUE;
 
             // Open appropriate menu
             if (int.class.isAssignableFrom(type)) {
@@ -332,11 +332,11 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             // Finally construct button
             Button button = Button.of(ItemCreator.builder()
                             .material(f.getAnnotation(Configurable.class).material())
-                            .name(new Message(Locale.Interface.OPTIONS_OPTION_NAME)
+                            .name(new Message(PluginLocale.Interface.OPTIONS_OPTION_NAME)
                                     .processPlaceholder("valueName", TextUtil.convertCamelCase(f.getName())).getMessage())
-                            .lore(new Message(Locale.Interface.OPTIONS_OPTION_LORE)
+                            .lore(new Message(PluginLocale.Interface.OPTIONS_OPTION_LORE)
                                     .processPlaceholder("value", value)
-                                    .processPlaceholder("description", WordUtils.wrap(Locale.getMessage(valueDescriptionKey, valueDescriptionKey).getMessage(), 30)).getMessage())
+                                    .processPlaceholder("description", WordUtils.wrap(PluginLocale.getMessage(valueDescriptionKey, valueDescriptionKey).getMessage(), 30)).getMessage())
                             .build(),
                     listener);
             options.add(button);
@@ -555,14 +555,14 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             // Set here as we need to get field content
             currentValues = Button.makeIcon(ItemCreator.builder()
                     .material(XMaterial.PAPER)
-                    .name(Locale.Interface.LIST_VALUES_NAME)
+                    .name(PluginLocale.Interface.LIST_VALUES_NAME)
                     .lores((List<String>) ReflectionUtil.getFieldContent(field, object))
                     .build());
 
             clearValues = Button.of(ItemCreator.builder()
                             .material(XMaterial.RED_DYE)
-                            .name(Locale.Interface.LIST_CLEAR_NAME)
-                            .lore(Locale.Interface.LIST_CLEAR_LORE)
+                            .name(PluginLocale.Interface.LIST_CLEAR_NAME)
+                            .lore(PluginLocale.Interface.LIST_CLEAR_LORE)
                             .build(),
                     (player, ui, clickType, event) -> {
                         // Clear list
@@ -580,8 +580,8 @@ public class ConfigureOptionsUI<T> extends UserInterface {
 
             addValue = Button.of(ItemCreator.builder()
                             .material(XMaterial.LIME_DYE)
-                            .name(Locale.Interface.LIST_ADD_NAME)
-                            .lore(Locale.Interface.LIST_ADD_LORE)
+                            .name(PluginLocale.Interface.LIST_ADD_NAME)
+                            .lore(PluginLocale.Interface.LIST_ADD_LORE)
                             .build(),
                     (player, ui, clickType, event) -> {
                         // Attempt to add value
@@ -591,7 +591,7 @@ public class ConfigureOptionsUI<T> extends UserInterface {
                                 return new SimplePrompt() {
                                     @Override
                                     protected String getPrompt(ConversationContext conversationContext) {
-                                        return Locale.Config.ENTER_VALUE;
+                                        return PluginLocale.Config.ENTER_VALUE;
                                     }
 
                                     @Nullable

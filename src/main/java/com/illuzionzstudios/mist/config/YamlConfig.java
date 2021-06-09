@@ -387,7 +387,7 @@ public class YamlConfig extends ConfigSection {
         if (file.exists()) {
             try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
                 Charset charset = TextUtil.detectCharset(stream, StandardCharsets.UTF_8);
-                // upgrade charset if file was saved in a more complex format
+                // Upgrade charset if file was saved in a more complex format
                 if (charset == StandardCharsets.UTF_16BE || charset == StandardCharsets.UTF_16LE) {
                     defaultCharset = StandardCharsets.UTF_16;
                 }
@@ -439,15 +439,15 @@ public class YamlConfig extends ConfigSection {
     }
 
     protected void convertMapsToSections(@NotNull Map<?, ?> input, @NotNull ConfigSection section) {
-        // TODO: make this non-recursive
-        for (Map.Entry<?, ?> entry : input.entrySet()) {
-            String key = entry.getKey().toString();
-            Object value = entry.getValue();
+        for (final Map.Entry<?, ?> entry : input.entrySet()) {
+            final String key = entry.getKey().toString();
+            final Object value = entry.getValue();
+
             if (value instanceof Map) {
-                this.convertMapsToSections((Map) value, section.createSection(key));
-                continue;
+                convertMapsToSections((Map<?, ?>) value, section.createSection(key));
+            } else {
+                section.set(key, value);
             }
-            section.set(key, value);
         }
     }
 

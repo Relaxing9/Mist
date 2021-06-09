@@ -2,7 +2,7 @@ package com.illuzionzstudios.mist.util;
 
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
@@ -59,7 +59,7 @@ public final class UpdateChecker {
 
         check((version, name) -> {
             if (version != VersionType.LATEST)
-            new Message(Locale.Update.AVAILABLE)
+            new Message(PluginLocale.Update.AVAILABLE)
                     .processPlaceholder("plugin_name", SpigotPlugin.getPluginName())
                     .processPlaceholder("current", SpigotPlugin.getPluginVersion())
                     .processPlaceholder("new", name)

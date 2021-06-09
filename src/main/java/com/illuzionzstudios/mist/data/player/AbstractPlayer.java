@@ -11,7 +11,7 @@ package com.illuzionzstudios.mist.data.player;
  */
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.data.PlayerData;
 import com.illuzionzstudios.mist.data.controller.PlayerDataController;
@@ -110,7 +110,7 @@ public abstract class AbstractPlayer {
      * @param key Key to fetch from locale
      */
     public Message getMessage(String key) {
-        return Locale.getMessage(key, key);
+        return PluginLocale.getMessage(key, key);
     }
 
     /**

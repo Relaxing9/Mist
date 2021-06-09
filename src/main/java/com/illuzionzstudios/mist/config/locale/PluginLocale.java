@@ -4,6 +4,8 @@ import com.illuzionzstudios.mist.config.PluginSettings;
 import com.illuzionzstudios.mist.config.YamlConfig;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
+import java.util.HashMap;
+
 /**
  * Loaded file that handles all game language
  * Also supports different languages apart from English
@@ -11,19 +13,26 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  *
  * We provide some common messages but can implement your own
  */
-public abstract class Locale extends YamlConfig {
+public abstract class PluginLocale extends YamlConfig {
 
     /**
      * @param plugin Make sure we pass owning plugin
      */
-    public Locale(SpigotPlugin plugin) {
+    public PluginLocale(SpigotPlugin plugin) {
         super(plugin, "/locales", PluginSettings.LOCALE.getString() + ".lang");
     }
 
     /**
-     * The current loaded {@link Locale} instance
+     * The current loaded {@link PluginLocale} instance
      */
     public static YamlConfig LOCALE_FILE;
+
+    /**
+     * This is a cache of all loaded translations for a key. If we go to get a value by
+     * a key it will first check here. If not found it will look through the file and if found
+     * update it here. If not found anywhere it will simply return the default.
+     */
+    protected final static HashMap<String, String> localeCache = new HashMap<>();
 
     /**
      * This loads our lang file if the "locales/LOCALE.lang" exists
@@ -39,7 +48,6 @@ public abstract class Locale extends YamlConfig {
     }
 
     //  -------------------------------------------------------------------------
-
     //  Main messages provided by default
     //  If these are found in the locale, we use those, otherwise use these
     //  defaults
@@ -261,14 +269,14 @@ public abstract class Locale extends YamlConfig {
     }
 
     /**
-     * Load these {@link PluginSettings} into the server, setting values
+     * Load the {@link PluginLocale} into the server, setting values
      * if not there, or loading the values into memory
      *
-     * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
+     * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin locale
      *
-     * @param settings The instance of {@link Locale} to load
+     * @param settings The instance of {@link PluginLocale} to load
      */
-    public static void loadLocale(Locale settings) {
+    public static void loadLocale(PluginLocale settings) {
         // Set instance
         LOCALE_FILE = settings;
         // Load settings loadLocale
@@ -288,7 +296,7 @@ public abstract class Locale extends YamlConfig {
 
     /**
      * Invoked to load all other custom settings that we implement
-     * in our own {@link Locale}
+     * in our own {@link PluginLocale}
      */
     public abstract void loadLocale();
 
@@ -298,19 +306,42 @@ public abstract class Locale extends YamlConfig {
      * @param key Node key to search for
      * @return The found message
      */
-    public static Message getMessage(String key) {
+    public static String getMessage(String key) {
         return getMessage(key, key);
     }
 
     /**
-     * Retrieve a message from the locale
+     * Retrieve a message from the locale. Will first look in the cache to see if
+     * they key is there. If not found it will look for it in the file and then update
+     * the cache. If couldn't be found anywhere will return {@param def}. Should
+     * be defined in lang file manually anyway.
      *
      * @param key Node key to search for
      * @param def The default message to use if not found
      * @return The found message or default
      */
-    public static Message getMessage(String key, String def) {
-        return new Message(LOCALE_FILE.getString(key, def));
+    public static String getMessage(String key, String def) {
+        // Try find in cache
+        if (localeCache.containsKey(key))
+            return localeCache.get(key);
+
+        // Try find in locale file
+        if (LOCALE_FILE.isSet(key)) {
+            String foundValue = LOCALE_FILE.getString(key);
+            // Update cache
+            localeCache.put(key, foundValue);
+            return foundValue;
+        }
+
+        // Return default
+        return def;
+    }
+
+    /**
+     * Clear the locale cache. Usually good for a plugin reload
+     */
+    public static void invalidateCache() {
+        localeCache.clear();
     }
 
 }

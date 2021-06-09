@@ -10,7 +10,7 @@
 package com.illuzionzstudios.mist.ui.type;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ItemCreator;
@@ -51,8 +51,8 @@ public class ConfirmUI extends UserInterface {
 
         denyButton = Button.of(ItemCreator.builder()
                 .material(XMaterial.RED_DYE)
-                .name(Locale.Interface.CONFIRM_CONFIRM_NAME)
-                .lore(Locale.Interface.CONFIRM_CONFIRM_LORE)
+                .name(PluginLocale.Interface.CONFIRM_CONFIRM_NAME)
+                .lore(PluginLocale.Interface.CONFIRM_CONFIRM_LORE)
                 .glow(true)
                 .build(),
                 (player, ui, clickType, event) -> {
@@ -61,8 +61,8 @@ public class ConfirmUI extends UserInterface {
 
         confirmButton = Button.of(ItemCreator.builder()
                 .material(XMaterial.LIME_DYE)
-                .name(Locale.Interface.CONFIRM_DENY_NAME)
-                .lore(Locale.Interface.CONFIRM_DENY_LORE)
+                .name(PluginLocale.Interface.CONFIRM_DENY_NAME)
+                .lore(PluginLocale.Interface.CONFIRM_DENY_LORE)
                 .glow(true)
                 .build(),
                 (player, ui, clickType, event) -> {

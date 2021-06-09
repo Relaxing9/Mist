@@ -14,7 +14,7 @@ import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.SpigotCommand;
 import com.illuzionzstudios.mist.command.SpigotCommandGroup;
 import com.illuzionzstudios.mist.config.PluginSettings;
-import com.illuzionzstudios.mist.config.locale.Locale;
+import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController;
 import com.illuzionzstudios.mist.data.controller.PlayerDataController;
 import com.illuzionzstudios.mist.data.database.Database;
@@ -22,15 +22,12 @@ import com.illuzionzstudios.mist.data.player.BukkitPlayer;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import com.illuzionzstudios.mist.ui.InterfaceController;
-import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.util.UpdateChecker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -217,7 +214,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             // Load settings and locale
             // Try save config if found
             PluginSettings.loadSettings(getPluginSettings());
-            Locale.loadLocale(getPluginLocale());
+            PluginLocale.loadLocale(getPluginLocale());
 
             // Enable our scheduler
             new BukkitScheduler(this).initialize();
@@ -290,7 +287,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             // Load settings and locale
             // Try save config if found
             PluginSettings.loadSettings(getPluginSettings());
-            Locale.loadLocale(getPluginLocale());
+            PluginLocale.loadLocale(getPluginLocale());
 
             // Restart tickers
             MinecraftScheduler.get().initialize();
@@ -376,9 +373,9 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract PluginSettings getPluginSettings();
 
     /**
-     * @return Get the {@link Locale} instance being used for this plugin
+     * @return Get the {@link PluginLocale} instance being used for this plugin
      */
-    public abstract Locale getPluginLocale();
+    public abstract PluginLocale getPluginLocale();
 
     /**
      * @return Plugin's id for update checking on spigot
