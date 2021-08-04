@@ -8,10 +8,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 
 /**
- * The major server version the current server software is
- * eg, 1.15, 1.8
- */
-/**
  * Represents the current Minecraft version the plugin loaded on
  */
 public final class ServerVersion {

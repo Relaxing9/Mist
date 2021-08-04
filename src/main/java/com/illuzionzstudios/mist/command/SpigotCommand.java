@@ -12,6 +12,7 @@ package com.illuzionzstudios.mist.command;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
+import com.illuzionzstudios.mist.config.locale.MistString;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.util.PlayerUtil;
@@ -196,7 +197,7 @@ public abstract class SpigotCommand extends Command {
             if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && ("help".equals(args[0]) || "?".equals(args[0]))) {
                 if (!getUsage().trim().equalsIgnoreCase(""))
                     // Inform usage message
-                    tell(PluginLocale.Command.INVALID_USAGE.replace("{label}", label).replace("{args}", String.join(" ", args)));
+                    tell(PluginLocale.COMMAND_INVALID_USAGE.toString("{label}", label, "{args}", String.join(" ", args)));
                 return true;
             }
 
@@ -207,7 +208,7 @@ public abstract class SpigotCommand extends Command {
             if (response == ReturnType.NO_PERMISSION) {
                 tell("&cYou don't have enough permissions to do this...");
             } else if (response == ReturnType.PLAYER_ONLY) {
-                tell(PluginLocale.Command.PLAYER_ONLY);
+                tell(PluginLocale.COMMAND_PLAYER_ONLY);
             } else if (response == ReturnType.UNKNOWN_ERROR) {
                 tell("&cThis was not supposed to happen...");
             }
@@ -225,10 +226,14 @@ public abstract class SpigotCommand extends Command {
      */
     protected abstract ReturnType onCommand();
 
+    protected void tell(final MistString message) {
+        message.sendMessage(getSender());
+    }
+
     /**
      * @param message Tell the command sender a single message
      */
-    protected void tell(String message) {
+    protected void tell(final String message) {
         if (getSender() != null)
             getSender().sendMessage(TextUtil.formatText(message));
     }
@@ -325,7 +330,7 @@ public abstract class SpigotCommand extends Command {
      */
     @Override
     public final String getPermissionMessage() {
-        return super.getPermissionMessage() != null && !super.getPermissionMessage().trim().equals("") ? super.getPermissionMessage() : PluginLocale.Command.NO_PERMISSION;
+        return super.getPermissionMessage() != null && !super.getPermissionMessage().trim().equals("") ? super.getPermissionMessage() : PluginLocale.COMMAND_NO_PERMISSION.toString();
     }
 
     /**

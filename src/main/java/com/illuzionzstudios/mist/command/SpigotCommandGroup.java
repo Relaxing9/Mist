@@ -139,8 +139,8 @@ public abstract class SpigotCommandGroup {
                 + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
                         ""),
                 " ",
-                "&2  [] &7= " + PluginLocale.Command.LABEL_OPTIONAL_ARGS,
-                "&6  <> &7= " + PluginLocale.Command.LABEL_REQUIRED_ARGS,
+                "&2  [] &7= " + PluginLocale.COMMAND_LABEL_OPTIONAL_ARGS,
+                "&6  <> &7= " + PluginLocale.COMMAND_LABEL_REQUIRED_ARGS,
                 " "
         };
     }
@@ -200,7 +200,7 @@ public abstract class SpigotCommandGroup {
                 command.execute(sender, getLabel(), args.length == 1 ? new String[] {} : Arrays.copyOfRange(args, 1, args.length));
             } else {
                 // Couldn't find sub command
-                tell(PluginLocale.Command.INVALID_SUB.replace("{label}", getMainLabel()));
+                tell(PluginLocale.COMMAND_INVALID_SUB.toString("{label}", getMainLabel()));
             }
 
             return ReturnType.SUCCESS;

@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.config.locale;
 
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 
@@ -45,6 +44,25 @@ public class MistString {
      */
     public MistString(final MistString other) {
         this(other.key, other.def);
+    }
+
+    /**
+     * Concat another string to this string
+     *
+     * @param other String to add
+     * @return String with other added on
+     */
+    public MistString concat(final String other) {
+        this.value = this.value.concat(other);
+        return this;
+    }
+
+    /**
+     * See {@link #concat(String)}
+     */
+    public MistString concat(final MistString other) {
+        concat(other.toString());
+        return this;
     }
 
     /**

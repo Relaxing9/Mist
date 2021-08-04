@@ -1,16 +1,8 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.ui.render;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Mist;
+import com.illuzionzstudios.mist.util.TextUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -137,7 +129,7 @@ public final class InterfaceDrawer {
      */
     public void display(Player player) {
         // Create our inventory instance
-        final Inventory inventory = Bukkit.createInventory(player, size, Mist.colorize("&7" + title));
+        final Inventory inventory = Bukkit.createInventory(player, size, TextUtil.formatText("&7" + title));
 
         inventory.setContents(content);
 

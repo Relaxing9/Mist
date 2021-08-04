@@ -51,7 +51,7 @@ public class Message {
         this.message = msg;
 
         // Set our plugin prefix
-        setPrefix(PluginLocale.General.PLUGIN_PREFIX);
+        setPrefix(PluginLocale.GENERAL_PLUGIN_PREFIX.toString());
     }
 
     /**

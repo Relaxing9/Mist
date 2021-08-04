@@ -1,16 +1,8 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.conversation;
 
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.ui.UserInterface;
+import com.illuzionzstudios.mist.util.TextUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.SneakyThrows;
 import org.bukkit.conversations.*;
@@ -60,7 +52,7 @@ public abstract class SimplePrompt extends ValidatingPrompt implements Cloneable
      */
     @Override
     public final String getPromptText(final ConversationContext ctx) {
-        return Mist.colorize(getPrompt(ctx));
+        return TextUtil.formatText(getPrompt(ctx));
     }
 
     /**

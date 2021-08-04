@@ -124,7 +124,7 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             Button.ButtonListener listener = Button.ButtonListener.ofNull();
 
             // Message to indicate to input a value
-            String enterValueMessage = PluginLocale.Config.ENTER_VALUE;
+            String enterValueMessage = PluginLocale.CONFIG_ENTER_VALUE.toString();
 
             // Open appropriate menu
             if (int.class.isAssignableFrom(type)) {
@@ -332,11 +332,11 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             // Finally construct button
             Button button = Button.of(ItemCreator.builder()
                             .material(f.getAnnotation(Configurable.class).material())
-                            .name(new Message(PluginLocale.Interface.OPTIONS_OPTION_NAME)
-                                    .processPlaceholder("valueName", TextUtil.convertCamelCase(f.getName())).getMessage())
-                            .lore(new Message(PluginLocale.Interface.OPTIONS_OPTION_LORE)
-                                    .processPlaceholder("value", value)
-                                    .processPlaceholder("description", WordUtils.wrap(PluginLocale.getMessage(valueDescriptionKey, valueDescriptionKey).getMessage(), 30)).getMessage())
+                            .name(PluginLocale.INTERFACE_OPTIONS_OPTION_NAME
+                                    .toString("valueName", TextUtil.convertCamelCase(f.getName())).toString())
+                            .lore(PluginLocale.INTERFACE_OPTIONS_OPTION_LORE
+                                    .toString("value", value)
+                                    .toString("description", WordUtils.wrap(PluginLocale.getMessage(valueDescriptionKey, valueDescriptionKey), 30)).toString())
                             .build(),
                     listener);
             options.add(button);
@@ -555,14 +555,14 @@ public class ConfigureOptionsUI<T> extends UserInterface {
             // Set here as we need to get field content
             currentValues = Button.makeIcon(ItemCreator.builder()
                     .material(XMaterial.PAPER)
-                    .name(PluginLocale.Interface.LIST_VALUES_NAME)
+                    .name(PluginLocale.INTERFACE_LIST_VALUES_NAME.toString())
                     .lores((List<String>) ReflectionUtil.getFieldContent(field, object))
                     .build());
 
             clearValues = Button.of(ItemCreator.builder()
                             .material(XMaterial.RED_DYE)
-                            .name(PluginLocale.Interface.LIST_CLEAR_NAME)
-                            .lore(PluginLocale.Interface.LIST_CLEAR_LORE)
+                            .name(PluginLocale.INTERFACE_LIST_CLEAR_NAME.toString())
+                            .lore(PluginLocale.INTERFACE_LIST_CLEAR_LORE.toString())
                             .build(),
                     (player, ui, clickType, event) -> {
                         // Clear list
@@ -580,8 +580,8 @@ public class ConfigureOptionsUI<T> extends UserInterface {
 
             addValue = Button.of(ItemCreator.builder()
                             .material(XMaterial.LIME_DYE)
-                            .name(PluginLocale.Interface.LIST_ADD_NAME)
-                            .lore(PluginLocale.Interface.LIST_ADD_LORE)
+                            .name(PluginLocale.INTERFACE_LIST_ADD_NAME.toString())
+                            .lore(PluginLocale.INTERFACE_LIST_ADD_LORE.toString())
                             .build(),
                     (player, ui, clickType, event) -> {
                         // Attempt to add value
@@ -591,7 +591,7 @@ public class ConfigureOptionsUI<T> extends UserInterface {
                                 return new SimplePrompt() {
                                     @Override
                                     protected String getPrompt(ConversationContext conversationContext) {
-                                        return PluginLocale.Config.ENTER_VALUE;
+                                        return PluginLocale.CONFIG_ENTER_VALUE.toString();
                                     }
 
                                     @Nullable

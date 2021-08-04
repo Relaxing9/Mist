@@ -56,12 +56,12 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * The prefix to use before certain messages
      */
-    public static MistString PLUGIN_PREFIX = new MistString("general.prefix","&d&lMist Plugin &8»&7");
+    public static MistString GENERAL_PLUGIN_PREFIX = new MistString("general.prefix","&d&lMist Plugin &8»&7");
 
     /**
      * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
      */
-    public static MistString PLUGIN_RELOAD = new MistString("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
+    public static MistString GENERAL_PLUGIN_RELOAD = new MistString("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
 
     /**
      * If a command sender that isn't a player tries to execute a command

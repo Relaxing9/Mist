@@ -3,7 +3,6 @@ package com.illuzionzstudios.mist.command.type;
 import com.illuzionzstudios.mist.command.SpigotSubCommand;
 import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
-import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 
 /**
@@ -29,7 +28,7 @@ public class ReloadCommand extends SpigotSubCommand {
         plugin.reload();
 
         // Inform
-        new Message(PluginLocale.General.PLUGIN_RELOAD).sendPrefixedMessage(getSender());
+        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(getSender());
         return ReturnType.SUCCESS;
     }
 }
