@@ -2,6 +2,7 @@ package com.illuzionzstudios.mist.util;
 
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;
+import com.illuzionzstudios.mist.config.locale.MistString;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
@@ -59,12 +60,12 @@ public final class UpdateChecker {
 
         check((version, name) -> {
             if (version != VersionType.LATEST)
-            new Message(PluginLocale.Update.AVAILABLE)
-                    .processPlaceholder("plugin_name", SpigotPlugin.getPluginName())
-                    .processPlaceholder("current", SpigotPlugin.getPluginVersion())
-                    .processPlaceholder("new", name)
-                    .processPlaceholder("status", version.name().toLowerCase())
-                    .processPlaceholder("resource_id", SpigotPlugin.getInstance().getPluginId())
+            new MistString(PluginLocale.UPDATE_AVAILABLE)
+                    .toString("plugin_name", SpigotPlugin.getPluginName())
+                    .toString("current", SpigotPlugin.getPluginVersion())
+                    .toString("new", name)
+                    .toString("status", version.name().toLowerCase())
+                    .toString("resource_id", SpigotPlugin.getInstance().getPluginId())
                     .sendMessage(sender);
         });
     }

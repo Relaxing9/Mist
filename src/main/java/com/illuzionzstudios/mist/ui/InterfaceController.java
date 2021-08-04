@@ -18,6 +18,7 @@ import com.illuzionzstudios.mist.scheduler.rate.Rate;
 import com.illuzionzstudios.mist.scheduler.rate.Sync;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.ClickLocation;
+import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -127,7 +128,7 @@ public enum InterfaceController implements PluginController<SpigotPlugin>, Liste
 
                     } catch (final Throwable t) {
                         // Notify of error
-                        player.sendMessage(Mist.colorize("&cOops! There was a problem with this menu! Please contact the administrator to review the console for details."));
+                        player.sendMessage(TextUtil.formatText("&cOops! There was a problem with this menu! Please contact the administrator to review the console for details."));
                         player.closeInventory();
 
                         Logger.displayError(t, "Error clicking in menu " + userInterface);

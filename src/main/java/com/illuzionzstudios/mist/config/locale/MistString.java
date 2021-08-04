@@ -1,7 +1,8 @@
 package com.illuzionzstudios.mist.config.locale;
 
-import com.illuzionzstudios.mist.config.YamlConfig;
 import com.illuzionzstudios.mist.util.TextUtil;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
 
@@ -16,19 +17,34 @@ public class MistString {
      * The key of this string for the locale
      */
     private final String key;
+
+    /**
+     * Default value of the string
+     */
+    private final String def;
     
     /**
      * The raw contents of this string
      */
     private String value;
     
-    public MistString(final String value) {
-        this("", value);
+    public MistString(final String def) {
+        this("", def);
     }
 
-    public MistString(final String key, final String value) {
+    public MistString(final String key, final String def) {
         this.key = key;
-        this.value = value;
+        this.def = this.value = def;
+
+        // When this is created it will insert into file as default
+        PluginLocale.getMessage(key, def);
+    }
+
+    /**
+     * @param other Create string from another
+     */
+    public MistString(final MistString other) {
+        this(other.key, other.def);
     }
 
     /**
@@ -56,7 +72,19 @@ public class MistString {
     @Override
     public String toString() {
         // Get the message from locale cache otherwise search
-        return TextUtil.formatText(PluginLocale.getMessage(key, value));
+        return TextUtil.formatText(PluginLocale.getMessage(key, def));
+    }
+
+    /**
+     * Format and send the held message to a player.
+     * Detect if string is split and send multiple lines
+     *
+     * @param player player to send the message to
+     */
+    public void sendMessage(final CommandSender player) {
+        // Check for split lore
+        String[] strings = toString().split("\\n");
+        player.sendMessage(strings);
     }
 
 }

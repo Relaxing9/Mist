@@ -51,222 +51,115 @@ public abstract class PluginLocale extends YamlConfig {
     //  Main messages provided by default
     //  If these are found in the locale, we use those, otherwise use these
     //  defaults
-    //
-    //  Init methods are called to set variables
-    //
-    //  When creating your own messages that have the same name, make sure to
-    //  extend the super class and call the super init method
     //  -------------------------------------------------------------------------
 
     /**
-     * General messages
+     * The prefix to use before certain messages
      */
-    public static class General {
-
-        /**
-         * The prefix to use before certain messages
-         */
-        public static String PLUGIN_PREFIX = "&d&lMist Plugin &8»&7";
-
-        /**
-         * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
-         */
-        public static String PLUGIN_RELOAD = "&7Reloaded the plugin (Configuration files & controllers)";
-
-        public static void init() {
-            if (LOCALE_FILE.isSet("general.prefix"))
-                PLUGIN_PREFIX = LOCALE_FILE.getString("general.prefix");
-
-            if (LOCALE_FILE.isSet("general.reload"))
-                PLUGIN_RELOAD = LOCALE_FILE.getString("general.reload");
-        }
-    }
+    public static MistString PLUGIN_PREFIX = new MistString("general.prefix","&d&lMist Plugin &8»&7");
 
     /**
-     * Messages relating to commands
+     * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
      */
-    public static class Command {
-
-        /**
-         * If a command sender that isn't a player tries to execute a command
-         */
-        public static String PLAYER_ONLY = "&cYou must be a player to execute this command.";
-
-        /**
-         * If the player doesn't have a required permission
-         */
-        public static String NO_PERMISSION = "&cYou must have the permission {permission} to do this.";
-
-        /**
-         * Sent when the executor provides too little arguments
-         */
-        public static String INVALID_USAGE = "&cInvalid usage. Try /{label} {args}";
-
-        /**
-         * If they try use a sub command that doesn't exist
-         */
-        public static String INVALID_SUB = "&cThat command doesn't exist. Try /{label} help";
-
-        /**
-         * The optional arguments label
-         */
-        public static String LABEL_OPTIONAL_ARGS = "optional arguments";
-
-        /**
-         * The required arguments label
-         */
-        public static String LABEL_REQUIRED_ARGS = "required arguments";
-
-        public static void init() {
-            if (LOCALE_FILE.isSet("command.player-only"))
-                PLAYER_ONLY = LOCALE_FILE.getString("command.player-only");
-
-            if (LOCALE_FILE.isSet("command.no-permission"))
-                NO_PERMISSION = LOCALE_FILE.getString("command.no-permission");
-
-            if (LOCALE_FILE.isSet("command.invalid-usage"))
-                INVALID_USAGE = LOCALE_FILE.getString("command.invalid-usage");
-
-            if (LOCALE_FILE.isSet("command.invalid-sub"))
-                INVALID_SUB = LOCALE_FILE.getString("command.invalid-sub");
-
-            if (LOCALE_FILE.isSet("command.label-optional-args"))
-                LABEL_OPTIONAL_ARGS = LOCALE_FILE.getString("command.label-optional-args");
-
-            if (LOCALE_FILE.isSet("command.label-required-args"))
-                LABEL_REQUIRED_ARGS = LOCALE_FILE.getString("command.label-required-args");
-        }
-    }
+    public static MistString PLUGIN_RELOAD = new MistString("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
 
     /**
-     * Language dealing with configuration
+     * If a command sender that isn't a player tries to execute a command
      */
-    public static class Config {
-
-        /**
-         * Message sent prompting to enter a value
-         */
-        public static String ENTER_VALUE = "&7Enter a new value to set (Type 'cancel' to cancel)";
-
-        public static void init() {
-            if (LOCALE_FILE.isSet("config.enter-value"))
-                ENTER_VALUE = LOCALE_FILE.getString("config.enter-value");
-        }
-    }
+    public static MistString COMMAND_PLAYER_ONLY = new MistString("command.player-only", "&cYou must be a player to execute this command.");
 
     /**
-     * Language dealing with interfaces
+     * If the player doesn't have a required permission
      */
-    public static class Interface {
-
-        /**
-         * Name of the confirm icon in the confirm inventory
-         */
-        public static String CONFIRM_CONFIRM_NAME = "&a&lConfirm";
-
-        /**
-         * Lore of the confirm icon in the confirm inventory
-         */
-        public static String CONFIRM_CONFIRM_LORE = "&7&o(Click to confirm)";
-
-        /**
-         * Name of the deny icon in the confirm inventory
-         */
-        public static String CONFIRM_DENY_NAME = "&c&lDeny";
-
-        /**
-         * Lore of the deny icon in the confirm inventory
-         */
-        public static String CONFIRM_DENY_LORE = "&7&o(Click to deny)";
-
-        /**
-         * Name for an option in the options inventory
-         */
-        public static String OPTIONS_OPTION_NAME = "&d&l{valueName}";
-
-        /**
-         * Lore for an option in the options inventory
-         */
-        public static String OPTIONS_OPTION_LORE = "&7Value: {value}\n&r\n&7{description}\n&r\n&7&o(Left click to edit value)";
-
-        /**
-         * Name for displaying values in the edit list inventory
-         */
-        public static String LIST_VALUES_NAME = "&d&lCurrent Values";
-
-        /**
-         * Name for clearing values in the edit list inventory
-         */
-        public static String LIST_CLEAR_NAME = "&c&lClear Values";
-
-        /**
-         * Lore for clearing values in the edit list inventory
-         */
-        public static String LIST_CLEAR_LORE = "&7&o(Click to clear values)";
-
-        /**
-         * Name for adding values in the edit list inventory
-         */
-        public static String LIST_ADD_NAME = "&a&lAdd value";
-
-        /**
-         * Lore for adding values in the edit list inventory
-         */
-        public static String LIST_ADD_LORE = "&7&o(Click to add a value)";
-
-        public static void init() {
-            if (LOCALE_FILE.isSet("interface.confirm.confirm.name"))
-                CONFIRM_CONFIRM_NAME = LOCALE_FILE.getString("interface.confirm.confirm.name");
-
-            if (LOCALE_FILE.isSet("interface.confirm.confirm.lore"))
-                CONFIRM_CONFIRM_LORE = LOCALE_FILE.getString("interface.confirm.confirm.lore");
-
-            if (LOCALE_FILE.isSet("interface.confirm.deny.name"))
-                CONFIRM_DENY_NAME = LOCALE_FILE.getString("interface.confirm.deny.name");
-
-            if (LOCALE_FILE.isSet("interface.confirm.deny.lore"))
-                CONFIRM_DENY_LORE = LOCALE_FILE.getString("interface.confirm.deny.lore");
-
-            if (LOCALE_FILE.isSet("interface.options.option.name"))
-                OPTIONS_OPTION_NAME = LOCALE_FILE.getString("interface.options.option.name");
-
-            if (LOCALE_FILE.isSet("interface.options.option.lore"))
-                OPTIONS_OPTION_LORE = LOCALE_FILE.getString("interface.options.option.lore");
-
-            if (LOCALE_FILE.isSet("interface.list.values.name"))
-                LIST_VALUES_NAME = LOCALE_FILE.getString("interface.list.values.name");
-
-            if (LOCALE_FILE.isSet("interface.list.clear.name"))
-                LIST_CLEAR_NAME = LOCALE_FILE.getString("interface.list.clear.name");
-
-            if (LOCALE_FILE.isSet("interface.list.clear.lore"))
-                LIST_CLEAR_LORE = LOCALE_FILE.getString("interface.list.clear.lore");
-
-            if (LOCALE_FILE.isSet("interface.list.add.name"))
-                LIST_ADD_NAME = LOCALE_FILE.getString("interface.list.add.name");
-
-            if (LOCALE_FILE.isSet("interface.list.add.lore"))
-                LIST_ADD_LORE = LOCALE_FILE.getString("interface.list.add.lore");
-        }
-    }
+    public static MistString COMMAND_NO_PERMISSION = new MistString("command.no-permission", "&cYou must have the permission {permission} to do this.");
 
     /**
-     * Language dealing with updates
+     * Sent when the executor provides too little arguments
      */
-    public static class Update {
+    public static MistString COMMAND_INVALID_USAGE = new MistString("command.invalid-usage", "&cInvalid usage. Try /{label} {args}");
 
-        /**
-         * The message if a new version is found
-         */
-        public static String AVAILABLE = "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
-                + "&2Current version: &a{current}&2; New version: &a{new}\n"
-                + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.";
+    /**
+     * If they try use a sub command that doesn't exist
+     */
+    public static MistString COMMAND_INVALID_SUB = new MistString("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help");
 
-        public static void init() {
-            if (LOCALE_FILE.isSet("update.available"))
-                AVAILABLE = LOCALE_FILE.getString("update.available");
-        }
-    }
+    /**
+     * The optional arguments label
+     */
+    public static MistString COMMAND_LABEL_OPTIONAL_ARGS = new MistString("command.label-optional-args", "optional arguments");
+
+    /**
+     * The required arguments label
+     */
+    public static MistString COMMAND_LABEL_REQUIRED_ARGS = new MistString("command.label-required-args", "required arguments");
+
+    /**
+     * Message sent prompting to enter a value
+     */
+    public static MistString CONFIG_ENTER_VALUE = new MistString("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)");
+
+    /**
+     * Name of the confirm icon in the confirm inventory
+     */
+    public static MistString INTERFACE_CONFIRM_CONFIRM_NAME = new MistString("interface.confirm.confirm.name", "&a&lConfirm");
+
+    /**
+     * Lore of the confirm icon in the confirm inventory
+     */
+    public static MistString INTERFACE_CONFIRM_CONFIRM_LORE = new MistString("interface.confirm.confirm.lore", "&7&o(Click to confirm)");
+
+    /**
+     * Name of the deny icon in the confirm inventory
+     */
+    public static MistString INTERFACE_CONFIRM_DENY_NAME = new MistString("interface.confirm.deny.name", "&c&lDeny");
+
+    /**
+     * Lore of the deny icon in the confirm inventory
+     */
+    public static MistString INTERFACE_CONFIRM_DENY_LORE = new MistString("interface.confirm.deny.lore", "&7&o(Click to deny)");
+
+    /**
+     * Name for an option in the options inventory
+     */
+    public static MistString INTERFACE_OPTIONS_OPTION_NAME = new MistString("interface.options.option.name", "&d&l{valueName}");
+
+    /**
+     * Lore for an option in the options inventory
+     */
+    public static MistString INTERFACE_OPTIONS_OPTION_LORE = new MistString("interface.options.option.lore", "&7Value: {value}\n&r\n&7{description}\n&r\n&7&o(Left click to edit value)");
+
+    /**
+     * Name for displaying values in the edit list inventory
+     */
+    public static MistString INTERFACE_LIST_VALUES_NAME = new MistString("interface.list.values.name", "&d&lCurrent Values");
+
+    /**
+     * Name for clearing values in the edit list inventory
+     */
+    public static MistString INTERFACE_LIST_CLEAR_NAME = new MistString("interface.list.clear.name", "&c&lClear Values");
+
+    /**
+     * Lore for clearing values in the edit list inventory
+     */
+    public static MistString INTERFACE_LIST_CLEAR_LORE = new MistString("\"interface.list.clear.lore", "&7&o(Click to clear values)");
+
+    /**
+     * Name for adding values in the edit list inventory
+     */
+    public static MistString INTERFACE_LIST_ADD_NAME = new MistString("interface.list.add.name", "&a&lAdd value");
+
+    /**
+     * Lore for adding values in the edit list inventory
+     */
+    public static MistString INTERFACE_LIST_ADD_LORE = new MistString("interface.list.add.lore", "&7&o(Click to add a value)");
+
+    /**
+     * The message if a new version is found
+     */
+    public static MistString UPDATE_AVAILABLE = new MistString("update.available", "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
+            + "&2Current version: &a{current}&2; New version: &a{new}\n"
+            + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.");
+
 
     /**
      * Load the {@link PluginLocale} into the server, setting values
@@ -281,13 +174,6 @@ public abstract class PluginLocale extends YamlConfig {
         LOCALE_FILE = settings;
         // Load settings loadLocale
         settings.load();
-
-        // Load common messages
-        General.init();
-        Command.init();
-        Config.init();
-        Interface.init();
-        Update.init();
 
         // Load our other custom settings
         settings.loadLocale();
@@ -321,6 +207,10 @@ public abstract class PluginLocale extends YamlConfig {
      * @return The found message or default
      */
     public static String getMessage(String key, String def) {
+        // If no key just return default so doesn't get set in file.
+        if (key.equalsIgnoreCase(""))
+            return def;
+
         // Try find in cache
         if (localeCache.containsKey(key))
             return localeCache.get(key);
@@ -332,6 +222,10 @@ public abstract class PluginLocale extends YamlConfig {
             localeCache.put(key, foundValue);
             return foundValue;
         }
+
+        // Not found so add default
+        LOCALE_FILE.addDefault(key, def);
+        LOCALE_FILE.saveChanges();
 
         // Return default
         return def;
