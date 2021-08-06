@@ -166,7 +166,7 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * Lore for clearing values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_CLEAR_LORE = INTERFACE_GROUP.create("\"interface.list.clear.lore", "&7&o(Click to clear values)");
+    public static MistString INTERFACE_LIST_CLEAR_LORE = INTERFACE_GROUP.create("interface.list.clear.lore", "&7&o(Click to clear values)");
 
     /**
      * Name for adding values in the edit list inventory
