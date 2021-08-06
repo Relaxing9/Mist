@@ -203,6 +203,16 @@ public abstract class PluginLocale extends YamlConfig {
         // Load our other custom settings
         settings.loadLocale();
         settings.saveChanges();
+
+        // Reset cache
+        invalidateCache();
+
+        // Load locale groups
+        GENERAL_GROUP.load();
+        COMMAND_GROUP.load();
+        CONFIG_GROUP.load();
+        INTERFACE_GROUP.load();
+        UPDATE_GROUP.load();
     }
 
     /**

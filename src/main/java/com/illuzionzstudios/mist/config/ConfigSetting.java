@@ -1,7 +1,9 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.config.format.CommentStyle;
+import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,9 +19,11 @@ import java.util.List;
 public class ConfigSetting {
 
     /**
-     * The {@link YamlConfig} instance this value is apart of
+     * The {@link YamlConfig} instance this value is apart of. Can set
+     * if we want to dynamically change the config file or reset it.
      */
-    private final YamlConfig config;
+    @Setter
+    private YamlConfig config;
 
     /**
      * The node path (or key) this value is set at
@@ -27,21 +31,44 @@ public class ConfigSetting {
     @Getter
     private final String key;
 
-    public ConfigSetting(@NotNull YamlConfig config, @NotNull String key) {
-        this.config = config;
+    /**
+     * Default value of this setting
+     */
+    private Object defaultValue;
+
+    /**
+     * The comment style
+     */
+    private CommentStyle commentStyle = CommentStyle.SIMPLE;
+
+    /**
+     * Comments
+     */
+    private String[] comments;
+
+    public ConfigSetting(@NotNull String key) {
         this.key = key;
     }
 
-    public ConfigSetting(@NotNull YamlConfig config, @NotNull String key, @NotNull Object defaultValue, String... comment) {
-        this.config = config;
+    public ConfigSetting(@NotNull String key, @NotNull Object defaultValue, String... comment) {
         this.key = key;
-        config.setDefault(key, defaultValue, comment);
+        this.defaultValue = defaultValue;
+        this.comments = comment;
     }
 
-    public ConfigSetting(@NotNull YamlConfig config, @NotNull String key, @NotNull Object defaultValue, CommentStyle commentStyle, String... comment) {
-        this.config = config;
-        this.key = key;
-        config.setDefault(key, defaultValue, commentStyle, comment);
+    public ConfigSetting(@NotNull String key, @NotNull Object defaultValue, CommentStyle commentStyle, String... comment) {
+        this(key, defaultValue, comment);
+        this.commentStyle = commentStyle;
+    }
+
+    /**
+     * Load the setting if default value set. Doesn't load if config not set
+     */
+    public void loadSetting() {
+        Valid.checkNotNull(config, "Must load config file before loading config setting");
+
+        if (defaultValue != null)
+            config.setDefault(key, defaultValue, commentStyle, comments);
     }
 
     /**

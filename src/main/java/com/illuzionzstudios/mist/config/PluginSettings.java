@@ -34,11 +34,15 @@ public abstract class PluginSettings extends YamlConfig {
     //  Main config settings provided by default
     //  -------------------------------------------------------------------------
 
+    public static final ConfigSettings GENERAL_GROUP = new ConfigSettings("settings");
+
     /**
      * The locale type to use, for instance
      * "en_US"
      */
-    public static ConfigSetting LOCALE;
+    public static ConfigSetting LOCALE = GENERAL_GROUP.create("Settings.Locale", "en_US",
+            "The language file to use for the plugin",
+            "More language files (if available) can be found in the plugins locale folder.");
 
     /**
      * Load these {@link PluginSettings} into the server, setting values
@@ -53,10 +57,7 @@ public abstract class PluginSettings extends YamlConfig {
         // Load settings file
         settings.load();
 
-        // Load all settings
-        LOCALE = new ConfigSetting(SETTINGS_FILE, "Settings.Locale", "en_US",
-                "The language file to use for the plugin",
-                "More language files (if available) can be found in the plugins locale folder.");
+        GENERAL_GROUP.load();
 
         // Load our other custom settings
         settings.loadSettings();

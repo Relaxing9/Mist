@@ -207,13 +207,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             PluginSettings.loadSettings(getPluginSettings());
             PluginLocale.loadLocale(getPluginLocale());
 
-            // Load locale groups
-            PluginLocale.GENERAL_GROUP.load();
-            PluginLocale.COMMAND_GROUP.load();
-            PluginLocale.CONFIG_GROUP.load();
-            PluginLocale.INTERFACE_GROUP.load();
-            PluginLocale.UPDATE_GROUP.load();
-
             // Enable our scheduler
             new BukkitScheduler(this).initialize();
             InterfaceController.INSTANCE.initialize(this);
@@ -286,7 +279,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
             // Try save config if found
             PluginSettings.loadSettings(getPluginSettings());
             PluginLocale.loadLocale(getPluginLocale());
-            PluginLocale.invalidateCache();
 
             // Restart tickers
             MinecraftScheduler.get().initialize();
