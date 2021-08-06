@@ -54,109 +54,134 @@ public abstract class PluginLocale extends YamlConfig {
     //  -------------------------------------------------------------------------
 
     /**
+     * General messages
+     */
+    public static final MistStringGroup GENERAL_GROUP = new MistStringGroup("general");
+
+    /**
+     * Command messages
+     */
+    public static final MistStringGroup COMMAND_GROUP = new MistStringGroup("command");
+
+    /**
+     * Config messages
+     */
+    public static final MistStringGroup CONFIG_GROUP = new MistStringGroup("config");
+
+    /**
+     * Interface messages
+     */
+    public static final MistStringGroup INTERFACE_GROUP = new MistStringGroup("interface");
+
+    /**
+     * Update messages
+     */
+    public static final MistStringGroup UPDATE_GROUP = new MistStringGroup("update");
+
+    /**
      * The prefix to use before certain messages
      */
-    public static MistString GENERAL_PLUGIN_PREFIX = new MistString("general.prefix","&d&lMist Plugin &8»&7");
+    public static MistString GENERAL_PLUGIN_PREFIX = GENERAL_GROUP.create("general.prefix","&d&lMist Plugin &8»&7");
 
     /**
      * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
      */
-    public static MistString GENERAL_PLUGIN_RELOAD = new MistString("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
+    public static MistString GENERAL_PLUGIN_RELOAD = GENERAL_GROUP.create("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
 
     /**
      * If a command sender that isn't a player tries to execute a command
      */
-    public static MistString COMMAND_PLAYER_ONLY = new MistString("command.player-only", "&cYou must be a player to execute this command.");
+    public static MistString COMMAND_PLAYER_ONLY = COMMAND_GROUP.create("command.player-only", "&cYou must be a player to execute this command.");
 
     /**
      * If the player doesn't have a required permission
      */
-    public static MistString COMMAND_NO_PERMISSION = new MistString("command.no-permission", "&cYou must have the permission {permission} to do this.");
+    public static MistString COMMAND_NO_PERMISSION = COMMAND_GROUP.create("command.no-permission", "&cYou must have the permission {permission} to do this.");
 
     /**
      * Sent when the executor provides too little arguments
      */
-    public static MistString COMMAND_INVALID_USAGE = new MistString("command.invalid-usage", "&cInvalid usage. Try /{label} {args}");
+    public static MistString COMMAND_INVALID_USAGE = COMMAND_GROUP.create("command.invalid-usage", "&cInvalid usage. Try /{label} {args}");
 
     /**
      * If they try use a sub command that doesn't exist
      */
-    public static MistString COMMAND_INVALID_SUB = new MistString("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help");
+    public static MistString COMMAND_INVALID_SUB = COMMAND_GROUP.create("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help");
 
     /**
      * The optional arguments label
      */
-    public static MistString COMMAND_LABEL_OPTIONAL_ARGS = new MistString("command.label-optional-args", "optional arguments");
+    public static MistString COMMAND_LABEL_OPTIONAL_ARGS = COMMAND_GROUP.create("command.label-optional-args", "optional arguments");
 
     /**
      * The required arguments label
      */
-    public static MistString COMMAND_LABEL_REQUIRED_ARGS = new MistString("command.label-required-args", "required arguments");
+    public static MistString COMMAND_LABEL_REQUIRED_ARGS = COMMAND_GROUP.create("command.label-required-args", "required arguments");
 
     /**
      * Message sent prompting to enter a value
      */
-    public static MistString CONFIG_ENTER_VALUE = new MistString("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)");
+    public static MistString CONFIG_ENTER_VALUE = CONFIG_GROUP.create("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)");
 
     /**
      * Name of the confirm icon in the confirm inventory
      */
-    public static MistString INTERFACE_CONFIRM_CONFIRM_NAME = new MistString("interface.confirm.confirm.name", "&a&lConfirm");
+    public static MistString INTERFACE_CONFIRM_CONFIRM_NAME = INTERFACE_GROUP.create("interface.confirm.confirm.name", "&a&lConfirm");
 
     /**
      * Lore of the confirm icon in the confirm inventory
      */
-    public static MistString INTERFACE_CONFIRM_CONFIRM_LORE = new MistString("interface.confirm.confirm.lore", "&7&o(Click to confirm)");
+    public static MistString INTERFACE_CONFIRM_CONFIRM_LORE = INTERFACE_GROUP.create("interface.confirm.confirm.lore", "&7&o(Click to confirm)");
 
     /**
      * Name of the deny icon in the confirm inventory
      */
-    public static MistString INTERFACE_CONFIRM_DENY_NAME = new MistString("interface.confirm.deny.name", "&c&lDeny");
+    public static MistString INTERFACE_CONFIRM_DENY_NAME = INTERFACE_GROUP.create("interface.confirm.deny.name", "&c&lDeny");
 
     /**
      * Lore of the deny icon in the confirm inventory
      */
-    public static MistString INTERFACE_CONFIRM_DENY_LORE = new MistString("interface.confirm.deny.lore", "&7&o(Click to deny)");
+    public static MistString INTERFACE_CONFIRM_DENY_LORE = INTERFACE_GROUP.create("interface.confirm.deny.lore", "&7&o(Click to deny)");
 
     /**
      * Name for an option in the options inventory
      */
-    public static MistString INTERFACE_OPTIONS_OPTION_NAME = new MistString("interface.options.option.name", "&d&l{valueName}");
+    public static MistString INTERFACE_OPTIONS_OPTION_NAME = INTERFACE_GROUP.create("interface.options.option.name", "&d&l{valueName}");
 
     /**
      * Lore for an option in the options inventory
      */
-    public static MistString INTERFACE_OPTIONS_OPTION_LORE = new MistString("interface.options.option.lore", "&7Value: {value}\n&r\n&7{description}\n&r\n&7&o(Left click to edit value)");
+    public static MistString INTERFACE_OPTIONS_OPTION_LORE = INTERFACE_GROUP.create("interface.options.option.lore", "&7Value: {value}\n&r\n&7{description}\n&r\n&7&o(Left click to edit value)");
 
     /**
      * Name for displaying values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_VALUES_NAME = new MistString("interface.list.values.name", "&d&lCurrent Values");
+    public static MistString INTERFACE_LIST_VALUES_NAME = INTERFACE_GROUP.create("interface.list.values.name", "&d&lCurrent Values");
 
     /**
      * Name for clearing values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_CLEAR_NAME = new MistString("interface.list.clear.name", "&c&lClear Values");
+    public static MistString INTERFACE_LIST_CLEAR_NAME = INTERFACE_GROUP.create("interface.list.clear.name", "&c&lClear Values");
 
     /**
      * Lore for clearing values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_CLEAR_LORE = new MistString("\"interface.list.clear.lore", "&7&o(Click to clear values)");
+    public static MistString INTERFACE_LIST_CLEAR_LORE = INTERFACE_GROUP.create("\"interface.list.clear.lore", "&7&o(Click to clear values)");
 
     /**
      * Name for adding values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_ADD_NAME = new MistString("interface.list.add.name", "&a&lAdd value");
+    public static MistString INTERFACE_LIST_ADD_NAME = INTERFACE_GROUP.create("interface.list.add.name", "&a&lAdd value");
 
     /**
      * Lore for adding values in the edit list inventory
      */
-    public static MistString INTERFACE_LIST_ADD_LORE = new MistString("interface.list.add.lore", "&7&o(Click to add a value)");
+    public static MistString INTERFACE_LIST_ADD_LORE = INTERFACE_GROUP.create("interface.list.add.lore", "&7&o(Click to add a value)");
 
     /**
      * The message if a new version is found
      */
-    public static MistString UPDATE_AVAILABLE = new MistString("update.available", "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
+    public static MistString UPDATE_AVAILABLE = UPDATE_GROUP.create("update.available", "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
             + "&2Current version: &a{current}&2; New version: &a{new}\n"
             + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.");
 

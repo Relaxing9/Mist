@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
  * This represents a custom translatable string that can be used in the plugin where we
  * would usually use a {@link String}. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
+ *
+ * TODO: Create string groups that load all strings once locale is loaded
  */
 public class MistString {
 
@@ -34,9 +36,6 @@ public class MistString {
     public MistString(final String key, final String def) {
         this.key = key;
         this.def = this.value = def;
-
-        // When this is created it will insert into file as default
-        PluginLocale.getMessage(key, def);
     }
 
     /**
@@ -89,8 +88,14 @@ public class MistString {
     
     @Override
     public String toString() {
-        // Get the message from locale cache otherwise search
-        return TextUtil.formatText(PluginLocale.getMessage(key, def));
+        return value;
+    }
+
+    /**
+     * Loads string from locale into value. Must be used before replacing
+     */
+    public void loadString() {
+        this.value = TextUtil.formatText(PluginLocale.getMessage(key, def));
     }
 
     /**

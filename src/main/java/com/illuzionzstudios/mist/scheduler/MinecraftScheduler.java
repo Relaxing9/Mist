@@ -400,9 +400,9 @@ public abstract class MinecraftScheduler {
 
             for (AccessibleObject object : objects) {
                 // Set them to public if they are private for obvious reasons
-                if (!object.isAccessible()) {
-                    object.setAccessible(true);
-                }
+//                if (!object.canAccess(object)) {
+//                    object.setAccessible(true);
+//                }
 
                 Rate declaredRate = getRate(synchronizationClass, object);
 
@@ -427,9 +427,9 @@ public abstract class MinecraftScheduler {
             Method getRate = annotation.annotationType()
                     .getDeclaredMethod("rate");
 
-            if (!getRate.isAccessible()) {
-                getRate.setAccessible(true);
-            }
+//            if (!getRate.canAccess(getRate)) {
+//                getRate.setAccessible(true);
+//            }
 
             return (Rate) getRate.invoke(annotation);
         }
