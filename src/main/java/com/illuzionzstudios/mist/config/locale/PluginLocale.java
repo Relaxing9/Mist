@@ -81,7 +81,7 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * The prefix to use before certain messages
      */
-    public static MistString GENERAL_PLUGIN_PREFIX = GENERAL_GROUP.create("general.prefix","&d&lMist Plugin &8»&7");
+    public static MistString GENERAL_PLUGIN_PREFIX = GENERAL_GROUP.create("general.prefix","&d&lMist Plugin &8\\u00BB&7");
 
     /**
      * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}

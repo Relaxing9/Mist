@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.util;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -60,6 +61,9 @@ public final class TextUtil {
             return "";
         if (capitalize)
             text = text.substring(0, 1).toUpperCase() + text.substring(1);
+
+        // Parse unicode
+        text = StringEscapeUtils.unescapeJava(text);
 
         return ChatColor.translateAlternateColorCodes('&', text);
     }

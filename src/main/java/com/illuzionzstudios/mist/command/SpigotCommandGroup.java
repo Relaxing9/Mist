@@ -200,7 +200,7 @@ public abstract class SpigotCommandGroup {
                 command.execute(sender, getLabel(), args.length == 1 ? new String[] {} : Arrays.copyOfRange(args, 1, args.length));
             } else {
                 // Couldn't find sub command
-                tell(PluginLocale.COMMAND_INVALID_SUB.toString("{label}", getMainLabel()));
+                tell(PluginLocale.COMMAND_INVALID_SUB.toString("label", getMainLabel()));
             }
 
             return ReturnType.SUCCESS;
