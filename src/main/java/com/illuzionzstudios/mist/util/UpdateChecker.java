@@ -60,7 +60,7 @@ public final class UpdateChecker {
 
         check((version, name) -> {
             if (version != VersionType.LATEST)
-            new MistString(PluginLocale.UPDATE_AVAILABLE)
+            PluginLocale.UPDATE_AVAILABLE
                     .toString("plugin_name", SpigotPlugin.getPluginName())
                     .toString("current", SpigotPlugin.getPluginVersion())
                     .toString("new", name)

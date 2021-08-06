@@ -88,7 +88,7 @@ public class MistString {
     
     @Override
     public String toString() {
-        return value;
+        return TextUtil.formatText(value);
     }
 
     /**
