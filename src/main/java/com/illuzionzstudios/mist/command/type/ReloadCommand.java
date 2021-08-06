@@ -28,7 +28,7 @@ public class ReloadCommand extends SpigotSubCommand {
         plugin.reload();
 
         // Inform
-        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(getSender());
+        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(getSender());
         return ReturnType.SUCCESS;
     }
 }
