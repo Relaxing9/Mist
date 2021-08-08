@@ -40,8 +40,9 @@ public final class UpdateChecker {
                 String currentVersion = SpigotPlugin.getPluginVersion();
                 String fetchedVersion = Resources.toString(httpURLConnection.getURL(), Charset.defaultCharset());
 
+                boolean devVersion = currentVersion.contains("DEV");
                 boolean latestVersion = fetchedVersion.equalsIgnoreCase(currentVersion);
-                MinecraftScheduler.get().synchronize(() -> callback.accept(latestVersion ? VersionType.LATEST : VersionType.OUTDATED, latestVersion ? currentVersion : fetchedVersion));
+                MinecraftScheduler.get().synchronize(() -> callback.accept(latestVersion ? VersionType.LATEST : devVersion ? VersionType.EXPERIMENTAL : VersionType.OUTDATED, latestVersion ? currentVersion : fetchedVersion));
             } catch (IOException exception) {
                 MinecraftScheduler.get().synchronize(() -> callback.accept(VersionType.UNKNOWN, null));
             }
@@ -93,6 +94,6 @@ public final class UpdateChecker {
         /**
          * Running a development build
          */
-        DEVELOPMENT
+        EXPERIMENTAL
     }
 }

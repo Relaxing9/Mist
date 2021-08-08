@@ -27,7 +27,7 @@ public abstract class PluginSettings extends YamlConfig {
 
     @Override
     public final boolean load() {
-        return loadResourceToServer("", "config.yml");
+        return loadResourceToServer("", Mist.SETTINGS_NAME);
     }
 
     //  -------------------------------------------------------------------------

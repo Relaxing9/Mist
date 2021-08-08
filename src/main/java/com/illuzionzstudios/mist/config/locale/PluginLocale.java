@@ -182,7 +182,7 @@ public abstract class PluginLocale extends YamlConfig {
      * The message if a new version is found
      */
     public static MistString UPDATE_AVAILABLE = UPDATE_GROUP.create("update.available", "&2You're on an &a{status}&2 version of &a{plugin_name}&2.\n"
-            + "&2Current version: &a{current}&2; New version: &a{new}\n"
+            + "&2Current version: &a{current}&2; Latest version: &a{new}\n"
             + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.");
 
 

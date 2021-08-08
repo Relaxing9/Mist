@@ -1,7 +1,5 @@
 package com.illuzionzstudios.mist.config.serialization;
 
-import com.google.gson.JsonObject;
-
 import java.io.Serializable;
 
 /**
