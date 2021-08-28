@@ -3,6 +3,7 @@ package com.illuzionzstudios.mist.config.locale;
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -81,6 +82,20 @@ public class MistString {
     public MistString toString(final String placeholder, final Object replacement) {
         final String place = Matcher.quoteReplacement(placeholder);
         this.value = value.replaceAll("\\{" + place + "}", replacement == null ? "" : Matcher.quoteReplacement(replacement.toString()));
+        return this;
+    }
+
+    /**
+     * Replace everything in the string according to this replacement map.
+     *
+     * @param replacements The map of replacements
+     * @return the modified Message
+     */
+    public MistString toString(final Map<String, Object> replacements) {
+        replacements.forEach((placeholder, replacement) -> {
+            final String place = Matcher.quoteReplacement(placeholder);
+            this.value = value.replaceAll("\\{" + place + "}", replacement == null ? "" : Matcher.quoteReplacement(replacement.toString()));
+        });
         return this;
     }
 
