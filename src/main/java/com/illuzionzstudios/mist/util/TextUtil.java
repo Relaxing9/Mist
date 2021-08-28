@@ -1,7 +1,7 @@
 package com.illuzionzstudios.mist.util;
 
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;

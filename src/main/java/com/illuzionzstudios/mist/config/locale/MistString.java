@@ -28,7 +28,13 @@ public class MistString {
      * The raw contents of this string
      */
     private String value;
-    
+
+    /**
+     * Used when we just want a string with content and not
+     * to be localised
+     *
+     * @param def The value of the string
+     */
     public MistString(final String def) {
         this("", def);
     }
@@ -88,9 +94,8 @@ public class MistString {
     
     @Override
     public String toString() {
-        String toSend = TextUtil.formatText(value);
         loadString();
-        return toSend;
+        return TextUtil.formatText(value);
     }
 
     /**
