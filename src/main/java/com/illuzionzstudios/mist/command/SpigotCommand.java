@@ -107,7 +107,7 @@ public abstract class SpigotCommand extends Command {
      * @param label The main label for this command
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
      */
-    protected SpigotCommand(@NotNull String label, String... aliases) {
+    protected SpigotCommand(@NotNull final String label, String... aliases) {
         super(label, "", "", Arrays.asList(aliases));
         this.label = label;
 

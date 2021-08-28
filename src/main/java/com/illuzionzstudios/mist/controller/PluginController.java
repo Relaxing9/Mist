@@ -19,13 +19,13 @@ public interface PluginController<P extends SpigotPlugin> {
      *
      * @param plugin The plugin starting the controller
      */
-    void initialize(P plugin);
+    void initialize(final P plugin);
 
     /**
      * Stops our controller
      *
      * @param plugin The plugin stopping the controller
      */
-    void stop(P plugin);
+    void stop(final P plugin);
 
 }

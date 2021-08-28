@@ -312,17 +312,9 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     /**
      * @param listener Register a listener for this plugin
      */
-    protected final void registerListener(Listener listener) {
+    protected final void registerListener(final Listener listener) {
         listeners.register(this, listener);
     }
-
-    /**
-     * @param command Register a {@link SpigotCommand} for this plugin
-     */
-    protected final void registerCommand(final SpigotCommand command) {
-        command.register();
-    }
-
 
     //  -------------------------------------------------------------------------
     //  Additional features of our main plugin
@@ -374,9 +366,23 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public abstract int getPluginId();
 
     /**
+     * @param command Register a {@link SpigotCommand} for this plugin
+     */
+    protected final void registerCommand(final SpigotCommand command) {
+        command.register();
+    }
+
+    /**
+     * @param command Register a {@link SpigotCommand} for this plugin
+     */
+    protected final void registerCommand(final SpigotCommandGroup command, String... labels) {
+        command.register(labels);
+    }
+
+    /**
      * @param command Register a new {@link SpigotCommandGroup}
      */
-    protected void registerMainCommand(SpigotCommandGroup command, String... labels) {
+    protected void registerMainCommand(final SpigotCommandGroup command, String... labels) {
         this.mainCommand = command;
         this.mainCommand.register(labels);
     }
@@ -387,7 +393,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @param label Label to check
      * @return If it's an aliases for the main command
      */
-    public static boolean isMainCommand(String label) {
+    public static boolean isMainCommand(final String label) {
         return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
     }
 
@@ -395,7 +401,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * Check for updates
      */
     @EventHandler
-    public void checkUpdates(PlayerJoinEvent event) {
+    public void checkUpdates(final PlayerJoinEvent event) {
         UpdateChecker.checkVersion(event.getPlayer());
     }
 

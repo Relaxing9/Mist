@@ -54,7 +54,7 @@ public abstract class SpigotCommandGroup {
 
         // Set the aliases
         if (labels.length > 1)
-            mainCommand.setAliases(Arrays.asList(Arrays.copyOf(labels, 1)));
+            mainCommand.setAliases(Arrays.asList(Arrays.copyOfRange(labels, 1, labels.length)));
 
         // Register it
         mainCommand.register();
