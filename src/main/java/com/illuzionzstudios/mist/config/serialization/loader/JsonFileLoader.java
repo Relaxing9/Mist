@@ -2,13 +2,21 @@ package com.illuzionzstudios.mist.config.serialization.loader;
 
 import com.google.gson.*;
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.*;
 
 /**
- * Simply used to load a {@link com.google.gson.JsonObject} from a {@link java.io.File}
+ * Provides a way to load on object from a JSON file.
+ *
+ * @param <T> The object to load
  */
-public class JsonFileLoader extends FileLoader<JsonObject> {
+public abstract class JsonFileLoader<T> extends FileLoader<T> {
+
+    /**
+     * The JSON object to use for loading
+     */
+    protected JsonObject json;
 
     /**
      * @param directory The directory from plugin folder
@@ -19,6 +27,11 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
     }
 
     /**
+     * Save the object T into a json object to be saved to disk
+     */
+    public abstract void saveJson();
+
+    /**
      * Used to save our {@link JsonObject} to disk
      * at {@link #file}
      *
@@ -26,12 +39,15 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
      */
     @Override
     public boolean save() {
+        // Load new object before saving
+        saveJson();
+
         try {
             FileWriter writer = new FileWriter(file);
 
             Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             JsonParser jp = new JsonParser();
-            JsonElement je = jp.parse(object.toString());
+            JsonElement je = jp.parse(json.toString());
             String prettyJsonString = gson.toJson(je);
 
             writer.write(prettyJsonString);
@@ -47,29 +63,23 @@ public class JsonFileLoader extends FileLoader<JsonObject> {
     }
 
     @Override
-    public JsonObject loadObject(final File file) {
-        JsonObject tempObject;
-
+    public T loadObject(final File file) {
         // Try assign JSON file
         try {
-            tempObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+            json = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
         } catch (FileNotFoundException e) {
             // If couldn't load, it becomes a new object
-            tempObject = new JsonObject();
+            json = new JsonObject();
         }
 
-        return tempObject;
+        return loadJsonObject();
     }
 
     /**
-     * Shorthand way to get {@link JsonObject} from a file
+     * Load the object from a {@link JsonObject}
      *
-     * @param directory The directory from plugin folder
-     * @param fileName The file name without .json
-     * @return Found JsonObject or a new {@link JsonObject}
+     * @return The loaded object
      */
-    public static JsonObject of(String directory, String fileName) {
-        return new JsonFileLoader(directory, fileName).getObject();
-    }
+    public abstract T loadJsonObject();
 
 }

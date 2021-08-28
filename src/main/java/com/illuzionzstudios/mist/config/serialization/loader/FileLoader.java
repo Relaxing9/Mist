@@ -85,7 +85,8 @@ public abstract class FileLoader<T> {
     public abstract boolean save();
 
     /**
-     * Load basic object to memory from disk
+     * Load basic object to memory from disk.
+     * Loaded on creation of loader
      */
     public abstract T loadObject(final File file);
 

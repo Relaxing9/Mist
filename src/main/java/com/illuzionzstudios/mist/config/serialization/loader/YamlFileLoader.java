@@ -1,11 +1,20 @@
 package com.illuzionzstudios.mist.config.serialization.loader;
 
-import com.google.gson.*;
 import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.File;
 
-public class YamlFileLoader extends FileLoader<YamlConfig> {
+/**
+ * Provides a way to load on object from a YAML file.
+ *
+ * @param <T> The object to load
+ */
+public abstract class YamlFileLoader<T> extends FileLoader<T> {
+
+    /**
+     * The YAML file for this loader
+     */
+    protected YamlConfig config;
 
     /**
      * @param directory The directory from plugin folder
@@ -15,34 +24,18 @@ public class YamlFileLoader extends FileLoader<YamlConfig> {
         super(directory, fileName, "yml");
     }
 
-    /**
-     * Used to save our {@link JsonObject} to disk
-     * at {@link #file}
-     *
-     * @return If was saved successfully
-     */
-    public boolean save() {
-        object.load();
-        return object.saveChanges();
-    }
-
     @Override
-    public YamlConfig loadObject(final File file) {
-        YamlConfig config = new YamlConfig(file);
+    public T loadObject(final File file) {
+        config = new YamlConfig(file);
         config.load();
-        config.saveChanges();
-        return config;
+        return loadYamlObject();
     }
 
     /**
-     * Shorthand way to get {@link YamlConfig} from a file
+     * Load the object from a {@link YamlConfig}
      *
-     * @param directory The directory from plugin folder
-     * @param fileName The file name without .yaml
-     * @return Found {@link YamlConfig} or a new {@link YamlConfig}
+     * @return The loaded object
      */
-    public static YamlConfig of(String directory, String fileName) {
-        return new YamlFileLoader(directory, fileName).getObject();
-    }
+    public abstract T loadYamlObject();
 
 }
