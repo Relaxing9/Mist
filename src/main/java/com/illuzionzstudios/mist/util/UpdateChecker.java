@@ -60,7 +60,8 @@ public final class UpdateChecker {
             return;
 
         check((version, name) -> {
-            if (version != VersionType.LATEST)
+            // Only notify if new version available
+            if (version == VersionType.OUTDATED)
             PluginLocale.UPDATE_AVAILABLE
                     .toString("plugin_name", SpigotPlugin.getPluginName())
                     .toString("current", SpigotPlugin.getPluginVersion())
