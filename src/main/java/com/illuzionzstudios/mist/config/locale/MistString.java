@@ -103,6 +103,7 @@ public class MistString {
      * Chain replace placeholders.
      * See {@link #toString(String, Object)}
      */
+    @Deprecated
     public MistString toString(final String placeholder1, final Object replacement1, final String placeholder2, final Object replacement2) {
         return this.toString(placeholder1, replacement1).toString(placeholder2, replacement2);
     }

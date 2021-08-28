@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Utility class for mathematical operations.
@@ -135,28 +136,6 @@ public final class MathUtil {
     }
 
     /**
-     * Return the given value if above min, or min
-     *
-     * @param value
-     * @param min
-     * @return
-     */
-    public static double atLeast(final double value, final double min) {
-        return value > min ? value : min;
-    }
-
-    /**
-     * Return the given value if above min, or min
-     *
-     * @param value
-     * @param min
-     * @return
-     */
-    public static int atLeast(final int value, final int min) {
-        return value > min ? value : min;
-    }
-
-    /**
      * Increase the given number by given percents (from 0 to 100)
      *
      * @param number
@@ -229,6 +208,26 @@ public final class MathUtil {
      */
     public static boolean chance(double percent) {
         return new Random().nextInt(100) <= percent;
+    }
+
+    /**
+     * Return a random number (inclusive) from expression. E.g "1.2--1.5"
+     *
+     * @param rangeExpression The expression
+     * @return Random number from so
+     */
+    public static float range(String rangeExpression) {
+        String[] toParse = rangeExpression.split("//--");
+        // Make sure no more than two numbers
+        if (toParse.length > 2) return 0f;
+
+        // One number
+        if (toParse.length == 1)
+            return Float.parseFloat(toParse[0]);
+
+        final float from = Float.parseFloat(toParse[0]);
+        final float to = Float.parseFloat(toParse[1]);
+        return from + ThreadLocalRandom.current().nextFloat() * (to - from);
     }
 
     // ----------------------------------------------------------------------------------------------------
