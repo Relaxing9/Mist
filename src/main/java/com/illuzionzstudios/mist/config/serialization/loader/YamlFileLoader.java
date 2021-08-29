@@ -29,7 +29,7 @@ public abstract class YamlFileLoader<T> extends FileLoader<T> {
     }
 
     /**
-     * Save the object T into a json object to be saved to disk
+     * Save the object T into a yaml object to be saved to disk
      */
     public abstract void saveYaml();
 
