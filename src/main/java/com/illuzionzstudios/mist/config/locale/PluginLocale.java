@@ -198,12 +198,11 @@ public abstract class PluginLocale extends YamlConfig {
         // Set instance
         LOCALE_FILE = settings;
         // Load settings loadLocale
-        settings.load();
+        LOCALE_FILE.load();
 
         // Load our other custom settings
         settings.loadLocale();
-        settings.setAutoRemove(true);
-        settings.saveChanges();
+        LOCALE_FILE.saveChanges();
 
         // Reset cache
         invalidateCache();

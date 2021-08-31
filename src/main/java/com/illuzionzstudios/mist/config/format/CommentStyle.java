@@ -76,10 +76,10 @@ public enum CommentStyle {
     public static CommentStyle parseStyle(List<String> lines) {
         if (lines == null || lines.size() <= 2) {
             return CommentStyle.SIMPLE;
-        } else if (lines.size() > 2 && lines.get(0).trim().equals("#") && lines.get(lines.size() - 1).trim().equals("#")) {
+        } else if (lines.get(0).trim().equals("#") && lines.get(lines.size() - 1).trim().equals("#")) {
             return CommentStyle.SPACED;
         }
-        boolean hasBorders = lines.size() > 2 && lines.get(0).trim().matches("^##+$") && lines.get(lines.size() - 1).trim().matches("^##+$");
+        boolean hasBorders = lines.get(0).trim().matches("^##+$") && lines.get(lines.size() - 1).trim().matches("^##+$");
         if (!hasBorders) {
             // default return
             return CommentStyle.SIMPLE;

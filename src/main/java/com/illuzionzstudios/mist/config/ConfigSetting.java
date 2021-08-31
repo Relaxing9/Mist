@@ -63,12 +63,14 @@ public class ConfigSetting {
 
     /**
      * Load the setting if default value set. Doesn't load if config not set
+     *
+     * @param config The config to load this setting for
      */
-    public void loadSetting() {
-        Valid.checkNotNull(config, "Must load config file before loading config setting");
+    public void loadSetting(@NotNull final YamlConfig config) {
+        this.config = config;
 
         if (defaultValue != null)
-            config.setDefault(key, defaultValue, commentStyle, comments);
+            this.config.setDefault(key, defaultValue, commentStyle, comments);
     }
 
     /**

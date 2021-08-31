@@ -47,9 +47,9 @@ public class YamlConfig extends ConfigSection {
     protected static final String BLANK_CONFIG = "{}\n";
 
     /**
-     * This is the REGEX to parse YAML syntax
+     * This is the REGEX to parse YAML syntax. Matches "key: value" making sure syntax is right
      */
-    protected final Pattern yamlNode = Pattern.compile("^( *)([^:{}\\[\\],&*#?|\\-<>=!%@`]+):(.*)$");
+    protected final Pattern yamlNode = Pattern.compile("^( *)([^:{}\\[\\],&*#?|<>=!%@`]+):(.*)$");
 
     /**
      * This is the path to the directory to store the file in. This
@@ -154,7 +154,7 @@ public class YamlConfig extends ConfigSection {
      */
     @Getter
     @Setter
-    private int commentSpacing = 1;
+    private int commentSpacing = 0;
 
     //  -------------------------------------------------------------------------
     //  Constructors
@@ -627,7 +627,7 @@ public class YamlConfig extends ConfigSection {
         boolean insideScalar = false;
         boolean firstNode = true;
         int index = 0;
-        LinkedList<String> currentPath = new LinkedList();
+        LinkedList<String> currentPath = new LinkedList<>();
         while ((line = in.readLine()) != null) {
             // ignore comments and empty lines (there shouldn't be any, but just in case)
             if (line.trim().startsWith("#") || line.isEmpty()) {

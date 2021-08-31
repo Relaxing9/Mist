@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.config.format.CommentStyle;
+import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +47,7 @@ public class ConfigSettings {
     public final void load() {
         settings.forEach(setting -> {
             // Set config file then load
-            setting.setConfig(PluginSettings.SETTINGS_FILE);
-            setting.loadSetting();
+            setting.loadSetting(PluginSettings.SETTINGS_FILE);
         });
     }
 

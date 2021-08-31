@@ -74,7 +74,7 @@ public class Comment {
      */
     @Override
     public String toString() {
-        return lines.isEmpty() ? "" : lines.stream().collect(Collectors.joining("\n"));
+        return lines.isEmpty() ? "" : String.join("\n", lines);
     }
 
     /**
