@@ -202,6 +202,7 @@ public abstract class PluginLocale extends YamlConfig {
 
         // Load our other custom settings
         settings.loadLocale();
+        settings.setAutoRemove(true);
         settings.saveChanges();
 
         // Reset cache

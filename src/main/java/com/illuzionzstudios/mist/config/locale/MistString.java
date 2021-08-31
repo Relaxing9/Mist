@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
  * This represents a custom translatable string that can be used in the plugin where we
  * would usually use a {@link String}. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
- *
+ * <p>
  * TODO: Create string groups that load all strings once locale is loaded
  */
 public class MistString {
@@ -24,7 +24,7 @@ public class MistString {
      * Default value of the string
      */
     private final String def;
-    
+
     /**
      * The raw contents of this string
      */
@@ -107,7 +107,7 @@ public class MistString {
     public MistString toString(final String placeholder1, final Object replacement1, final String placeholder2, final Object replacement2) {
         return this.toString(placeholder1, replacement1).toString(placeholder2, replacement2);
     }
-    
+
     @Override
     public String toString() {
         loadString();
