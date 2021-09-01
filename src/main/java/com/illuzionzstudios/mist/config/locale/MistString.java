@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config.locale;
 
+import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
 
@@ -29,6 +30,11 @@ public class MistString {
      * The raw contents of this string
      */
     private String value;
+
+    /**
+     * If it has been loaded from the locale
+     */
+    private boolean loaded;
 
     /**
      * Used when we just want a string with content and not
@@ -80,6 +86,7 @@ public class MistString {
      * @return the modified Message
      */
     public MistString toString(final String placeholder, final Object replacement) {
+        loadString();
         final String place = Matcher.quoteReplacement(placeholder);
         this.value = value.replaceAll("\\{" + place + "}", replacement == null ? "" : Matcher.quoteReplacement(replacement.toString()));
         return this;
@@ -92,10 +99,7 @@ public class MistString {
      * @return the modified Message
      */
     public MistString toString(final Map<String, Object> replacements) {
-        replacements.forEach((placeholder, replacement) -> {
-            final String place = Matcher.quoteReplacement(placeholder);
-            this.value = value.replaceAll("\\{" + place + "}", replacement == null ? "" : Matcher.quoteReplacement(replacement.toString()));
-        });
+        replacements.forEach(this::toString);
         return this;
     }
 
@@ -118,7 +122,10 @@ public class MistString {
      * Loads string from locale into value. Must be used before replacing
      */
     public void loadString() {
-        this.value = TextUtil.formatText(PluginLocale.getMessage(key, def));
+        if (!loaded) {
+            this.value = TextUtil.formatText(PluginLocale.getMessage(key, def));
+            loaded = true;
+        }
     }
 
     /**
