@@ -299,6 +299,19 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
+     * Static method to just load an internal YAML file right onto the server without having
+     * to create a custom class because we aren't doing any internal loading.
+     *
+     * @param plugin The plugin this file is apart of
+     * @param directory The directory to put the file in
+     * @param fileName The name of the file
+     */
+    public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
+        YamlConfig toLoad = new YamlConfig(plugin, directory, fileName);
+        toLoad.loadResourceToServer(directory, fileName);
+    }
+
+    /**
      * Loads an internal resource onto the server
      * For instance file in resources/locales/en_US.lang will be loaded
      * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
@@ -306,6 +319,8 @@ public class YamlConfig extends ConfigSection {
      * Main applications are implementing this {@link YamlConfig} into a custom
      * object, for instance implementing a specific type of config. This way if we have
      * any defaults in the plugin we can load to the server.
+     *
+     * If file already exists on disk it just loads that.
      *
      * @param directory The directory to load from, "" if none
      * @param fileName File name with extension to load
