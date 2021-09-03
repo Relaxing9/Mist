@@ -50,6 +50,12 @@ public final class ItemCreator {
     private final int damage = -1;
 
     /**
+     * Custom model data
+     */
+    @Builder.Default
+    private final int customModelData = 0;
+
+    /**
      * The display name of the item
      */
     private final String name;
@@ -116,7 +122,6 @@ public final class ItemCreator {
      * @return The built item
      */
     public ItemStack make() {
-
         // Make sure base item and material are set
         Valid.checkBoolean((material != null && material.parseMaterial() != null) || item != null, "Material or item must be set!");
 
@@ -144,6 +149,10 @@ public final class ItemCreator {
             } catch (final Throwable ignored) {
             }
         }
+
+        // Custom model data only in 1.14+
+        if (ServerVersion.atLeast(ServerVersion.V.v1_14))
+            stackMeta.setCustomModelData(customModelData);
 
         // Glow
         if (glow) {
