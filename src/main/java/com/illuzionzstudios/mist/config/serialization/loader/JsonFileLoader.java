@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.config.serialization.loader;
 
 import com.google.gson.*;
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.*;
 

@@ -1,12 +1,9 @@
 package com.illuzionzstudios.mist.config.serialization.loader;
 
 import com.google.gson.*;
-import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Provides a way to load on object from a YAML file.
