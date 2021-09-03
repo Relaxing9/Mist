@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.util;
 
+import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -14,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Util methods to help parsing text
@@ -21,9 +24,14 @@ import java.util.concurrent.TimeUnit;
 public final class TextUtil {
 
     /**
+     * Hexadecimal pattern
+     */
+    private static final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
+
+    /**
      * These are all the {@link Charset} we support for encoding/saving
      */
-    protected static final List<Charset> supportedCharsets = new ArrayList<>();
+    private static final List<Charset> supportedCharsets = new ArrayList<>();
 
     static {
         supportedCharsets.add(StandardCharsets.UTF_8); // UTF-8 BOM: EF BB BF
@@ -65,6 +73,18 @@ public final class TextUtil {
         // Parse unicode
         text = StringEscapeUtils.unescapeJava(text);
 
+        // Parse hexadecimal as #FAFAFA<message>
+        if (ServerVersion.atLeast(ServerVersion.V.v1_16)) {
+            Matcher matcher = hexPattern.matcher(text);
+            while (matcher.find()) {
+                final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
+                final String before = text.substring(0, matcher.start());
+                final String after = text.substring(matcher.end());
+                text = before + hexColor + after;
+                matcher = hexPattern.matcher(text);
+            }
+        }
+
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
@@ -72,7 +92,7 @@ public final class TextUtil {
      * Converts list of objects into a string separated by \n char.
      * Takes the toString() form.
      * For instance list of objects "one" and "two" becomes
-     * "one \ntwo"
+     * "one\ntwo"
      *
      * @param list List to convert
      * @return As singular string
