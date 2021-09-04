@@ -308,7 +308,7 @@ public class YamlConfig extends ConfigSection {
      */
     public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
         YamlConfig toLoad = new YamlConfig(plugin, directory, fileName);
-        toLoad.loadResourceToServer(directory, fileName);
+        toLoad.loadResourceToServer(File.separator + directory, fileName);
     }
 
     /**

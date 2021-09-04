@@ -27,13 +27,21 @@ public class DirectoryLoader<T extends FileLoader<?>> {
     private final List<T> loaders;
 
     /**
+     * Class of the loader
+     */
+    private final Class<T> clazz;
+
+    /**
      * @param directory to load from
      * @param clazz The class for the file loader
      */
     public DirectoryLoader(Class<T> clazz, String directory) {
         this.directory = directory;
         loaders = new ArrayList<>();
+        this.clazz = clazz;
+    }
 
+    public void load() {
         // Reward directory
         File dir = new File(SpigotPlugin.getInstance().getDataFolder().getPath() + File.separator + directory);
 
