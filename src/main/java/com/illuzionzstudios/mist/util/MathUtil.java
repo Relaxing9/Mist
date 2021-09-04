@@ -221,7 +221,7 @@ public final class MathUtil {
         if (rangeExpression.isEmpty())
             return 0f;
 
-        String[] toParse = rangeExpression.split("//--");
+        String[] toParse = rangeExpression.split("--");
         // Make sure no more than two numbers
         if (toParse.length > 2) return 0f;
 
