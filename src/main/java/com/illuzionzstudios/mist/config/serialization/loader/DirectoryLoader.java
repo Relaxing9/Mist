@@ -39,6 +39,8 @@ public class DirectoryLoader<T extends FileLoader<?>> {
         this.directory = directory;
         loaders = new ArrayList<>();
         this.clazz = clazz;
+
+        load();
     }
 
     public void load() {
