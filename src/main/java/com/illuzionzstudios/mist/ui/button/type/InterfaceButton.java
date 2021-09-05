@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
-import com.illuzionzstudios.mist.ui.render.ItemCreator;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;

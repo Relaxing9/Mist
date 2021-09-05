@@ -51,6 +51,10 @@ public final class FileUtil {
      * @param dir File path to directory
      */
     public static void purgeDirectory(File dir) {
+        Valid.checkNotNull(dir, "Cant purge a null directory");
+        // If not a directory just delete the file
+        if (!dir.isDirectory()) dir.delete();
+
         for (File file : dir.listFiles()) {
             if (file.isDirectory())
                 purgeDirectory(file);

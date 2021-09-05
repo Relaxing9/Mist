@@ -4,6 +4,8 @@ import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -138,6 +140,49 @@ public class MistString {
         // Check for split lore
         String[] strings = toString().split("\\n");
         player.sendMessage(strings);
+    }
+
+    /**
+     * Converts a list of strings to one mist string
+     *
+     * @param list The list of strings to convert
+     * @return One {@link MistString}
+     */
+    public static MistString fromList(final List<String> list) {
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i));
+
+            // Can't compare values have to compare index
+            if (i != list.size() - 1)
+                builder.append("\n");
+        }
+
+        return new MistString(builder.toString());
+    }
+
+    /**
+     * Easily turn a list of strings into a list of {@link MistString}
+     *
+     * @param list The list to convert
+     * @return The list of {@link MistString} with the original list's values
+     */
+    public static List<MistString> fromStringList(final List<String> list) {
+        ArrayList<MistString> strings = new ArrayList<>();
+        list.forEach(string -> strings.add(new MistString(string)));
+        return strings;
+    }
+
+    /**
+     * Easily turn a list of {@link MistString} into a list of strings
+     *
+     * @param list The list to convert
+     * @return The list of string with the original list's values
+     */
+    public static List<String> fromMistList(final List<MistString> list) {
+        ArrayList<String> strings = new ArrayList<>();
+        list.forEach(string -> strings.add(string.toString()));
+        return strings;
     }
 
 }

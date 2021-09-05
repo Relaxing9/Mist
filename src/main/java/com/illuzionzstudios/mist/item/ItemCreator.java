@@ -1,8 +1,7 @@
-package com.illuzionzstudios.mist.ui.render;
+package com.illuzionzstudios.mist.item;
 
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.compatibility.XItemFlag;
 import com.illuzionzstudios.mist.compatibility.XProperty;
@@ -22,7 +21,8 @@ import java.util.*;
 
 /**
  * Utility class to easily build custom items. We can set flags,
- * names and lore, and enchantments.
+ * names and lore, and enchantments. Provides a way to
+ * just easily construct an item
  */
 @Builder
 public final class ItemCreator {
@@ -44,7 +44,7 @@ public final class ItemCreator {
     private final int amount = 1;
 
     /**
-     * Damage of the item for setting custom metadata
+     * Damage to the item for setting custom metadata
      */
     @Builder.Default
     private final int damage = -1;
@@ -243,7 +243,7 @@ public final class ItemCreator {
      * See {@link #of(XMaterial, String, Collection)}
      */
     public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final String... lore) {
-        return ItemCreator.builder().material(material).name("&r" + name).lores(Arrays.asList(lore)).hideTags(true);
+        return ItemCreator.builder().material(material).name(name).lores(Arrays.asList(lore)).hideTags(true);
     }
 
     /**

@@ -6,7 +6,7 @@ import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
-import com.illuzionzstudios.mist.ui.render.ItemCreator;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.util.MathUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;

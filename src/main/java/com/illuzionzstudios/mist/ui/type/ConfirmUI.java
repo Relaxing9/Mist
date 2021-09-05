@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
-import com.illuzionzstudios.mist.ui.render.ItemCreator;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;

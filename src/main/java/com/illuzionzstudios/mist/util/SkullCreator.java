@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.util;
 
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

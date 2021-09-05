@@ -3,7 +3,7 @@ package com.illuzionzstudios.mist.ui.button.type;
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
-import com.illuzionzstudios.mist.ui.render.ItemCreator;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import lombok.*;
 import org.bukkit.inventory.ItemStack;
 

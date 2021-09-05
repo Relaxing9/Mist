@@ -2,7 +2,7 @@ package com.illuzionzstudios.mist.ui.button;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.ui.UserInterface;
-import com.illuzionzstudios.mist.ui.render.ItemCreator;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

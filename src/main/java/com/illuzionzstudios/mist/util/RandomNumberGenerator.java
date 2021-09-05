@@ -34,14 +34,14 @@ public class RandomNumberGenerator {
     @Setter
     private double upper;
 
-    public RandomNumberGenerator(double upper) {
+    public RandomNumberGenerator(final double upper) {
         this(0, upper);
     }
 
     /**
      * Set lower and upper limits for generation
      */
-    public RandomNumberGenerator(double lower, double upper) {
+    public RandomNumberGenerator(final double lower, final double upper) {
         this.lower = lower;
         this.upper = upper;
     }
@@ -60,15 +60,17 @@ public class RandomNumberGenerator {
 
     /**
      * Parse a string into a {@link RandomNumberGenerator}.
-     * Syntax is "{lower}-{upper}". If just one number is provided, it is used
+     * Syntax is "{lower}to{upper}". If just one number is provided, it is used
      * as the upper bound with lower being 1.
      *
-     * @param string String as "{lower}-{upper}"
+     * @param string String as "{lower}to{upper}"
      * @return {@link RandomNumberGenerator} with those bounds
      */
     public static RandomNumberGenerator parse(String string) {
+        // Remove whitespace
+        string = string.replaceAll("\\s+","");
         // Create tokens
-        String[] tokens = string.split("-");
+        String[] tokens = string.split("to");
 
         // Else use first element as upper
         return tokens[1] != null ? new RandomNumberGenerator(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]))

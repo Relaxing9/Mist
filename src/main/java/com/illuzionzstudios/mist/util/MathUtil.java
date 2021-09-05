@@ -211,17 +211,21 @@ public final class MathUtil {
     }
 
     /**
-     * Return a random number (inclusive) from expression. E.g "1.2--1.5"
+     * Return a random number (inclusive) from expression. E.g "1.2 to 1.5".
+     * If one number is provided always returns that number. For more randomness
+     * use {@link RandomNumberGenerator}
      *
      * @param rangeExpression The expression
      * @return Random number from so
      */
     public static float range(String rangeExpression) {
+        rangeExpression = rangeExpression.replaceAll("\\s+","");
+
         // If null string no number
         if (rangeExpression.isEmpty())
             return 0f;
 
-        String[] toParse = rangeExpression.split("--");
+        String[] toParse = rangeExpression.split("to");
         // Make sure no more than two numbers
         if (toParse.length > 2) return 0f;
 
