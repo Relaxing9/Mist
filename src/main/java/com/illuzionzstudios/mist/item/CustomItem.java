@@ -28,7 +28,6 @@ import java.util.Map;
 @Setter
 @Builder
 @ToString
-@NoArgsConstructor
 public class CustomItem {
 
     /**
@@ -41,12 +40,14 @@ public class CustomItem {
      * include this in a map if need be
      */
     @NotNull
+    @Builder.Default
     private String identifier = "null";
 
     /**
      * The material of this item
      */
     @NotNull
+    @Builder.Default
     private XMaterial material = XMaterial.AIR;
 
     /**

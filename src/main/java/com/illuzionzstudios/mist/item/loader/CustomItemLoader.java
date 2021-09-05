@@ -14,6 +14,6 @@ public class CustomItemLoader extends BaseCustomItemLoader<CustomItem> {
 
     @Override
     protected CustomItem returnImplementedObject(final ConfigSection configSection) {
-        return new CustomItem();
+        return CustomItem.builder().build();
     }
 }
