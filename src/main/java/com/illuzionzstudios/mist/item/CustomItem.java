@@ -135,11 +135,20 @@ public class CustomItem {
     protected void customiseItem() {}
 
     /**
+     * Makes sure item is set. Run where we need to make sure it isn't null
+     */
+    private void checkBuilt() {
+        if (this.item == null)
+            buildItem();
+    }
+
+    /**
      * Give this item to a player
      *
      * @param player Player receiving item
      */
     public void givePlayer(final Player player) {
+        checkBuilt();
         player.getInventory().addItem(this.item);
     }
 
