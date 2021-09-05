@@ -2,18 +2,13 @@ package com.illuzionzstudios.mist.item;
 
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-import com.illuzionzstudios.mist.compatibility.XItemFlag;
 import com.illuzionzstudios.mist.config.locale.MistString;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Singular;
-import lombok.ToString;
+import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,14 +25,15 @@ import java.util.Map;
  * Contains methods for manipulating item
  */
 @Getter
+@Setter
 @Builder
 @ToString
+@NoArgsConstructor
 public class CustomItem {
 
     /**
      * Actual item stack constructed to perform more operations on
      */
-    @NotNull
     private ItemStack item;
 
     /**
@@ -45,13 +41,13 @@ public class CustomItem {
      * include this in a map if need be
      */
     @NotNull
-    private String identifier;
+    private String identifier = "null";
 
     /**
      * The material of this item
      */
     @NotNull
-    private XMaterial material;
+    private XMaterial material = XMaterial.AIR;
 
     /**
      * Custom name of the item
