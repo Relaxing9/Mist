@@ -22,11 +22,12 @@ import java.util.Map;
  * stack where this is to create an item stack with a bit more functionality and
  * have our own sort of data attached to it.
  *
+ * Is not a builder as we should set everything manually.
+ *
  * Contains methods for manipulating item
  */
 @Getter
 @Setter
-@Builder
 @ToString
 public class CustomItem {
 
@@ -106,7 +107,7 @@ public class CustomItem {
      * registering or giving of the item is done. If is overriden must
      * call this super method
      */
-    public void buildItem() {
+    public ItemStack buildItem() {
         ItemCreator.ItemCreatorBuilder creator = ItemCreator.of(material);
 
         if (customName != null)
@@ -124,6 +125,7 @@ public class CustomItem {
 
         this.item = creator.build().make();
         customiseItem();
+        return this.item.clone();
     }
 
     /**
