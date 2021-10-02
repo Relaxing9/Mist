@@ -110,7 +110,7 @@ public class CustomItem {
     public ItemStack buildItem() {
         ItemCreator.ItemCreatorBuilder creator = ItemCreator.of(material);
 
-        if (customName != null)
+        if (customName != null && !customName.toString().trim().isEmpty())
             creator.name(customName.toString());
 
         if (lore != null)

@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * A loader for a {@link CustomItem} from a YAML config section. Can be implemented
- * with another custom item by overriding {@link #returnImplementedObject()} and creating
+ * with another custom item by overriding {@link #returnImplementedObject(ConfigSection)} and creating
  * new instance of custom item with loading already done for that item.
  */
 public abstract class BaseCustomItemLoader<T extends CustomItem> extends SectionLoader<T> {

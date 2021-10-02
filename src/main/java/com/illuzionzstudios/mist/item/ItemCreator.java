@@ -95,7 +95,8 @@ public final class ItemCreator {
      *
      * The enchant is visible on older MC versions.
      */
-    private final boolean glow;
+    @Builder.Default
+    private boolean glow = false;
 
     /**
      * The actual metadata of the item stack
@@ -151,7 +152,7 @@ public final class ItemCreator {
         }
 
         // Custom model data only in 1.14+
-        if (ServerVersion.atLeast(ServerVersion.V.v1_14))
+        if (ServerVersion.atLeast(ServerVersion.V.v1_14) && customModelData != 0)
             stackMeta.setCustomModelData(customModelData);
 
         // Glow
@@ -187,9 +188,6 @@ public final class ItemCreator {
 
         // Unbreakable
         if (unbreakable) {
-            flags.add(XItemFlag.HIDE_ATTRIBUTES);
-            flags.add(XItemFlag.HIDE_UNBREAKABLE);
-
             if (ServerVersion.olderThan(ServerVersion.V.v1_12)) {
                 try {
                     final Object spigot = stackMeta.getClass().getMethod("spigot").invoke(stackMeta);

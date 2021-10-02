@@ -14,7 +14,8 @@ import java.util.regex.Matcher;
  * would usually use a {@link String}. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
  * <p>
- * TODO: Create string groups that load all strings once locale is loaded
+ *
+ * Reset value once has been queried
  */
 public class MistString {
 
@@ -114,10 +115,17 @@ public class MistString {
         return this.toString(placeholder1, replacement1).toString(placeholder2, replacement2);
     }
 
+    /**
+     * After turning into final string we must reset the value as
+     * otherwise things like concat will continue for every call
+     */
     @Override
     public String toString() {
+        String toSend = value;
+        // Reload value
+        this.loaded = false;
         loadString();
-        return TextUtil.formatText(value);
+        return TextUtil.formatText(toSend);
     }
 
     /**
