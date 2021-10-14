@@ -55,6 +55,8 @@ public final class UpdateChecker {
      * @param sender The sender to check
      */
     public static void checkVersion(CommandSender sender) {
+        if (!SpigotPlugin.getInstance().isCheckUpdates()) return;
+
         // Only notify ops
         if (!sender.isOp())
             return;

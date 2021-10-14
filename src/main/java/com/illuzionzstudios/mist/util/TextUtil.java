@@ -59,6 +59,14 @@ public final class TextUtil {
         return formatText(text, false);
     }
 
+    public static List<String> formatText(List<String> text) {
+        List<String> formatted = new ArrayList<>();
+        text.forEach(str -> {
+            formatted.add(formatText(str));
+        });
+        return formatted;
+    }
+
     /**
      * See {@link #formatText(String)}
      *

@@ -34,6 +34,13 @@ import java.util.Objects;
 public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     //  -------------------------------------------------------------------------
+    //  Internal plugin settings that determine if certain things are loaded
+    //  -------------------------------------------------------------------------
+
+    @Getter
+    protected boolean checkUpdates = false;
+
+    //  -------------------------------------------------------------------------
     //  Static instances that stay final
     //  -------------------------------------------------------------------------
 

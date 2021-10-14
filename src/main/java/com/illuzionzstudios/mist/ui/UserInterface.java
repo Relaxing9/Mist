@@ -368,7 +368,8 @@ public abstract class UserInterface implements Tickable {
     }
 
     /**
-     * Run any last minute registering before the interface is displayed
+     * Run any last minute registering before the interface is displayed.
+     * Good if you want a dynamic interface
      */
     protected void preDisplay() {
     }
@@ -388,7 +389,7 @@ public abstract class UserInterface implements Tickable {
      * "Restart" this interface. This means re-registering all buttons,
      * and redrawing all items
      */
-    protected final void restart() {
+    public final void restart() {
         preDisplay();
         registerButtons();
         redraw();

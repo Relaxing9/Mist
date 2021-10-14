@@ -80,6 +80,10 @@ public abstract class Button {
         return new IconButton(creator.makeUIItem());
     }
 
+    public static IconButton makeIcon(final ItemStack stack) {
+        return new IconButton(stack);
+    }
+
     /**
      * @return Simply a button that is just air, represents {@code null}
      */
