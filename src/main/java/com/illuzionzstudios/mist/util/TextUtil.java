@@ -1,8 +1,11 @@
 package com.illuzionzstudios.mist.util;
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
+import com.illuzionzstudios.mist.config.locale.MistString;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -65,6 +68,18 @@ public final class TextUtil {
             formatted.add(formatText(str));
         });
         return formatted;
+    }
+
+    public void sendTitle(final CommandSender sender, final MistString title, final MistString subtitle) {
+        if (sender instanceof Player) {
+            if (ServerVersion.atLeast(ServerVersion.V.v1_11)) {
+                ((Player) sender).sendTitle(title.toString(), subtitle.toString(), 10, 20, 10);
+            } else {
+                ((Player) sender).sendTitle(title.toString(), subtitle.toString());
+            }
+        } else {
+            sender.sendMessage(title.toString());
+        }
     }
 
     /**

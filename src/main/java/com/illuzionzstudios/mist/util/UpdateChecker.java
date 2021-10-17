@@ -2,9 +2,7 @@ package com.illuzionzstudios.mist.util;
 
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;
-import com.illuzionzstudios.mist.config.locale.MistString;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
-import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import org.bukkit.command.CommandSender;

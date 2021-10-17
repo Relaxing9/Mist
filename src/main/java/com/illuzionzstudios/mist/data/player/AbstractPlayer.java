@@ -1,9 +1,6 @@
 package com.illuzionzstudios.mist.data.player;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.config.locale.MistString;
-import com.illuzionzstudios.mist.config.locale.PluginLocale;
-import com.illuzionzstudios.mist.config.locale.Message;
 import com.illuzionzstudios.mist.data.PlayerData;
 import com.illuzionzstudios.mist.data.controller.PlayerDataController;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
