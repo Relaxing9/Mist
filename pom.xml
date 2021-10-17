@@ -27,6 +27,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>nms-repo</id>
+            <url>https://repo.codemc.org/repository/nms/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- Spigot API and NMS -->
         <dependency>
