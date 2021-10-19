@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 /**
  * This command is apart of a command group. It acts as a sub label to
- * add extra functionality. For instance, "/customfishing rewards", rewards is the
+ * add extra functionality. For instance, "/maincommand rewards", rewards is the
  * sub label
  *
  * Acts as a normal command that runs based of a {@link SpigotCommandGroup}

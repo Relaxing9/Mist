@@ -72,30 +72,16 @@ public enum XProperty {
             m.setAccessible(true);
 
             m.invoke(instance, key);
-
-        } catch (final ReflectiveOperationException e) {
-            if (e instanceof NoSuchMethodException && ServerVersion.olderThan(ServerVersion.V.values()[0])) {
-                // Pass through TODO
-            } else e.printStackTrace();
-        }
-    }
-
-    /**
-     * Can this property be used on this server for the given class? Class must be compatible with {@link #requiredClass}
-     */
-    public final boolean isAvailable(Class<?> clazz) {
-        try {
-            getMethod(clazz);
         } catch (final ReflectiveOperationException e) {
             if (e instanceof NoSuchMethodException && ServerVersion.olderThan(ServerVersion.V.values()[0]))
-                return false;
+                return;
+            e.printStackTrace();
         }
-
-        return true;
     }
 
     // Automatically returns the correct getter or setter method for class
     private Method getMethod(Class<?> clazz) throws ReflectiveOperationException {
+        // Check AI because method is setAI not setAi
         return clazz.getMethod("set" + (toString().equals("AI") ? "AI" : TextUtil.formatText(toString().toLowerCase(), true)), setterMethodType);
     }
 

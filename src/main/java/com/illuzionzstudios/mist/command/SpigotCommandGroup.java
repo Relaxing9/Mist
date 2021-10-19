@@ -19,7 +19,8 @@ import java.util.List;
 /**
  * Contains a group of commands for execution. Contains the main command,
  * for instance "/customfishing", and the subs for that command, eg "/customfishing rewards"
- * allows us to group functionality for commands and interact with each other
+ * allows us to group functionality for commands and interact with each other. Also will
+ * provide a help sub command that lists all available commands for the group
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class SpigotCommandGroup {
@@ -35,10 +36,6 @@ public abstract class SpigotCommandGroup {
      * executed through
      */
     protected SpigotCommand mainCommand;
-
-    //  -------------------------------------------------------------------------
-    //  Registration
-    //  -------------------------------------------------------------------------
 
     /**
      * Register this command group with the main label,
@@ -109,10 +106,6 @@ public abstract class SpigotCommandGroup {
         return mainCommand != null;
     }
 
-    //  -------------------------------------------------------------------------
-    //  Functions
-    //  -------------------------------------------------------------------------
-
     /**
      * Return which subcommands should trigger the automatic help
      * menu that shows all subcommands sender has permission for.
@@ -126,7 +119,7 @@ public abstract class SpigotCommandGroup {
     }
 
     /**
-     * Return the header messages used in /{label} help|? typically
+     * Return the header messages used in /{label} help|? typically,
      * used to tell all available subcommands from this command group
      *
      * @return String array of messages
@@ -154,11 +147,6 @@ public abstract class SpigotCommandGroup {
     protected String getHeaderPrefix() {
         return "" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD;
     }
-
-
-    //  -------------------------------------------------------------------------
-    //  Execution
-    //  -------------------------------------------------------------------------
 
     /**
      * Handles our main command to detect sub commands and run functionality
@@ -217,7 +205,8 @@ public abstract class SpigotCommandGroup {
                 if (subcommand.showInHelp() && hasPerm(subcommand.getPermission())) {
 
                     final String usage = colorizeUsage(subcommand.getUsage());
-                    final String desc = subcommand.getDescription() != null ? subcommand.getDescription() : "";
+                    subcommand.getDescription();
+                    final String desc = subcommand.getDescription();
 
                     tell("  &7/" + getLabel() + " " + subcommand.getSubLabels()[0] + (!usage.startsWith("/") ? " " + usage : "") + (!desc.isEmpty() ? "&e- " + desc : ""));
                 }

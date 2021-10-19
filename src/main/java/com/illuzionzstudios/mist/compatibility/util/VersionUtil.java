@@ -3,8 +3,6 @@ package com.illuzionzstudios.mist.compatibility.util;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,7 +15,7 @@ import java.util.Map;
 
 /**
  * Main util class for cross-version compatibility.
- *
+ * <p>
  * Contains a lot of static methods in order to make our plugin
  * work from {@version 1.8.8} to the latest version
  */
@@ -52,8 +50,8 @@ public final class VersionUtil {
      * Removes a command by its label from command map, optionally can also remove
      * aliases
      *
-     * @param label          the label
-     * @param removeAliases, also remove aliases?
+     * @param label         the label
+     * @param removeAliases also remove aliases?
      */
     public void unregisterCommand(final String label, final boolean removeAliases) {
         try {

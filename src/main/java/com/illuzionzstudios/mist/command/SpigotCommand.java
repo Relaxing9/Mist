@@ -197,7 +197,7 @@ public abstract class SpigotCommand extends Command {
             if (args.length < getMinArguments() || autoHandleHelp && args.length == 1 && ("help".equals(args[0]) || "?".equals(args[0]))) {
                 if (!getUsage().trim().equalsIgnoreCase(""))
                     // Inform usage message
-                    tell(PluginLocale.COMMAND_INVALID_USAGE.toString("{label}", label, "{args}", String.join(" ", args)));
+                    tell(PluginLocale.COMMAND_INVALID_USAGE.toString("{label}", label).toString("{args}", String.join(" ", args)));
                 return true;
             }
 
@@ -285,10 +285,6 @@ public abstract class SpigotCommand extends Command {
                 .replace("{plugin.name}", SpigotPlugin.getPluginName().toLowerCase());
     }
 
-    // ----------------------------------------------------------------------
-    // Temporary variables and safety
-    // ----------------------------------------------------------------------
-
     /**
      * Checks if the sender is a console
      */
@@ -339,22 +335,19 @@ public abstract class SpigotCommand extends Command {
      * If that is null, we check for the following:
      * {plugin.name}.command.{label} for {@link SpigotCommand}
      *
-     * We handle lacking permissions automatically and return with an no-permission message
+     * We handle lacking permissions automatically and return with a no-permission message
      * when the player lacks it.
      *
      * @return The formatted permission
      */
     @Override
     public final String getPermission() {
-        return super.getPermission() == null ? null : replaceBasicPlaceholders(super.getPermission());
+        return super.getPermission() == null ? "" : replaceBasicPlaceholders(super.getPermission());
     }
 
     /**
      * Get the permission without replacing {plugin.name}, {label} or {sublabel}
-     *
-     * @deprecated internal use only
      */
-    @Deprecated
     public final String getRawPermission() {
         return super.getPermission();
     }
@@ -373,6 +366,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Get aliases for this command
      */
+    @NotNull
     @Override
     public final List<String> getAliases() {
         return super.getAliases();
@@ -381,6 +375,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Get description for this command
      */
+    @NotNull
     @Override
     public final String getDescription() {
         return super.getDescription();
@@ -389,6 +384,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Get the name of this command
      */
+    @NotNull
     @Override
     public final String getName() {
         return super.getName();
@@ -397,6 +393,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Get the usage message of this command
      */
+    @NotNull
     @Override
     public final String getUsage() {
         return super.getUsage();

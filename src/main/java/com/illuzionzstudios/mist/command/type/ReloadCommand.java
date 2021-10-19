@@ -22,10 +22,8 @@ public class ReloadCommand extends SpigotSubCommand {
 
     @Override
     protected ReturnType onCommand() {
-        SpigotPlugin plugin = SpigotPlugin.getInstance();
-
         // Just call this method to reload
-        plugin.reload();
+        SpigotPlugin.getInstance().reload();
 
         // Inform
         PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(getSender());

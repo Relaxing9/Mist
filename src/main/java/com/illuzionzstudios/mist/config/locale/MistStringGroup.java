@@ -11,18 +11,12 @@ import java.util.List;
  * Represents a group of strings for a section. Eg strings to do with interface or the player.
  * The way this works is we create strings via this group and then load this group after
  * the locale is loaded. This way the {@link MistString}'s get loaded from locale without null
- * errors
+ * errors. Only one loader is needed for all strings. Only group if they need to be loaded in
+ * different stages
  *
  * Should be loaded in {@link SpigotPlugin#onReloadablesStart()}
  */
-@RequiredArgsConstructor
 public class MistStringGroup {
-
-    /**
-     * Name of this group
-     */
-    @Getter
-    public final String name;
 
     /**
      * List of strings in group
