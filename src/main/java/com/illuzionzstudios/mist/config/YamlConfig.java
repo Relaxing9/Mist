@@ -326,7 +326,7 @@ public class YamlConfig extends ConfigSection {
      * @param fileName File name with extension to load
      * @return If was found and loaded successfully
      */
-    protected final boolean loadResourceToServer(final String directory, final String fileName) {
+    public final boolean loadResourceToServer(final String directory, final String fileName) {
         Objects.requireNonNull(fileName, "Must provide a file to load");
 
         // Internal path to locale
