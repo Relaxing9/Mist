@@ -207,7 +207,7 @@ public final class MathUtil {
      * @return If the odds were in it's favour
      */
     public static boolean chance(double percent) {
-        return new Random().nextInt(100) <= percent;
+        return new RandomNumberGenerator(0, 100).generate() <= percent;
     }
 
     /**
