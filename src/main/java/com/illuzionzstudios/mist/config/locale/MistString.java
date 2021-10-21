@@ -1,8 +1,10 @@
 package com.illuzionzstudios.mist.config.locale;
 
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,21 @@ import java.util.regex.Matcher;
  * Reset value once has been queried
  */
 public class MistString {
+
+    /**
+     *  If can use the action bar
+     */
+    private static boolean canActionBar = false;
+
+    static {
+        try {
+            Class.forName("net.md_5.bungee.api.ChatMessageType");
+            Class.forName("net.md_5.bungee.api.chat.TextComponent");
+            Player.Spigot.class.getDeclaredMethod("sendMessage", net.md_5.bungee.api.ChatMessageType.class, net.md_5.bungee.api.chat.TextComponent.class);
+            canActionBar = true;
+        } catch (Exception ignored) {
+        }
+    }
 
     /**
      * The key of this string for the locale
@@ -148,6 +165,49 @@ public class MistString {
         // Check for split lore
         String[] strings = toString().split("\\n");
         player.sendMessage(strings);
+    }
+
+    /**
+     * Format and send the held message to a player as a title message
+     *
+     * @param sender command sender to send the message to
+     */
+    public void sendTitle(final CommandSender sender) {
+        this.sendTitle(sender, new MistString(""));
+    }
+
+    /**
+     * Format and send the held message to a player as a title message
+     *
+     * @param sender   command sender to send the message to
+     * @param subtitle Subtitle to send
+     */
+    public void sendTitle(final CommandSender sender, final MistString subtitle) {
+        if (sender instanceof Player) {
+            if (ServerVersion.atLeast(ServerVersion.V.v1_11)) {
+                ((Player) sender).sendTitle(toString(), subtitle.toString(), 10, 20, 10);
+            } else {
+                ((Player) sender).sendTitle(toString(), subtitle.toString());
+            }
+        } else {
+            sendMessage(sender);
+        }
+    }
+
+    /**
+     * Format and send the held message to a player as an actionbar message
+     *
+     * @param sender command sender to send the message to
+     */
+    public void sendActionBar(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(toString());
+        } else if (!canActionBar) {
+            sendTitle(sender);
+        } else {
+            ((Player) sender).spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                    new net.md_5.bungee.api.chat.TextComponent(toString()));
+        }
     }
 
     /**
