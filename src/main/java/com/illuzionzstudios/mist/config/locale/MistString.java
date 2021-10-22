@@ -1,8 +1,9 @@
 package com.illuzionzstudios.mist.config.locale;
 
-import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.util.TextUtil;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,25 @@ import java.util.regex.Matcher;
  * would usually use a {@link String}. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
  * <p>
- *
+ * <p>
  * Reset value once has been queried
  */
 public class MistString {
+
+    /**
+     * If can use the action bar
+     */
+    private static boolean canActionBar = false;
+
+    static {
+        try {
+            Class.forName("net.md_5.bungee.api.ChatMessageType");
+            Class.forName("net.md_5.bungee.api.chat.TextComponent");
+            Player.Spigot.class.getDeclaredMethod("sendMessage", net.md_5.bungee.api.ChatMessageType.class, net.md_5.bungee.api.chat.TextComponent.class);
+            canActionBar = true;
+        } catch (Exception ignored) {
+        }
+    }
 
     /**
      * The key of this string for the locale
@@ -59,6 +75,49 @@ public class MistString {
      */
     public MistString(final MistString other) {
         this(other.key, other.def);
+    }
+
+    /**
+     * Converts a list of strings to one mist string
+     *
+     * @param list The list of strings to convert
+     * @return One {@link MistString}
+     */
+    public static MistString fromList(final List<String> list) {
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i));
+
+            // Can't compare values have to compare index
+            if (i != list.size() - 1)
+                builder.append("\n");
+        }
+
+        return new MistString(builder.toString());
+    }
+
+    /**
+     * Easily turn a list of strings into a list of {@link MistString}
+     *
+     * @param list The list to convert
+     * @return The list of {@link MistString} with the original list's values
+     */
+    public static List<MistString> fromStringList(final List<String> list) {
+        ArrayList<MistString> strings = new ArrayList<>();
+        list.forEach(string -> strings.add(new MistString(string)));
+        return strings;
+    }
+
+    /**
+     * Easily turn a list of {@link MistString} into a list of strings
+     *
+     * @param list The list to convert
+     * @return The list of string with the original list's values
+     */
+    public static List<String> fromMistList(final List<MistString> list) {
+        ArrayList<String> strings = new ArrayList<>();
+        list.forEach(string -> strings.add(string.toString()));
+        return strings;
     }
 
     /**
@@ -151,46 +210,46 @@ public class MistString {
     }
 
     /**
-     * Converts a list of strings to one mist string
+     * Format and send the held message to a player as a title message
      *
-     * @param list The list of strings to convert
-     * @return One {@link MistString}
+     * @param sender command sender to send the message to
      */
-    public static MistString fromList(final List<String> list) {
-        final StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            builder.append(list.get(i));
+    public void sendTitle(final CommandSender sender) {
+        this.sendTitle(sender, new MistString(""));
+    }
 
-            // Can't compare values have to compare index
-            if (i != list.size() - 1)
-                builder.append("\n");
+    /**
+     * Format and send the held message to a player as a title message
+     *
+     * @param sender   command sender to send the message to
+     * @param subtitle Subtitle to send
+     */
+    public void sendTitle(final CommandSender sender, final MistString subtitle) {
+        if (sender instanceof Player) {
+            if (ServerVersion.atLeast(ServerVersion.V.v1_11)) {
+                ((Player) sender).sendTitle(toString(), subtitle.toString(), 10, 20, 10);
+            } else {
+                ((Player) sender).sendTitle(toString(), subtitle.toString());
+            }
+        } else {
+            sendMessage(sender);
         }
-
-        return new MistString(builder.toString());
     }
 
     /**
-     * Easily turn a list of strings into a list of {@link MistString}
+     * Format and send the held message to a player as an actionbar message
      *
-     * @param list The list to convert
-     * @return The list of {@link MistString} with the original list's values
+     * @param sender command sender to send the message to
      */
-    public static List<MistString> fromStringList(final List<String> list) {
-        ArrayList<MistString> strings = new ArrayList<>();
-        list.forEach(string -> strings.add(new MistString(string)));
-        return strings;
-    }
-
-    /**
-     * Easily turn a list of {@link MistString} into a list of strings
-     *
-     * @param list The list to convert
-     * @return The list of string with the original list's values
-     */
-    public static List<String> fromMistList(final List<MistString> list) {
-        ArrayList<String> strings = new ArrayList<>();
-        list.forEach(string -> strings.add(string.toString()));
-        return strings;
+    public void sendActionBar(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(toString());
+        } else if (!canActionBar) {
+            sendTitle(sender);
+        } else {
+            ((Player) sender).spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                    new net.md_5.bungee.api.chat.TextComponent(toString()));
+        }
     }
 
 }
