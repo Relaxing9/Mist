@@ -3,19 +3,17 @@ package com.illuzionzstudios.mist.config.serialization.loader;
 import com.illuzionzstudios.mist.config.ConfigSection;
 import lombok.Getter;
 
-import java.io.File;
-
 /**
  * Works much like {@link FileLoader} but loads a configuration
  * section. Good if we want to loop through a section
  * with nodes and build a custom object from there.
- *
+ * <p>
  * With a config that looks like
  * items:
- *   itemone:
- *     example: 1
- *   itemtwo:
- *     example: 2
+ * itemone:
+ * example: 1
+ * itemtwo:
+ * example: 2
  * Loop over items manually and pass each child config section to this class
  * and invoke the getObject() on this class.
  */

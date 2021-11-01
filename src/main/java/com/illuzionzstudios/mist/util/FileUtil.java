@@ -19,7 +19,6 @@ public final class FileUtil {
     /**
      * Return an internal resource within our plugin's jar file
      *
-     * @param path
      * @return the resource input stream, or null if not found
      */
     public static InputStream getInternalResource(String path) {

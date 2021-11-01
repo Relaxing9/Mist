@@ -3,7 +3,10 @@ package com.illuzionzstudios.mist.item;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.config.locale.MistString;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +20,13 @@ import java.util.Map;
  * allows us to customise things like display name and lore from a {@link com.illuzionzstudios.mist.config.ConfigSection}
  * and turn it into an item. Can be implemented to have custom items that are configured
  * by the config extending on the base functionality.
- *
+ * <p>
  * This differs from {@link ItemCreator} as that is strictly for creating an item
  * stack where this is to create an item stack with a bit more functionality and
  * have our own sort of data attached to it.
- *
+ * <p>
  * Is not a builder as we should set everything manually.
- *
+ * <p>
  * Contains methods for manipulating item
  */
 @Getter
@@ -132,7 +135,8 @@ public class CustomItem {
      * Do custom things to the item with extra loaded stuff right after {@link #item} instance
      * is set.
      */
-    protected void customiseItem() {}
+    protected void customiseItem() {
+    }
 
     /**
      * Makes sure item is set. Run where we need to make sure it isn't null

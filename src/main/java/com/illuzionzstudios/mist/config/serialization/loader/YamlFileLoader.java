@@ -1,6 +1,6 @@
 package com.illuzionzstudios.mist.config.serialization.loader;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 import com.illuzionzstudios.mist.config.YamlConfig;
 
 import java.io.File;
@@ -19,7 +19,7 @@ public abstract class YamlFileLoader<T> extends FileLoader<T> {
 
     /**
      * @param directory The directory from plugin folder
-     * @param fileName The file name without .yml
+     * @param fileName  The file name without .yml
      */
     public YamlFileLoader(String directory, String fileName) {
         super(directory, fileName, "yml");

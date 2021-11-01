@@ -25,6 +25,6 @@ public enum ReturnType {
     /**
      * Unexpected error occurred here
      */
-    UNKNOWN_ERROR;
+    UNKNOWN_ERROR
 
 }

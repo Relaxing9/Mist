@@ -19,7 +19,7 @@ public abstract class JsonFileLoader<T> extends FileLoader<T> {
 
     /**
      * @param directory The directory from plugin folder
-     * @param fileName The file name without .json
+     * @param fileName  The file name without .json
      */
     public JsonFileLoader(String directory, String fileName) {
         super(directory, fileName, "json");

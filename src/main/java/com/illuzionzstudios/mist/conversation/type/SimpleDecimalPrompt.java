@@ -3,7 +3,6 @@ package com.illuzionzstudios.mist.conversation.type;
 import com.illuzionzstudios.mist.conversation.SimplePrompt;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bukkit.conversations.ConversationContext;
@@ -94,6 +93,7 @@ public class SimpleDecimalPrompt extends SimplePrompt {
 
     /**
      * Show the question with the action to the player
+     *
      * @param player
      * @param question
      * @param successAction

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Use MySql or any Sql database for our data
- *
+ * <p>
  * TODO: Make this mess work
  */
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class SqlDatabase implements Database {
     /**
      * Table to store our player data
      */
-    private final String tableName = SpigotPlugin.getPluginName() + "Data";
+    private final String tableName = SpigotPlugin.getPluginName() + "_PlayerData";
     /**
      * Our connection to handle SQL operations
      */
@@ -133,6 +133,7 @@ public class SqlDatabase implements Database {
             statement.setString(6, player.getUUID().toString());
             statement.setObject(7, value);
             statement.executeUpdate();
+            createColumn.executeUpdate();
         } catch (Exception ex) {
             Logger.displayError(ex, "Error preforming SQL operation");
         }
@@ -178,7 +179,7 @@ public class SqlDatabase implements Database {
                     }
                     Class.forName("com.mysql.jdbc.Driver");
                     connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password
-                    + "?useSSL=false");
+                            + "?useSSL=false");
                     status.set(true);
                 }
             } catch (Exception ex) {

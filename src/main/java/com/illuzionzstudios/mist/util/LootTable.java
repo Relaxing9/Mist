@@ -12,7 +12,7 @@ public class LootTable<T> {
     /**
      * Stored rewards in our table
      */
-    private List<Pair<T, Double>> lootTable = new LinkedList<>();
+    private final List<Pair<T, Double>> lootTable = new LinkedList<>();
 
     /**
      * Total weight of rewards used for picking

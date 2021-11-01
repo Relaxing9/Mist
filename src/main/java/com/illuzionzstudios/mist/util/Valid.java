@@ -6,7 +6,8 @@ import lombok.experimental.UtilityClass;
 import java.util.regex.Pattern;
 
 /**
- * Util class to check if things are valid
+ * Util class to check if things are valid. This means checking nulls,
+ * empties, if an item is air etc
  */
 @UtilityClass
 public class Valid {
@@ -21,7 +22,6 @@ public class Valid {
      */
     private final Pattern PATTERN_DECIMAL = Pattern.compile("-?\\d+.\\d+");
 
-
     /**
      * Throws an error if the given object is null
      *
@@ -35,7 +35,7 @@ public class Valid {
     /**
      * Throws an error with a custom message if the given object is null
      *
-     * @param toCheck Object to check if is null
+     * @param toCheck      Object to check if is null
      * @param falseMessage Message explaining why it may have been null
      */
     public void checkNotNull(Object toCheck, String falseMessage) {
@@ -56,7 +56,7 @@ public class Valid {
     /**
      * Throws an error with a custom message if the given expression is false
      *
-     * @param expression Boolean expression to check
+     * @param expression   Boolean expression to check
      * @param falseMessage Message explaining why it may have been false
      */
     public void checkBoolean(boolean expression, String falseMessage) {
@@ -70,9 +70,6 @@ public class Valid {
 
     /**
      * Returns true if the given string is a valid integer
-     *
-     * @param raw
-     * @return
      */
     public boolean isInteger(String raw) {
         return PATTERN_INTEGER.matcher(raw).find();
@@ -80,9 +77,6 @@ public class Valid {
 
     /**
      * Returns true if the given string is a valid whole number
-     *
-     * @param raw
-     * @return
      */
     public boolean isDecimal(String raw) {
         return PATTERN_DECIMAL.matcher(raw).find();

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * A section of memory that relates to a configuration. This configuration
  * is usually a YAML file which is split into different memory sections
- *
+ * <p>
  * See {@link MemoryConfiguration}
  */
 public class ConfigSection extends MemoryConfiguration {
@@ -96,7 +96,7 @@ public class ConfigSection extends MemoryConfiguration {
      * This is to lock performing operations on our section across threads.
      * This is because concurrently editing the config may lead to weird things
      * being saved or our data not being saved properly.
-     *
+     * <p>
      * Each {@link ConfigSection} contains their own lock because we only
      * need one lock per instance, as we can edit different instances at
      * the different times. Although, we generally invoke on the {@link #root}
@@ -120,7 +120,7 @@ public class ConfigSection extends MemoryConfiguration {
      * This is the character to separate the paths with.
      * For instance if set to '.', paths will be "foo.bar".
      * And again '#', "foo#bar"
-     *
+     * <p>
      * IMPORTANT: Must not be set when the config is currently
      * loaded or when adding {@link ConfigSection}. This is because
      * paths may then different with separators and produce a whole
@@ -157,9 +157,9 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * Setup the config section in another {@link ConfigSection}
      *
-     * @param root The absolute root {@link ConfigSection} (Main file)
-     * @param parent The {@link ConfigSection} just above {@link this}
-     * @param nodeKey See {@link #nodeKey}
+     * @param root      The absolute root {@link ConfigSection} (Main file)
+     * @param parent    The {@link ConfigSection} just above {@link this}
+     * @param nodeKey   See {@link #nodeKey}
      * @param isDefault See {@link #isDefault}
      */
     public ConfigSection(ConfigSection root, ConfigSection parent, String nodeKey, boolean isDefault) {
@@ -177,7 +177,7 @@ public class ConfigSection extends MemoryConfiguration {
      * This method is invoked everytime we make manual changes to
      * values in the code. This is so we can make any operations
      * or update data when we make changes.
-     *
+     * <p>
      * Can be overridden to setup our own stuff when making changes
      */
     protected void onChange() {
@@ -201,8 +201,8 @@ public class ConfigSection extends MemoryConfiguration {
      * to set values and avoid null errors.
      * <b>DON'T INVOKE ON THE {@link #lock} OBJECT</b>
      *
-     * @param path Full path to the node for the value. Eg, foo.bar.node, this will create
-     *             a {@link ConfigSection} for "foo" and "foo.bar"
+     * @param path       Full path to the node for the value. Eg, foo.bar.node, this will create
+     *                   a {@link ConfigSection} for "foo" and "foo.bar"
      * @param useDefault If the value to be set at this node is a default value
      */
     protected void createNodePath(@NotNull String path, boolean useDefault) {
@@ -244,8 +244,8 @@ public class ConfigSection extends MemoryConfiguration {
      * This will create a {@link ConfigSection} that acts as a default that must
      * appear in the section. Also optional comments for this section
      *
-     * @param path The relevant path from this {@link ConfigSection} to the new {@link ConfigSection}
-     *             to create
+     * @param path    The relevant path from this {@link ConfigSection} to the new {@link ConfigSection}
+     *                to create
      * @param comment Varargs of comments to explain this section
      * @return The created {@link ConfigSection} for this path
      */
@@ -298,9 +298,9 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #setComment(String, Comment)} and construct {@link Comment} from parameters
-     * 
+     *
      * @param commentStyle The styling for the comment
-     * @param lines The lines to set
+     * @param lines        The lines to set
      */
     @NotNull
     public ConfigSection setComment(@NotNull String path, @Nullable CommentStyle commentStyle, String... lines) {
@@ -318,7 +318,7 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * Set a {@link Comment} for a node of a {@link ConfigSection}
      *
-     * @param path The relevant path to the node to set
+     * @param path    The relevant path to the node to set
      * @param comment The {@link Comment} object to set
      * @return The {@link ConfigSection} the comment was set for
      */
@@ -410,7 +410,7 @@ public class ConfigSection extends MemoryConfiguration {
      * See {@link #getComment(String)}
      *
      * @return {@link Comment} invoked with {@link Comment#toString()}
-     *          May produce {@code null}
+     * May produce {@code null}
      */
     @Nullable
     public String getCommentString(@NotNull String path) {
@@ -425,7 +425,7 @@ public class ConfigSection extends MemoryConfiguration {
     /**
      * This method will create a default value for a specific node path
      *
-     * @param path The relative path to add the default to
+     * @param path  The relative path to add the default to
      * @param value The value to set for this node
      */
     @Override
@@ -513,7 +513,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #getKeys(boolean)}
-     *
+     * <p>
      * Will do the same but instead map the nodes to the value found at that path
      *
      * @return A map of nodes to their values
@@ -554,7 +554,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #getKeys(boolean)}
-     *
+     * <p>
      * This will perform a shallow search for all keys and
      * add all found {@link ConfigSection} for that node path
      *
@@ -660,13 +660,13 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #get(String)}
-     *
+     * <p>
      * Able to provide a default value that get returns should nothing be
      * found at the path. Also doesn't search in defaults if not found, instead
      * returns our def.
      *
      * @param path The path to search for
-     * @param def Default object to return should one not be found
+     * @param def  Default object to return should one not be found
      * @return Found object or default
      */
     @Nullable
@@ -680,15 +680,15 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #get(String)}
-     *
+     * <p>
      * In this instance we provide a type and ensure our found object
      * get's returned as this type. Can still produce {@code null}
-     *
+     * <p>
      * If object isn't instance of T, simply return null
      *
      * @param path The path to search for
      * @param type The class of T for casting
-     * @param <T> The type that the found object must be
+     * @param <T>  The type that the found object must be
      * @return Found value as T
      */
     @Nullable
@@ -698,7 +698,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #getT(String, Class)}
-     *
+     * <p>
      * Except we are able to return a default instance of T should the value
      * not be found or not be able to cast to T
      */
@@ -713,7 +713,7 @@ public class ConfigSection extends MemoryConfiguration {
      * at a given path. It then checks for nodes without a value to free up
      * memory and make sure if we set anything null, it's removed
      *
-     * @param path Path to set value at
+     * @param path  Path to set value at
      * @param value Object to place as a value. Setting to {@code null} removes value from memory
      */
     @Override
@@ -832,7 +832,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #set(String, Object)}
-     *
+     * <p>
      * This does the same thing except we are setting a new {@link ConfigSection}
      * This may be if we want to construct things under it and bulk update
      *
@@ -875,7 +875,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #createSection(String)} and {@link #set(String, Object, CommentStyle, String...)}
-     *
+     * <p>
      * Except we are doing this on a new {@link ConfigSection}
      */
     @NotNull
@@ -897,7 +897,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #createSection(String)}
-     *
+     * <p>
      * Except we are able to map node value pairs to this section already
      */
     @NotNull
@@ -1015,7 +1015,7 @@ public class ConfigSection extends MemoryConfiguration {
 
     /**
      * See {@link #getConfigurationSection(String)}
-     *
+     * <p>
      * Except it will create the section if not found
      */
     @NotNull

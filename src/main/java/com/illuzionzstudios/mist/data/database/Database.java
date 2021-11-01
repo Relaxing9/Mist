@@ -14,7 +14,7 @@ public interface Database {
     /**
      * Get a cached value
      *
-     * @param player The player who's data to get
+     * @param player        The player who's data to get
      * @param queryingField The field we're trying to access
      * @return The value as an {@link Object} to be cast
      */
@@ -25,9 +25,9 @@ public interface Database {
     /**
      * Set a cached value
      *
-     * @param player The player who's data to set
+     * @param player        The player who's data to set
      * @param queryingField The field we're trying to access
-     * @param value The value we're setting in the database
+     * @param value         The value we're setting in the database
      */
     default void setCachedValue(AbstractPlayer player, String queryingField, Object value) {
         player.getCachedData().put(queryingField, value);
@@ -43,7 +43,7 @@ public interface Database {
     /**
      * Get a value from the database
      *
-     * @param player The player who's data to get
+     * @param player        The player who's data to get
      * @param queryingField The field we're trying to access
      * @return The value as an {@link Object} to be cast
      */
@@ -52,9 +52,9 @@ public interface Database {
     /**
      * Set a value in the database
      *
-     * @param player The player who's data to set
+     * @param player        The player who's data to set
      * @param queryingField The field we're trying to access
-     * @param value The value we're setting in the database
+     * @param value         The value we're setting in the database
      */
     void setFieldValue(AbstractPlayer player, String queryingField, Object value);
 

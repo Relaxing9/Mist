@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.ui;
 
 import com.illuzionzstudios.mist.Logger;
-import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.controller.PluginController;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;

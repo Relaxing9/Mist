@@ -2,9 +2,9 @@ package com.illuzionzstudios.mist.ui.button.type;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Logger;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
-import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public final class InterfaceButton extends Button {
     /**
      * Sometimes you need to allocate data when you create the button,
      * but these data are not yet available when you make new instance of this button
-     *
+     * <p>
      * Use this helper to set them right before showing the button
      */
     private final Callable<UserInterface> interfaceLateBind;
@@ -45,9 +45,9 @@ public final class InterfaceButton extends Button {
      * Create a new button that triggers another menu
      *
      * @param menuClass Class of the menu to create
-     * @param material Material for the icon
-     * @param name Name for the icon
-     * @param lore Lore for the icon
+     * @param material  Material for the icon
+     * @param name      Name for the icon
+     * @param lore      Lore for the icon
      */
     public InterfaceButton(final Class<? extends UserInterface> menuClass, final XMaterial material, final String name, final String... lore) {
         this(null, () -> ReflectionUtil.instantiate(menuClass), ItemCreator.of(material, name, lore).hideTags(true).build().make(), false);
@@ -57,7 +57,7 @@ public final class InterfaceButton extends Button {
      * Create a new button that triggers another menu
      *
      * @param menuLateBind The callable to create the menu
-     * @param item The item creator for the icon
+     * @param item         The item creator for the icon
      */
     public InterfaceButton(final Callable<UserInterface> menuLateBind, final ItemCreator.ItemCreatorBuilder item) {
         this(null, menuLateBind, item.hideTags(true).build().make(), false);
@@ -67,7 +67,7 @@ public final class InterfaceButton extends Button {
      * Create a new button that triggers another menu
      *
      * @param menuLateBind The callable to create the menu
-     * @param item The icon for the button
+     * @param item         The icon for the button
      */
     public InterfaceButton(final Callable<UserInterface> menuLateBind, final ItemStack item) {
         this(null, menuLateBind, item, false);
@@ -76,10 +76,10 @@ public final class InterfaceButton extends Button {
     /**
      * Create a new button that triggers another menu
      *
-     * @param menu Instance of menu to create
+     * @param menu     Instance of menu to create
      * @param material Material for the icon
-     * @param name Name for the icon
-     * @param lore Lore for the icon
+     * @param name     Name for the icon
+     * @param lore     Lore for the icon
      */
     public InterfaceButton(final UserInterface menu, final XMaterial material, final String name, final String... lore) {
         this(menu, ItemCreator.of(material, name, lore));

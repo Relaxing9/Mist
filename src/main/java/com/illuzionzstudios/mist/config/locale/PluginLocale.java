@@ -10,7 +10,7 @@ import java.util.HashMap;
  * Loaded file that handles all game language
  * Also supports different languages apart from English
  * Implement our own instance in our plugin with the different values
- *
+ * <p>
  * We provide some common messages but can implement your own
  */
 public abstract class PluginLocale extends YamlConfig {
@@ -37,7 +37,7 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * This loads our lang file if the "locales/LOCALE.lang" exists
      * in internal resources.
-     *
+     * <p>
      * Prefix comes from {@link PluginSettings}
      *
      * @return If the locale was loaded/exists
@@ -61,12 +61,12 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * The prefix to use before certain messages
      */
-    public static MistString GENERAL_PLUGIN_PREFIX = STARTUP_GROUP.create("general.prefix","&d&lMist Plugin &8\\u00BB&7");
+    public static MistString GENERAL_PLUGIN_PREFIX = STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7");
 
     /**
      * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
      */
-    public static MistString GENERAL_PLUGIN_RELOAD = STARTUP_GROUP.create("general.reload","&7Reloaded the plugin (Configuration files & controllers)");
+    public static MistString GENERAL_PLUGIN_RELOAD = STARTUP_GROUP.create("general.reload", "&7Reloaded the plugin (Configuration files & controllers)");
 
     /**
      * If a command sender that isn't a player tries to execute a command
@@ -134,7 +134,7 @@ public abstract class PluginLocale extends YamlConfig {
     /**
      * Load the {@link PluginLocale} into the server, setting values
      * if not there, or loading the values into memory
-     *
+     * <p>
      * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin locale
      *
      * @param settings The instance of {@link PluginLocale} to load
@@ -167,7 +167,6 @@ public abstract class PluginLocale extends YamlConfig {
      *
      * @param key Node key to search for
      * @return The found message
-     *
      * @deprecated Should always provide a default value for redundancy
      */
     @Deprecated

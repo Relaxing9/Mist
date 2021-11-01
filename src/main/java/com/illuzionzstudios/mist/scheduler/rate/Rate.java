@@ -32,7 +32,7 @@ public enum Rate {
      * The amount of ticks between each tick of the object
      */
     @Getter
-    private volatile long time;
+    private final long time;
 
     /**
      * The last amount of ticks passed
@@ -57,7 +57,7 @@ public enum Rate {
     /**
      * If the current time minus a time is greater than another
      *
-     * @param from Starting time
+     * @param from     Starting time
      * @param required The time that must be met
      * @return If time is met
      */

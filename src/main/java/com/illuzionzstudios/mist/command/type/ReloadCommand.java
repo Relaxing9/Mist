@@ -8,8 +8,9 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 /**
  * Skeleton command that you can add to your {@link com.illuzionzstudios.mist.command.SpigotCommandGroup}
  * Simply reloads the plugin with all files etc, implemented in {@link SpigotPlugin#onPluginReload()}.
- * Invokes {@link SpigotPlugin#reload()}
- *
+ * Invokes {@link SpigotPlugin#reload()}. Should only be implemented in whole plugin main command not
+ * per main command group
+ * <p>
  * {@permission {plugin.name}.command.reload}
  */
 public class ReloadCommand extends SpigotSubCommand {

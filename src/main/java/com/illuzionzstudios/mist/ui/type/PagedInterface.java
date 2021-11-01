@@ -3,10 +3,10 @@ package com.illuzionzstudios.mist.ui.type;
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.exception.PluginException;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer;
-import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.util.MathUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
@@ -54,8 +54,7 @@ public abstract class PagedInterface<T> extends UserInterface {
     /**
      * Create a new paged menu where each page has 3 rows + 1 bottom bar
      *
-     * @param pages
-     *            the pages
+     * @param pages the pages
      */
     protected PagedInterface(final Iterable<T> pages) {
         this(null, pages);
@@ -64,10 +63,8 @@ public abstract class PagedInterface<T> extends UserInterface {
     /**
      * Create a new paged menu
      *
-     * @param parent
-     *            the parent menu
-     * @param pages
-     *            the pages the pages
+     * @param parent the parent menu
+     * @param pages  the pages the pages
      */
     protected PagedInterface(final UserInterface parent, final Iterable<T> pages) {
         this(null, parent, pages, false);
@@ -81,21 +78,18 @@ public abstract class PagedInterface<T> extends UserInterface {
      * @param returnMakesNewInstance
      */
     protected PagedInterface(final UserInterface parent, final Iterable<T> pages,
-                         final boolean returnMakesNewInstance) {
+                             final boolean returnMakesNewInstance) {
         this(null, parent, pages, returnMakesNewInstance);
     }
 
     /**
      * Create a new paged menu
      *
-     * @param pageSize
-     *            size of the menu, a multiple of 9 (keep in mind we already add
-     *            1 row there)
-     * @param pages
-     *            the pages
-     *
+     * @param pageSize size of the menu, a multiple of 9 (keep in mind we already add
+     *                 1 row there)
+     * @param pages    the pages
      * @deprecated we recommend you don't set the page size for the menu to
-     *             autocalculate
+     * autocalculate
      */
     @Deprecated
     protected PagedInterface(final int pageSize, final Iterable<T> pages) {
@@ -105,19 +99,16 @@ public abstract class PagedInterface<T> extends UserInterface {
     /**
      * Create a new paged menu
      *
-     * @param pageSize
-     *            size of the menu, a multiple of 9 (keep in mind we already add
-     *            1 row there)
-     * @param parent
-     *            the parent menu
-     * @param pages
-     *            the pages the pages
+     * @param pageSize size of the menu, a multiple of 9 (keep in mind we already add
+     *                 1 row there)
+     * @param parent   the parent menu
+     * @param pages    the pages the pages
      * @deprecated we recommend you don't set the page size for the menu to
-     *             autocalculate
+     * autocalculate
      */
     @Deprecated
     protected PagedInterface(final int pageSize, final UserInterface parent,
-                         final Iterable<T> pages) {
+                             final Iterable<T> pages) {
         this(pageSize, parent, pages, false);
     }
 
@@ -129,26 +120,22 @@ public abstract class PagedInterface<T> extends UserInterface {
      * @param pages
      * @param returnMakesNewInstance *
      * @deprecated we recommend you don't set the page size for the menu to
-     *             autocalculate
+     * autocalculate
      */
     @Deprecated
     protected PagedInterface(final int pageSize, final UserInterface parent,
-                         final Iterable<T> pages, final boolean returnMakesNewInstance) {
+                             final Iterable<T> pages, final boolean returnMakesNewInstance) {
         this((Integer) pageSize, parent, pages, returnMakesNewInstance);
     }
 
     /**
      * Create a new paged menu
      *
-     * @param pageSize
-     *            size of the menu, a multiple of 9 (keep in mind we already add
-     *            1 row there)
-     * @param parent
-     *            the parent menu
-     * @param pages
-     *            the pages the pages
-     * @param returnMakesNewInstance
-     *            should we re-instatiate the parent menu when returning to it?
+     * @param pageSize               size of the menu, a multiple of 9 (keep in mind we already add
+     *                               1 row there)
+     * @param parent                 the parent menu
+     * @param pages                  the pages the pages
+     * @param returnMakesNewInstance should we re-instatiate the parent menu when returning to it?
      */
     private PagedInterface(final Integer pageSize, final UserInterface parent, final Iterable<T> pages, final boolean returnMakesNewInstance) {
         super(parent, returnMakesNewInstance);
@@ -186,9 +173,7 @@ public abstract class PagedInterface<T> extends UserInterface {
                     final T page = allItems.get(valueIndex);
 
                     pageItems.add(page);
-                }
-
-                else
+                } else
                     break;
 
             pages.put(i, pageItems);
@@ -231,7 +216,7 @@ public abstract class PagedInterface<T> extends UserInterface {
                 final int str = currentPage - 1;
 
                 return ItemCreator.of(
-                        canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
+                                canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
                         .name(str == 0 ? "&7First Page" : "&8<< &fPage " + str)
                         .build().make();
             }
@@ -258,7 +243,7 @@ public abstract class PagedInterface<T> extends UserInterface {
                 final boolean last = currentPage == pages.size();
 
                 return ItemCreator.of(
-                        canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
+                                canGo ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE)
                         .name(last
                                 ? "&7Last Page"
                                 : "Page " + (currentPage + 1) + " &8>>")
@@ -285,7 +270,7 @@ public abstract class PagedInterface<T> extends UserInterface {
 
     /**
      * Automatically prepend the title with page numbers
-     *
+     * <p>
      * Override for a custom last-minute implementation, but
      * ensure to call the super method otherwise no title will
      * be set in {@link InterfaceDrawer}
@@ -297,11 +282,10 @@ public abstract class PagedInterface<T> extends UserInterface {
 
     /**
      * Return the {@link ItemStack} representation of an item on a certain page
-     *
+     * <p>
      * Use {@link ItemCreator} for easy creation.
      *
-     * @param item
-     *            the given object, for example Arena
+     * @param item the given object, for example Arena
      * @return the itemstack, for example diamond sword having arena name
      */
     protected abstract ItemStack convertToItemStack(T item);
@@ -309,14 +293,10 @@ public abstract class PagedInterface<T> extends UserInterface {
     /**
      * Called automatically when an item is clicked
      *
-     * @param player
-     *            the player who clicked
-     * @param item
-     *            the clicked item
-     * @param click
-     *            the click type
-     * @param event
-     *            the click event
+     * @param player the player who clicked
+     * @param item   the clicked item
+     * @param click  the click type
+     * @param event  the click event
      */
     protected abstract void onPageClick(Player player, T item, ClickType click, InventoryClickEvent event);
 
@@ -352,8 +332,7 @@ public abstract class PagedInterface<T> extends UserInterface {
      * Automatically get the correct item from the actual page, including
      * prev/next buttons
      *
-     * @param slot
-     *            the slot
+     * @param slot the slot
      * @return the item, or null
      */
     @Override
@@ -379,9 +358,9 @@ public abstract class PagedInterface<T> extends UserInterface {
      */
     @Override
     public final void onInterfaceClick(final Player player, final int slot,
-                                  final InventoryAction action, final ClickType click,
-                                  final ItemStack cursor, final ItemStack clicked,
-                                  final boolean cancelled, final InventoryClickEvent event) {
+                                       final InventoryAction action, final ClickType click,
+                                       final ItemStack cursor, final ItemStack clicked,
+                                       final boolean cancelled, final InventoryClickEvent event) {
         if (slot < getCurrentPageItems().size()) {
             final T obj = getCurrentPageItems().get(slot);
 
@@ -408,7 +387,7 @@ public abstract class PagedInterface<T> extends UserInterface {
     // Do not allow override
     @Override
     public final void onInterfaceClick(final Player player, final int slot,
-                                  final ItemStack clicked, final InventoryClickEvent event) {
+                                       final ItemStack clicked, final InventoryClickEvent event) {
         throw new PluginException("Simplest click unsupported");
     }
 

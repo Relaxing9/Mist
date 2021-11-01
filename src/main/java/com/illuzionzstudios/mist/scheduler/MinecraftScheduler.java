@@ -22,14 +22,14 @@ import java.util.function.Consumer;
  * safely ticking objects in order to avoid errors and leaks. To use this
  * we can directly call methods to delay tasks or run tasks on certain threads,
  * or we can make use of the {@link Sync} and {@link Async} annotations.
- *
+ * <p>
  * These {@link Annotation} can annotate either {@link Class} {@link Field} or {@link Method}
  * Below is explained what each does
- *
+ * <p>
  * {@link Class} If is an instance of {@link Tickable}, invokes with a set rate
  * {@link Field} If this is an instance of {@link Tickable}, will be invoked with set rate
  * {@link Method} The method will be invoked with a set rate
- *
+ * <p>
  * When invoking a {@link Tickable} object, if the field is an instance of {@link Iterable}
  * or {@link Map}, will check the elements for {@link Tickable} and invoke those
  */
@@ -102,7 +102,7 @@ public abstract class MinecraftScheduler {
      * Ticks all of a certain Sync type
      *
      * @param type Either {@link Sync} or {@link Async} to tick
-     * @param <A> An {@link Annotation} to tick
+     * @param <A>  An {@link Annotation} to tick
      */
     protected <A extends Annotation> void heartbeat(Class<A> type) {
         for (SynchronizationService service : SYNC_SERVICE_REGISTRATION) {
@@ -179,7 +179,7 @@ public abstract class MinecraftScheduler {
         }
 
         // Increment current ticks passed
-        if (type.equals(Sync.class) ) {
+        if (type.equals(Sync.class)) {
             synchronousTicks.getAndIncrement();
         }
     }

@@ -55,20 +55,16 @@ public final class UpdateChecker {
     public static void checkVersion(CommandSender sender) {
         if (!SpigotPlugin.getInstance().isCheckUpdates()) return;
 
-        // Only notify ops
-        if (!sender.isOp())
-            return;
-
         check((version, name) -> {
-            // Only notify if new version available
+            // Only notify if new version available in console
             if (version == VersionType.OUTDATED)
-            PluginLocale.UPDATE_AVAILABLE
-                    .toString("plugin_name", SpigotPlugin.getPluginName())
-                    .toString("current", SpigotPlugin.getPluginVersion())
-                    .toString("new", name)
-                    .toString("status", version.name().toLowerCase())
-                    .toString("resource_id", SpigotPlugin.getInstance().getPluginId())
-                    .sendMessage(sender);
+                PluginLocale.UPDATE_AVAILABLE
+                        .toString("plugin_name", SpigotPlugin.getPluginName())
+                        .toString("current", SpigotPlugin.getPluginVersion())
+                        .toString("new", name)
+                        .toString("status", version.name().toLowerCase())
+                        .toString("resource_id", SpigotPlugin.getInstance().getPluginId())
+                        .sendMessage(sender);
         });
     }
 

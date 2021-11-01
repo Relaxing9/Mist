@@ -62,7 +62,7 @@ public class BukkitPlayer extends AbstractPlayer implements Tickable {
     /**
      * If another entity is in range
      *
-     * @param entity Entity
+     * @param entity       Entity
      * @param rangeSquared The blocks to check
      */
     public boolean isInRange(Entity entity, double rangeSquared) {
@@ -72,7 +72,7 @@ public class BukkitPlayer extends AbstractPlayer implements Tickable {
     /**
      * If another location is in range
      *
-     * @param location location
+     * @param location     location
      * @param rangeSquared The blocks to check
      */
     public boolean isInRange(Location location, double rangeSquared) {

@@ -11,13 +11,13 @@ public class Pair<K, V> {
      * First value
      */
     @Getter
-    private K key;
+    private final K key;
 
     /**
      * Second value
      */
     @Getter
-    private V value;
+    private final V value;
 
     /**
      * Construct pair from 2 values

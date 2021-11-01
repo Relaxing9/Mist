@@ -1,8 +1,6 @@
 package com.illuzionzstudios.mist.config.locale;
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
  * the locale is loaded. This way the {@link MistString}'s get loaded from locale without null
  * errors. Only one loader is needed for all strings. Only group if they need to be loaded in
  * different stages
- *
+ * <p>
  * Should be loaded in {@link SpigotPlugin#onReloadablesStart()}
  */
 public class MistStringGroup {

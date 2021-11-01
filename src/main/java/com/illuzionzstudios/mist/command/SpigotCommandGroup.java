@@ -1,9 +1,9 @@
 package com.illuzionzstudios.mist.command;
 
-import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.command.response.ReturnType;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import com.illuzionzstudios.mist.util.TextUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -109,7 +109,7 @@ public abstract class SpigotCommandGroup {
     /**
      * Return which subcommands should trigger the automatic help
      * menu that shows all subcommands sender has permission for.
-     *
+     * <p>
      * Default: help and ?
      *
      * @return List of labels
@@ -125,11 +125,11 @@ public abstract class SpigotCommandGroup {
      * @return String array of messages
      */
     protected String[] getHelpHeader() {
-        return new String[] {
+        return new String[]{
                 "&8",
-                "&8" + Mist.SMOOTH_LINE,
+                "&8" + TextUtil.SMOOTH_LINE,
                 getHeaderPrefix() + "  " + SpigotPlugin.getPluginName() + " &7v" + SpigotPlugin.getPluginVersion()
-                + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
+                        + (!SpigotPlugin.getInstance().getDescription().getAuthors().isEmpty() ? " by " + SpigotPlugin.getInstance().getDescription().getAuthors().get(0) :
                         ""),
                 " ",
                 "&2  [] &7= " + PluginLocale.COMMAND_LABEL_OPTIONAL_ARGS,
@@ -185,7 +185,7 @@ public abstract class SpigotCommandGroup {
                 command.setSubLabel(subArg);
 
                 // Run the command
-                command.execute(sender, getLabel(), args.length == 1 ? new String[] {} : Arrays.copyOfRange(args, 1, args.length));
+                command.execute(sender, getLabel(), args.length == 1 ? new String[]{} : Arrays.copyOfRange(args, 1, args.length));
             } else {
                 // Couldn't find sub command
                 tell(PluginLocale.COMMAND_INVALID_SUB.toString("label", getMainLabel()));
@@ -213,7 +213,7 @@ public abstract class SpigotCommandGroup {
             }
 
             // End line
-            tell("&8" + Mist.SMOOTH_LINE);
+            tell("&8" + TextUtil.SMOOTH_LINE);
         }
 
         /**
@@ -222,7 +222,7 @@ public abstract class SpigotCommandGroup {
          * @param message Message to colorize
          * @return Formatted message
          */
-        private String colorizeUsage(String message) {
+        private String colorizeUsage(final String message) {
             return message == null ? "" : message.replace("<", "&6<").replace(">", "&6>&7").replace("[", "&2[").replace("]", "&2]&7");
         }
 
@@ -231,9 +231,9 @@ public abstract class SpigotCommandGroup {
          *
          * @param label Label to search by
          * @return If a subcommand contains that label as main
-         *         or an aliases, return that
+         * or an aliases, return that
          */
-        private SpigotSubCommand findSubcommand(String label) {
+        private SpigotSubCommand findSubcommand(final String label) {
             for (final SpigotSubCommand command : subCommands) {
                 for (final String alias : command.getSubLabels())
                     if (alias.equalsIgnoreCase(label))
@@ -264,7 +264,7 @@ public abstract class SpigotCommandGroup {
         /**
          * Automatically tab-complete subcommands
          */
-        private List<String> tabCompleteSubcommands(CommandSender sender, String param) {
+        private List<String> tabCompleteSubcommands(final CommandSender sender, String param) {
             param = param.toLowerCase();
 
             final List<String> tab = new ArrayList<>();

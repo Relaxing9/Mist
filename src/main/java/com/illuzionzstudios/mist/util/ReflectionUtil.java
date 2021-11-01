@@ -10,7 +10,9 @@ import org.apache.commons.lang.ClassUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A utils class for help with reflection. Useful for NMS and
@@ -32,9 +34,6 @@ public final class ReflectionUtil {
     /**
      * Find a class in net.minecraft.server package, adding the version
      * automatically
-     *
-     * @param name
-     * @return
      */
     public static Class<?> getNMSClass(final String name) {
         return ReflectionUtil.lookupClass(NMS + "." + ServerVersion.getServerVersion() + "." + name);
@@ -43,9 +42,6 @@ public final class ReflectionUtil {
     /**
      * Find a class in org.bukkit.craftbukkit package, adding the version
      * automatically
-     *
-     * @param name
-     * @return
      */
     public static Class<?> getOBCClass(final String name) {
         return ReflectionUtil.lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name);
@@ -53,10 +49,6 @@ public final class ReflectionUtil {
 
     /**
      * Set the static field to the given value
-     *
-     * @param clazz
-     * @param fieldName
-     * @param fieldValue
      */
     public static void setStaticField(@NonNull final Class<?> clazz, final String fieldName, final Object fieldValue) {
         try {
@@ -71,10 +63,6 @@ public final class ReflectionUtil {
 
     /**
      * Set the static field to the given value
-     *
-     * @param object
-     * @param fieldName
-     * @param fieldValue
      */
     public static void setStaticField(@NonNull final Object object, final String fieldName, final Object fieldValue) {
         try {
@@ -90,11 +78,6 @@ public final class ReflectionUtil {
 
     /**
      * Convenience method for getting a static field content.
-     *
-     * @param <T>
-     * @param clazz
-     * @param field
-     * @return
      */
     public static <T> T getStaticFieldContent(@NonNull final Class<?> clazz, final String field) {
         return getFieldContent(clazz, field, null);
@@ -103,10 +86,6 @@ public final class ReflectionUtil {
     /**
      * Return a constructor for the given NMS class. We prepend the class name
      * with the {@link #NMS} so you only have to give in the name of the class.
-     *
-     * @param nmsClass
-     * @param params
-     * @return
      */
     public static Constructor<?> getNMSConstructor(@NonNull final String nmsClass, final Class<?>... params) {
         return getConstructor(getNMSClass(nmsClass), params);
@@ -115,10 +94,6 @@ public final class ReflectionUtil {
     /**
      * Return a constructor for the given OBC class. We prepend the class name
      * with the OBC so you only have to give in the name of the class.
-     *
-     * @param obcClass
-     * @param params
-     * @return
      */
     public static Constructor<?> getOBCConstructor(@NonNull final String obcClass, final Class<?>... params) {
         return getConstructor(getOBCClass(obcClass), params);
@@ -127,10 +102,6 @@ public final class ReflectionUtil {
     /**
      * Return a constructor for the given fully qualified class path such as
      * org.mineacademy.boss.BossPlugin
-     *
-     * @param classPath
-     * @param params
-     * @return
      */
     public static Constructor<?> getConstructor(@NonNull final String classPath, final Class<?>... params) {
         final Class<?> clazz = lookupClass(classPath);
@@ -140,10 +111,6 @@ public final class ReflectionUtil {
 
     /**
      * Return a constructor for the given class
-     *
-     * @param clazz
-     * @param params
-     * @return
      */
     public static Constructor<?> getConstructor(@NonNull final Class<?> clazz, final Class<?>... params) {
         try {
@@ -159,10 +126,6 @@ public final class ReflectionUtil {
 
     /**
      * Get the field content
-     *
-     * @param instance
-     * @param field
-     * @return
      */
     public static <T> T getFieldContent(final Object instance, final String field) {
         return getFieldContent(instance.getClass(), field, instance);
@@ -170,13 +133,6 @@ public final class ReflectionUtil {
 
     /**
      * Get the field content
-     *
-     * @param <T>
-     * @param clazz
-     * @param field
-     * @param instance
-     * @param type
-     * @return
      */
     public static <T> T getFieldContent(Class<?> clazz, final String field, final Object instance) {
         final String originalClassName = clazz.getSimpleName();
@@ -193,10 +149,6 @@ public final class ReflectionUtil {
 
     /**
      * Get the field content
-     *
-     * @param field
-     * @param instance
-     * @return
      */
     public static Object getFieldContent(final Field field, final Object instance) {
         try {
@@ -211,9 +163,6 @@ public final class ReflectionUtil {
 
     /**
      * Get all fields from the class and its super classes
-     *
-     * @param clazz
-     * @return
      */
     public static Field[] getAllFields(Class<?> clazz) {
         final List<Field> list = new ArrayList<>();
@@ -227,10 +176,6 @@ public final class ReflectionUtil {
 
     /**
      * Gets the declared field in class by its name
-     *
-     * @param clazz
-     * @param fieldName
-     * @return
      */
     public static Field getDeclaredField(final Class<?> clazz, final String fieldName) {
         try {
@@ -247,11 +192,6 @@ public final class ReflectionUtil {
 
     /**
      * Gets a class method
-     *
-     * @param clazz
-     * @param methodName
-     * @param args
-     * @return
      */
     public static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... args) {
         for (final Method method : clazz.getMethods())
@@ -278,11 +218,6 @@ public final class ReflectionUtil {
 
     /**
      * Gets a class method
-     *
-     * @param clazz
-     * @param methodName
-     * @param args
-     * @return
      */
     public static Method getMethod(final Class<?> clazz, final String methodName, final Integer args) {
         for (final Method method : clazz.getMethods())
@@ -297,10 +232,6 @@ public final class ReflectionUtil {
 
     /**
      * Gets a class method
-     *
-     * @param clazz
-     * @param methodName
-     * @return
      */
     public static Method getMethod(final Class<?> clazz, final String methodName) {
         for (final Method method : clazz.getMethods())
@@ -314,10 +245,6 @@ public final class ReflectionUtil {
 
     /**
      * Wrapper for Class.forName
-     *
-     * @param path
-     * @param type
-     * @return
      */
     public static <T> Class<T> lookupClass(final String path, final Class<T> type) {
         return (Class<T>) lookupClass(path);
@@ -325,9 +252,6 @@ public final class ReflectionUtil {
 
     /**
      * Wrapper for Class.forName
-     *
-     * @param path
-     * @return
      */
     public static Class<?> lookupClass(final String path) {
         try {
@@ -359,7 +283,7 @@ public final class ReflectionUtil {
     /**
      * Makes a new instance of a class with arguments
      *
-     * @param clazz The class instance to make
+     * @param clazz  The class instance to make
      * @param params Parameters to create a new class
      * @return The newly created class
      */
@@ -387,9 +311,9 @@ public final class ReflectionUtil {
     /**
      * Attempts to create a new instance from the given constructor and parameters
      *
-     * @param <T> The type of class to creator
+     * @param <T>         The type of class to creator
      * @param constructor Constructor instance for class
-     * @param params Parameters to create a new class
+     * @param params      Parameters to create a new class
      * @return The newly created class
      */
     public static <T> T instantiate(final Constructor<T> constructor, final Object... params) {
@@ -414,5 +338,5 @@ public final class ReflectionUtil {
             super(msg, ex);
         }
     }
-    
+
 }

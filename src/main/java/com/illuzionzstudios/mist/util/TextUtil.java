@@ -27,6 +27,11 @@ import java.util.regex.Pattern;
 public final class TextUtil {
 
     /**
+     * Returns a long ------ smooth console line
+     */
+    public static final String SMOOTH_LINE = org.bukkit.ChatColor.STRIKETHROUGH + "                                                               ";
+
+    /**
      * Hexadecimal pattern
      */
     private static final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
@@ -84,7 +89,7 @@ public final class TextUtil {
 
     /**
      * See {@link #formatText(String)}
-     *
+     * <p>
      * Capitalize the text and set colours
      */
     public static String formatText(String text, boolean capitalize) {

@@ -61,9 +61,6 @@ public final class MathUtil {
 
     /**
      * Return a roman number representation of the given number
-     *
-     * @param number
-     * @return
      */
     public static String toRoman(final int number) {
         if (number == 0)
@@ -79,9 +76,6 @@ public final class MathUtil {
 
     /**
      * Return the highest integer in the given number array
-     *
-     * @param numbers
-     * @return
      */
     public static int max(int... numbers) {
         return Arrays.stream(numbers).max().getAsInt();
@@ -89,9 +83,6 @@ public final class MathUtil {
 
     /**
      * See {@link Math#floor(double)}
-     *
-     * @param d1
-     * @return
      */
     public static int floor(final double d1) {
         final int i = (int) d1;
@@ -101,9 +92,6 @@ public final class MathUtil {
 
     /**
      * See {@link Math#ceil(double)}
-     *
-     * @param f1
-     * @return
      */
     public static int ceiling(final double f1) {
         final int i = (int) f1;
@@ -115,8 +103,8 @@ public final class MathUtil {
      * See {@link #range(int, int, int)}
      *
      * @param value the real value
-     * @param min the min limit
-     * @param max the max limit
+     * @param min   the min limit
+     * @param max   the max limit
      * @return the value in range
      */
     public static double range(final double value, final double min, final double max) {
@@ -127,8 +115,8 @@ public final class MathUtil {
      * Get a value in range. If the value is < min, returns min, if it is > max, returns max.
      *
      * @param value the real value
-     * @param min the min limit
-     * @param max the max limit
+     * @param min   the min limit
+     * @param max   the max limit
      * @return the value in range
      */
     public static int range(final int value, final int min, final int max) {
@@ -137,10 +125,6 @@ public final class MathUtil {
 
     /**
      * Increase the given number by given percents (from 0 to 100)
-     *
-     * @param number
-     * @param percent
-     * @return
      */
     public static int increase(final int number, final double percent) {
         final double myNumber = number;
@@ -151,10 +135,6 @@ public final class MathUtil {
 
     /**
      * Increase the given number by given percents (from 0 to 100)
-     *
-     * @param number
-     * @param percent
-     * @return
      */
     public static double increase(final double number, final double percent) {
         final double percentage = number / 100 * percent;
@@ -166,8 +146,6 @@ public final class MathUtil {
      * Calculates the percentage (completion) of the given number from the maximum
      * in 0 till 100
      *
-     * @param number
-     * @param maximum
      * @return 0 to 100 of the given number portion of the maximum
      */
     public static int percent(final double number, final double maximum) {
@@ -176,9 +154,6 @@ public final class MathUtil {
 
     /**
      * Return the average double of the given values
-     *
-     * @param values
-     * @return
      */
     public static double average(final Collection<Double> values) {
         return average(values.toArray(new Double[values.size()]));
@@ -186,9 +161,6 @@ public final class MathUtil {
 
     /**
      * Return the average double of the given values
-     *
-     * @param values
-     * @return
      */
     public static double average(final Double... values) {
         double sum = 0;
@@ -219,7 +191,7 @@ public final class MathUtil {
      * @return Random number from so
      */
     public static float range(String rangeExpression) {
-        rangeExpression = rangeExpression.replaceAll("\\s+","");
+        rangeExpression = rangeExpression.replaceAll("\\s+", "");
 
         // If null string no number
         if (rangeExpression.isEmpty())
@@ -244,9 +216,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into one digit
-     *
-     * @param value
-     * @return
      */
     public static String formatOneDigit(final double value) {
         return oneDigitFormat.format(value).replace(",", ".");
@@ -254,9 +223,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into one digit
-     *
-     * @param value
-     * @return
      */
     public static double formatOneDigitD(final double value) {
         Valid.checkBoolean(!Double.isNaN(value), "Value must not be NaN");
@@ -266,9 +232,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into two digits
-     *
-     * @param value
-     * @return
      */
     public static String formatTwoDigits(final double value) {
         return twoDigitsFormat.format(value).replace(",", ".");
@@ -276,9 +239,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into two digits
-     *
-     * @param value
-     * @return
      */
     public static double formatTwoDigitsD(final double value) {
         Valid.checkBoolean(!Double.isNaN(value), "Value must not be NaN");
@@ -288,9 +248,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into three digits
-     *
-     * @param value
-     * @return
      */
     public static String formatThreeDigits(final double value) {
         return threeDigitsFormat.format(value).replace(",", ".");
@@ -298,9 +255,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into three digits
-     *
-     * @param value
-     * @return
      */
     public static double formatThreeDigitsD(final double value) {
         Valid.checkBoolean(!Double.isNaN(value), "Value must not be NaN");
@@ -310,9 +264,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into five digits
-     *
-     * @param value
-     * @return
      */
     public static String formatFiveDigits(final double value) {
         return fiveDigitsFormat.format(value).replace(",", ".");
@@ -320,9 +271,6 @@ public final class MathUtil {
 
     /**
      * Formats the given number into five digits
-     *
-     * @param value
-     * @return
      */
     public static double formatFiveDigitsD(final double value) {
         Valid.checkBoolean(!Double.isNaN(value), "Value must not be NaN");
@@ -336,9 +284,6 @@ public final class MathUtil {
 
     /**
      * Evaluate the given expression, e.g. 5*(4-2) returns... let me check!
-     *
-     * @param expression
-     * @return
      */
     public static double calculate(final String expression) {
         class Parser {
@@ -373,7 +318,7 @@ public final class MathUtil {
             double parseExpression() {
                 double v = parseTerm();
 
-                for (;;) {
+                for (; ; ) {
                     eatSpace();
 
                     if (c == '+') { // addition
@@ -391,7 +336,7 @@ public final class MathUtil {
             double parseTerm() {
                 double v = parseFactor();
 
-                for (;;) {
+                for (; ; ) {
                     eatSpace();
 
                     if (c == '/') { // division
@@ -451,7 +396,7 @@ public final class MathUtil {
 
     /**
      * An exception thrown when calculating wrong numbers (i.e. 0 division)
-     *
+     * <p>
      * See {@link MathUtil#calculate(String)}
      */
     public static final class CalculatorException extends RuntimeException {

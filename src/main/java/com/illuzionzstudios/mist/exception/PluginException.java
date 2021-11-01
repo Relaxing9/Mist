@@ -33,7 +33,7 @@ public class PluginException extends RuntimeException {
      * Create a new exception and logs it
      *
      * @param message The cause of the error
-     * @param t The error thrown
+     * @param t       The error thrown
      */
     public PluginException(Throwable t, String message) {
         super(message, t);

@@ -55,7 +55,7 @@ public class YamlConfig extends ConfigSection {
      * This is the path to the directory to store the file in. This
      * is taken relative from the {@link JavaPlugin#getDataFolder()}, meaning
      * the value "" is the {@link JavaPlugin#getDataFolder()}.
-     *
+     * <p>
      * If we set this value to "foo", this final dir would be "foo/config.yml"
      */
     @Getter
@@ -302,9 +302,9 @@ public class YamlConfig extends ConfigSection {
      * Static method to just load an internal YAML file right onto the server without having
      * to create a custom class because we aren't doing any internal loading.
      *
-     * @param plugin The plugin this file is apart of
+     * @param plugin    The plugin this file is apart of
      * @param directory The directory to put the file in
-     * @param fileName The name of the file
+     * @param fileName  The name of the file
      */
     public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
         YamlConfig toLoad = new YamlConfig(plugin, File.separator + directory, fileName);
@@ -315,15 +315,15 @@ public class YamlConfig extends ConfigSection {
      * Loads an internal resource onto the server
      * For instance file in resources/locales/en_US.lang will be loaded
      * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
-     *
+     * <p>
      * Main applications are implementing this {@link YamlConfig} into a custom
      * object, for instance implementing a specific type of config. This way if we have
      * any defaults in the plugin we can load to the server.
-     *
+     * <p>
      * If file already exists on disk it just loads that.
      *
      * @param directory The directory to load from, "" if none
-     * @param fileName File name with extension to load
+     * @param fileName  File name with extension to load
      * @return If was found and loaded successfully
      */
     protected final boolean loadResourceToServer(final String directory, final String fileName) {
@@ -595,7 +595,7 @@ public class YamlConfig extends ConfigSection {
             file.getParentFile().mkdirs();
         }
         String data = this.saveToString();
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), defaultCharset);) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), defaultCharset)) {
             writer.write(data);
         } catch (IOException e) {
             return false;

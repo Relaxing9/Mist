@@ -16,34 +16,34 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * External UUID library included for our plugin
+ * External UUID library included for our plugin. Runs Async
  */
 public final class UUIDFetcher {
 
-    /**
-     * Date when name changes were introduced
-     * @see #getUUIDAt(String, long)
-     */
-    public static final long FEBRUARY_2015 = 1422748800000L;
-
-
-    private static Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
 
     private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/%s?at=%d";
     private static final String NAME_URL = "https://api.mojang.com/user/profiles/%s/names";
 
-    private static Map<String, UUID> uuidCache = new HashMap<String, UUID>();
-    private static Map<UUID, String> nameCache = new HashMap<UUID, String>();
+    private static final Map<String, UUID> uuidCache = new HashMap<>();
+    private static final Map<UUID, String> nameCache = new HashMap<>();
 
-    private static ExecutorService pool = Executors.newCachedThreadPool();
+    private static final ExecutorService pool = Executors.newCachedThreadPool();
 
+    /**
+     * Cached name
+     */
     private String name;
+
+    /**
+     * Cached {@link UUID}
+     */
     private UUID id;
 
     /**
      * Fetches the uuid asynchronously and passes it to the consumer
      *
-     * @param name The name
+     * @param name   The name
      * @param action Do what you want to do with the uuid her
      */
     public static void getUUID(String name, Consumer<UUID> action) {
@@ -63,9 +63,9 @@ public final class UUIDFetcher {
     /**
      * Fetches the uuid synchronously for a specified name and time and passes the result to the consumer
      *
-     * @param name The name
+     * @param name      The name
      * @param timestamp Time when the player had this name in milliseconds
-     * @param action Do what you want to do with the uuid her
+     * @param action    Do what you want to do with the uuid her
      */
     public static void getUUIDAt(String name, long timestamp, Consumer<UUID> action) {
         pool.execute(() -> action.accept(getUUIDAt(name, timestamp)));
@@ -74,9 +74,8 @@ public final class UUIDFetcher {
     /**
      * Fetches the uuid synchronously for a specified name and time
      *
-     * @param name The name
+     * @param name      The name
      * @param timestamp Time when the player had this name in milliseconds
-     * @see #FEBRUARY_2015
      */
     public static UUID getUUIDAt(String name, long timestamp) {
         name = name.toLowerCase();
@@ -84,7 +83,7 @@ public final class UUIDFetcher {
             return uuidCache.get(name);
         }
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp/1000)).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection();
             connection.setReadTimeout(5000);
             UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
 
@@ -102,7 +101,7 @@ public final class UUIDFetcher {
     /**
      * Fetches the name asynchronously and passes it to the consumer
      *
-     * @param uuid The uuid
+     * @param uuid   The uuid
      * @param action Do what you want to do with the name her
      */
     public static void getName(UUID uuid, Consumer<String> action) {

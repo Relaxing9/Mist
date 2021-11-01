@@ -61,10 +61,10 @@ public enum XProperty {
 
     /**
      * Apply the property to the entity. Class must be compatible with {@link #requiredClass}
-     *
+     * <p>
      * Example: SILENT.apply(myZombieEntity, true)
      */
-    public final void apply(Object instance, Object key) {
+    public final void apply(final Object instance, final Object key) {
         Valid.checkBoolean(requiredClass.isAssignableFrom(instance.getClass()), this + " accepts " + requiredClass.getSimpleName() + ", not " + instance.getClass().getSimpleName());
 
         try {
@@ -80,7 +80,7 @@ public enum XProperty {
     }
 
     // Automatically returns the correct getter or setter method for class
-    private Method getMethod(Class<?> clazz) throws ReflectiveOperationException {
+    private Method getMethod(final Class<?> clazz) throws ReflectiveOperationException {
         // Check AI because method is setAI not setAi
         return clazz.getMethod("set" + (toString().equals("AI") ? "AI" : TextUtil.formatText(toString().toLowerCase(), true)), setterMethodType);
     }

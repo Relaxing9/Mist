@@ -31,7 +31,7 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
     /**
      * Registered default data
      */
-    private ArrayList<Class<? extends AbstractPlayerData<?>>> defaultData = new ArrayList<>();
+    private final ArrayList<Class<? extends AbstractPlayerData<?>>> defaultData = new ArrayList<>();
 
     /**
      * The player class we use for our operations
@@ -58,7 +58,7 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
      * Let our data controller be used
      *
      * @param playerClass The player class registered for data
-     * @param database The database to use for data
+     * @param database    The database to use for data
      */
     public void initialize(Class<? extends AbstractPlayer> playerClass, Database database) {
         INSTANCE = this;
@@ -75,8 +75,8 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
      * Try and find default data for a player
      *
      * @param player The player to find
-     * @param clazz The class for the data
-     * @param <T> Return the player data
+     * @param clazz  The class for the data
+     * @param <T>    Return the player data
      */
     public <T extends PlayerData<?>> T getDefaultData(AbstractPlayer player, Class<T> clazz) {
         try {
@@ -121,7 +121,7 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
      * Get the default data of a data class
      *
      * @param type The class of the player data
-     * @param <T> Return a player data type
+     * @param <T>  Return a player data type
      */
     public <T extends PlayerData<?>> T getDefaultData(Class<T> type) {
         for (Class<?> pi : defaultData) {

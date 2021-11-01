@@ -4,7 +4,7 @@ import com.illuzionzstudios.mist.config.serialization.DataSerializable;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * An interface to load certain types of files
@@ -39,7 +39,7 @@ public abstract class FileLoader<T> {
 
     /**
      * @param directory The directory from plugin folder
-     * @param fileName The file name without extension
+     * @param fileName  The file name without extension
      * @param extension File extension to use
      */
     public FileLoader(final String directory, final String fileName, final String extension) {

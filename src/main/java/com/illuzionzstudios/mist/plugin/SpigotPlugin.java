@@ -16,20 +16,19 @@ import com.illuzionzstudios.mist.ui.InterfaceController;
 import com.illuzionzstudios.mist.util.UpdateChecker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * Represents an instance of a custom spigot plugin with our
  * "Mist" functionality
- *
+ * <p>
  * The plugin is only designed to work on versions
- * {@version 1.8.8} to {@version 1.15.2}
+ * {@version 1.8.8} to {@version 1.17.1}
  */
 public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
@@ -57,7 +56,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     /**
      * Return our instance of the {@link SpigotPlugin}
-     *
+     * <p>
      * Should be overridden in your own {@link SpigotPlugin} class
      * as a way to implement your own methods per plugin
      *
@@ -80,21 +79,21 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      *
      * @return if the instance has been set.
      */
-    public static final boolean hasInstance() {
+    public static boolean hasInstance() {
         return INSTANCE != null;
     }
 
     /**
      * @return The name of the {@link SpigotPlugin} from the plugin description
      */
-    public static final String getPluginName() {
+    public static String getPluginName() {
         return getInstance().getDescription().getName();
     }
 
     /**
      * @return The version of the {@link SpigotPlugin} from the plugin description
      */
-    public static final String getPluginVersion() {
+    public static String getPluginVersion() {
         return getInstance().getDescription().getVersion();
     }
 
@@ -103,7 +102,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      *
      * @return plugin's jar file
      */
-    public static final File getSource() {
+    public static File getSource() {
         return getInstance().getFile();
     }
 
@@ -178,7 +177,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     /**
      * This method is called when registering things like listeners.
-     *
+     * <p>
      * In your plugin use it to register commands, events etc.
      */
     public abstract void onReloadablesStart();
@@ -209,6 +208,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         // Main enabled
         try {
+            // Startup logo
+            if (getStartupLogo() != null)
+                Arrays.stream(getStartupLogo()).sequential().forEach(Logger::info);
+
             // Load settings and locale
             // Try save config if found
             PluginSettings.loadSettings(getPluginSettings());
@@ -338,16 +341,16 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
     /**
      * Opt in to using custom player data.
-     *
+     * <p>
      * This is optional because we don't to load and save
      * data if we don't need it
      *
-     * @param playerClass The class for our custom player data
-     * @param database The type of database to use to save data
+     * @param playerClass      The class for our custom player data
+     * @param database         The type of database to use to save data
      * @param playerController Our custom player controller for operations
      */
     protected <BP extends BukkitPlayer> void initializePlayerData(Class<? extends BukkitPlayer> playerClass, Database database,
-                                                               BukkitPlayerController<SpigotPlugin, BP> playerController) {
+                                                                  BukkitPlayerController<SpigotPlugin, BP> playerController) {
         this.playerController = playerController;
 
         new PlayerDataController<>().initialize(playerClass, database);
@@ -402,14 +405,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      */
     public static boolean isMainCommand(final String label) {
         return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
-    }
-
-    /**
-     * Check for updates
-     */
-    @EventHandler
-    public void checkUpdates(final PlayerJoinEvent event) {
-        UpdateChecker.checkVersion(event.getPlayer());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.config.format.CommentStyle;
-import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;

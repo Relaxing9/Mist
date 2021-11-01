@@ -68,7 +68,6 @@ public abstract class SimplePrompt extends ValidatingPrompt implements Cloneable
      *
      * @param context
      * @param input
-     *
      * @return
      */
     @Override
@@ -167,7 +166,7 @@ public abstract class SimplePrompt extends ValidatingPrompt implements Cloneable
 
     /**
      * Shows this prompt as a conversation to the player
-     *
+     * <p>
      * NB: Do not call this as a means to showing this prompt DURING AN EXISTING
      * conversation as it will fail! Use {@link #acceptValidatedInput(ConversationContext, String)} instead
      * to show the next prompt

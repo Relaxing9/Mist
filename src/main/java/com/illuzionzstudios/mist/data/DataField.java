@@ -18,19 +18,19 @@ public class DataField<T> {
     /**
      * Local instance of our controller
      */
-    private PlayerDataController<?, ?> controller = PlayerDataController.get();
+    private final PlayerDataController<?, ?> controller = PlayerDataController.get();
 
     /**
      * Point in file where data is stored
      */
     @Getter
-    private String field;
+    private final String field;
 
     /**
      * Data level this field is apart of
      */
     @Getter
-    private AbstractPlayerData<?> playerData;
+    private final AbstractPlayerData<?> playerData;
 
     /**
      * Default data for this field if not set
@@ -110,7 +110,7 @@ public class DataField<T> {
 
     /**
      * Used to update the current querying field ready for upload
-     *
+     * <p>
      * Used when the get() value modified something (i.e a list from get() was modified)... Basically only used for key tracking
      */
     public void set() {

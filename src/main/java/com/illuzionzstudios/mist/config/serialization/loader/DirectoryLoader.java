@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Loads all files from a directory with a certain file loader
+ *
  * @param <T> The type of file to load
  */
 public class DirectoryLoader<T extends FileLoader<?>> {
@@ -33,7 +34,7 @@ public class DirectoryLoader<T extends FileLoader<?>> {
 
     /**
      * @param directory to load from
-     * @param clazz The class for the file loader
+     * @param clazz     The class for the file loader
      */
     public DirectoryLoader(Class<T> clazz, String directory) {
         this.directory = directory;

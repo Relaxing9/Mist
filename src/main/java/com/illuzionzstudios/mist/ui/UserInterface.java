@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.ui;
 
-import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
@@ -12,7 +11,6 @@ import com.illuzionzstudios.mist.util.ReflectionUtil;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -24,11 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.List;
 
 /**
  * Our main menu (or interface) for all inventory interaction. We provide
@@ -44,7 +40,7 @@ public abstract class UserInterface implements Tickable {
 
     /**
      * This is an internal metadata tag that the player has.
-     *
+     * <p>
      * This will set the name of the current menu in order to keep
      * track of what menu is currently open
      */
@@ -52,7 +48,7 @@ public abstract class UserInterface implements Tickable {
 
     /**
      * This is an internal metadata tag that the player has.
-     *
+     * <p>
      * This will set the name of the previous menu in order to
      * backtrack for returning menus
      */
@@ -109,7 +105,7 @@ public abstract class UserInterface implements Tickable {
 
     /**
      * See {@link #UserInterface(UserInterface, boolean)}
-     *
+     * <p>
      * Creates a {@link UserInterface} with no parent
      */
     protected UserInterface() {
@@ -119,13 +115,13 @@ public abstract class UserInterface implements Tickable {
     /**
      * Base constructor to create a {@link UserInterface} with the size 9 * 3
      * with a parent menu.
-     *
+     * <p>
      * You should set the size and title of the {@link UserInterface} in
      * the constructor.
-     *
+     * <p>
      * Note: The viewer is still null here
      *
-     * @param parent The parent {@link UserInterface}
+     * @param parent          The parent {@link UserInterface}
      * @param makeNewInstance If the {@link ReturnBackButton} makes a new instance
      *                        of the parent menu
      */
@@ -163,7 +159,7 @@ public abstract class UserInterface implements Tickable {
      * Get a {@link UserInterface} from the metadata on a player
      *
      * @param player The player to check metadata
-     * @param tag The name of the tag storing the interface
+     * @param tag    The name of the tag storing the interface
      * @return Found {@link UserInterface} otherwise {@code null}
      */
     public static UserInterface getInterfaceViaTag(final Player player, final String tag) {
@@ -287,12 +283,12 @@ public abstract class UserInterface implements Tickable {
 
     /**
      * Return a new instance of this interface
-     *
+     * <p>
      * You must override this in certain cases
      *
      * @return the new instance, of null
      * @throws PluginException if new instance could not be made, for example when the menu is
-     *            taking constructor params
+     *                         taking constructor params
      */
     public UserInterface newInstance() {
         try {
@@ -377,7 +373,7 @@ public abstract class UserInterface implements Tickable {
     /**
      * Called automatically before the menu is displayed but after all items have
      * been drawn
-     *
+     * <p>
      * Override for custom last-minute modifications
      *
      * @param drawer The drawer for the interface
@@ -448,7 +444,7 @@ public abstract class UserInterface implements Tickable {
 
     /**
      * Returns the item at a certain slot
-     *
+     * <p>
      * To be overridden by the type of menu to get the item
      *
      * @param slot the slow
@@ -608,7 +604,7 @@ public abstract class UserInterface implements Tickable {
      * preventing ID mismatch in yaml files
      *
      * @param from The slot to start from
-     * @param to The slot to end at
+     * @param to   The slot to end at
      * @return The array of found {@link ItemStack} can contain {@link org.bukkit.Material#AIR}
      */
     protected final ItemStack[] getContent(final int from, final int to) {
@@ -631,17 +627,17 @@ public abstract class UserInterface implements Tickable {
     /**
      * Master method called when the interface is clicked on. Calls methods to be implemented
      * and handles click logic.
-     *
+     * <p>
      * It passes down to {@link #onInterfaceClick(Player, int, ItemStack, InventoryClickEvent)}
      *
-     * @param player The player clicking the menu
-     * @param slot The slot that was clicked
-     * @param action The type of action performed
-     * @param click How the slot was clicked
-     * @param cursor What {@link ItemStack} was on the cursor
-     * @param clicked The clicked {@link ItemStack}
+     * @param player    The player clicking the menu
+     * @param slot      The slot that was clicked
+     * @param action    The type of action performed
+     * @param click     How the slot was clicked
+     * @param cursor    What {@link ItemStack} was on the cursor
+     * @param clicked   The clicked {@link ItemStack}
      * @param cancelled If the event was cancelled
-     * @param event The actual event if needed
+     * @param event     The actual event if needed
      */
     protected void onInterfaceClick(final Player player, final int slot, final InventoryAction action, final ClickType click,
                                     final ItemStack cursor, final ItemStack clicked, final boolean cancelled, final InventoryClickEvent event) {
@@ -664,8 +660,8 @@ public abstract class UserInterface implements Tickable {
     /**
      * Called automatically when the interface is clicked
      *
-     * @param player The player clicking the menu
-     * @param slot The slot that was clicked
+     * @param player  The player clicking the menu
+     * @param slot    The slot that was clicked
      * @param clicked The clicked {@link ItemStack}
      */
     protected void onInterfaceClick(final Player player, final int slot, final ItemStack clicked, final InventoryClickEvent event) {
@@ -677,7 +673,7 @@ public abstract class UserInterface implements Tickable {
      * Called automatically when an item is placed to the menu
      *
      * @param player The player clicking the menu
-     * @param slot The slot that was clicked
+     * @param slot   The slot that was clicked
      * @param placed The {@link ItemStack} that was placed
      */
     protected void onItemPlace(final Player player, final int slot, final ItemStack placed, final InventoryClickEvent event) {
@@ -689,9 +685,9 @@ public abstract class UserInterface implements Tickable {
      * Called when a registered button is clicked on
      *
      * @param player The player clicking the menu
-     * @param slot The slot that was clicked
+     * @param slot   The slot that was clicked
      * @param action The type of action performed
-     * @param click How the slot was clicked
+     * @param click  How the slot was clicked
      * @param button The {@link Button} object clicked
      */
     protected void onButtonClick(final Player player, final int slot, final InventoryAction action,
@@ -704,7 +700,7 @@ public abstract class UserInterface implements Tickable {
     /**
      * Called when the interface is closed
      *
-     * @param player The player who closed the interface
+     * @param player    The player who closed the interface
      * @param inventory The {@link Inventory} instance ended
      */
     protected void onInterfaceClose(final Player player, final Inventory inventory) {

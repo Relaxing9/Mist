@@ -26,7 +26,7 @@ public final class Logger {
      * Print debug messages to the console. Warns as their
      * easier to see
      *
-     * @param message Message to send
+     * @param message    Message to send
      * @param parameters Formatting parameters
      */
     public static void debug(String message, Object... parameters) {
@@ -36,7 +36,7 @@ public final class Logger {
     /**
      * Send a warning to the console
      *
-     * @param message Message to send
+     * @param message    Message to send
      * @param parameters Formatting parameters
      */
     public static void warn(String message, Object... parameters) {
@@ -46,7 +46,7 @@ public final class Logger {
     /**
      * Log a error to the console
      *
-     * @param message Message to send
+     * @param message    Message to send
      * @param parameters Formatting parameters
      */
     public static void severe(String message, Object... parameters) {
@@ -56,7 +56,7 @@ public final class Logger {
     /**
      * Basic method to report information to the console
      *
-     * @param message Message to send
+     * @param message    Message to send
      * @param parameters Formatting parameters
      */
     public static void info(String message, Object... parameters) {
@@ -66,8 +66,8 @@ public final class Logger {
     /**
      * Base method to log output to the console at a certain logging level
      *
-     * @param level Logging level
-     * @param message The object/message to log
+     * @param level      Logging level
+     * @param message    The object/message to log
      * @param parameters Formatting parameters
      */
     private static void log(Level level, Object message, Object... parameters) {
@@ -87,7 +87,7 @@ public final class Logger {
     /**
      * Nicely display an error to console
      *
-     * @param throwable The error to display
+     * @param throwable    The error to display
      * @param errorMessage The error message/cause for this error
      */
     public static void displayError(final Throwable throwable, String errorMessage) {

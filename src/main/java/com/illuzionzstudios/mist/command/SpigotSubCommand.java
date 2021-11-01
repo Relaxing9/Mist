@@ -7,14 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * This command is apart of a command group. It acts as a sub label to
  * add extra functionality. For instance, "/maincommand rewards", rewards is the
  * sub label
- *
+ * <p>
  * Acts as a normal command that runs based of a {@link SpigotCommandGroup}
  */
 public abstract class SpigotSubCommand extends SpigotCommand {
@@ -50,7 +49,7 @@ public abstract class SpigotSubCommand extends SpigotCommand {
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
      *                First label is the main label
      */
-    protected SpigotSubCommand(SpigotCommandGroup parent, @NotNull String... aliases) {
+    protected SpigotSubCommand(final SpigotCommandGroup parent, @NotNull String... aliases) {
         super(parent.getLabel());
 
         // Set sub labels
@@ -92,7 +91,7 @@ public abstract class SpigotSubCommand extends SpigotCommand {
      * See {@link SpigotCommand#replacePlaceholders(String)}
      */
     @Override
-    protected String replacePlaceholders(String message) {
+    protected String replacePlaceholders(final String message) {
         return super.replacePlaceholders(message).replace("{sublabel}", getSubLabel());
     }
 

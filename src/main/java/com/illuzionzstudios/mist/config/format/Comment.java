@@ -80,8 +80,8 @@ public class Comment {
     /**
      * Write our comments to a writer
      *
-     * @param output The writer to output to
-     * @param offset The offset amount of chars indent
+     * @param output       The writer to output to
+     * @param offset       The offset amount of chars indent
      * @param defaultStyle The default styling for comments
      * @throws IOException If couldn't write comments
      */

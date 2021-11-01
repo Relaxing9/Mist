@@ -117,9 +117,9 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
 
     /**
      * Get conversation prefix before each message
-     *
+     * <p>
      * By default we use the plugins tell prefix
-     *
+     * <p>
      * TIP: You can use {@link SimplePrefix}
      *
      * @return
@@ -204,7 +204,6 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
 
     /**
      * Custom conversation class used for only showing the question once per 20 seconds interval
-     *
      */
     private final class CustomConversation extends Conversation {
 

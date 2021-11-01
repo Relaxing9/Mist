@@ -14,14 +14,15 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class DataUtil {
 
     public static final PersistentDataType<byte[], double[]> DOUBLE_ARRAY = new DoubleArray();
-    public static final PersistentDataType<byte[], String[]> STRING_ARRAY = new StringArray(Charset.forName("UTF-8"));
-    public static final PersistentDataType<byte[], java.util.UUID>     UUID         = new UUIDDataType();
+    public static final PersistentDataType<byte[], String[]> STRING_ARRAY = new StringArray(StandardCharsets.UTF_8);
+    public static final PersistentDataType<byte[], java.util.UUID> UUID = new UUIDDataType();
 
     @Nullable
     public static <Z> Z getData(@NotNull PersistentDataHolder holder, @NotNull PersistentDataType<?, Z> type,
@@ -46,20 +47,16 @@ public class DataUtil {
         if (value instanceof Double) {
             Double i = (Double) value;
             container.set(key, PersistentDataType.DOUBLE, i.doubleValue());
-        }
-        else if (value instanceof Integer) {
+        } else if (value instanceof Integer) {
             Integer i = (Integer) value;
             container.set(key, PersistentDataType.INTEGER, i.intValue());
-        }
-        else if (value instanceof String[]) {
+        } else if (value instanceof String[]) {
             String[] i = (String[]) value;
             container.set(key, STRING_ARRAY, i);
-        }
-        else if (value instanceof double[]) {
+        } else if (value instanceof double[]) {
             double[] i = (double[]) value;
             container.set(key, DOUBLE_ARRAY, i);
-        }
-        else {
+        } else {
             String i = value.toString();
             container.set(key, PersistentDataType.STRING, i);
         }
@@ -112,7 +109,7 @@ public class DataUtil {
     public static boolean getBooleanData(@NotNull PersistentDataHolder holder, @NotNull NamespacedKey key) {
         int i = getIntData(holder, key);
 
-        return i == 0 ? false : true;
+        return i != 0;
     }
 
     // ==================================================== //
@@ -173,7 +170,7 @@ public class DataUtil {
 
     public static boolean getBooleanData(@NotNull ItemStack item, @NotNull NamespacedKey key) {
         ItemMeta meta = item.getItemMeta();
-        return meta == null ? false : getBooleanData(meta, key);
+        return meta != null && getBooleanData(meta, key);
     }
 
     public static class DoubleArray implements PersistentDataType<byte[], double[]> {
@@ -200,7 +197,7 @@ public class DataUtil {
         }
 
         @Override
-        public double [] fromPrimitive(byte[] primitive, @NotNull PersistentDataAdapterContext context) {
+        public double[] fromPrimitive(byte[] primitive, @NotNull PersistentDataAdapterContext context) {
             ByteBuffer bb = ByteBuffer.wrap(primitive);
             DoubleBuffer dbuf = bb.asDoubleBuffer(); // Make DoubleBuffer
             double[] a = new double[dbuf.remaining()]; // Make an array of the correct size
@@ -212,7 +209,7 @@ public class DataUtil {
 
     public static class StringArray implements PersistentDataType<byte[], String[]> {
 
-        private Charset charset;
+        private final Charset charset;
 
         public StringArray(Charset charset) {
             this.charset = charset;
@@ -231,7 +228,7 @@ public class DataUtil {
         }
 
         @Override
-        public byte [] toPrimitive(String[] strings, PersistentDataAdapterContext itemTagAdapterContext) {
+        public byte[] toPrimitive(String[] strings, PersistentDataAdapterContext itemTagAdapterContext) {
             byte[][] allStringBytes = new byte[strings.length][];
             int total = 0;
             for (int i = 0; i < allStringBytes.length; i++) {
@@ -250,7 +247,7 @@ public class DataUtil {
         }
 
         @Override
-        public String [] fromPrimitive(byte[] bytes, PersistentDataAdapterContext itemTagAdapterContext) {
+        public String[] fromPrimitive(byte[] bytes, PersistentDataAdapterContext itemTagAdapterContext) {
             ByteBuffer buffer = ByteBuffer.wrap(bytes);
             ArrayList<String> list = new ArrayList<>();
 
@@ -284,7 +281,7 @@ public class DataUtil {
         }
 
         @Override
-        public byte [] toPrimitive(UUID complex, PersistentDataAdapterContext context) {
+        public byte[] toPrimitive(UUID complex, PersistentDataAdapterContext context) {
             ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
             bb.putLong(complex.getMostSignificantBits());
             bb.putLong(complex.getLeastSignificantBits());
@@ -292,7 +289,8 @@ public class DataUtil {
         }
 
         @Override
-        public @NotNull UUID fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
+        public @NotNull
+        UUID fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {
             ByteBuffer bb = ByteBuffer.wrap(primitive);
             long firstLong = bb.getLong();
             long secondLong = bb.getLong();

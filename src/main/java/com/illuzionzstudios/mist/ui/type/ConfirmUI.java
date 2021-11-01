@@ -2,9 +2,9 @@ package com.illuzionzstudios.mist.ui.type;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
+import com.illuzionzstudios.mist.item.ItemCreator;
 import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.ui.button.Button;
-import com.illuzionzstudios.mist.item.ItemCreator;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;
@@ -41,21 +41,21 @@ public class ConfirmUI extends UserInterface {
         this.confirmAction = confirmAction;
 
         denyButton = Button.of(ItemCreator.builder()
-                .material(XMaterial.RED_DYE)
-                .name(PluginLocale.INTERFACE_CONFIRM_CONFIRM_NAME.toString())
-                .lore(PluginLocale.INTERFACE_CONFIRM_CONFIRM_LORE.toString())
-                .glow(true)
-                .build(),
+                        .material(XMaterial.RED_DYE)
+                        .name(PluginLocale.INTERFACE_CONFIRM_CONFIRM_NAME.toString())
+                        .lore(PluginLocale.INTERFACE_CONFIRM_CONFIRM_LORE.toString())
+                        .glow(true)
+                        .build(),
                 (player, ui, clickType, event) -> {
                     confirmAction.accept(false);
                 });
 
         confirmButton = Button.of(ItemCreator.builder()
-                .material(XMaterial.LIME_DYE)
-                .name(PluginLocale.INTERFACE_CONFIRM_DENY_NAME.toString())
-                .lore(PluginLocale.INTERFACE_CONFIRM_DENY_LORE.toString())
-                .glow(true)
-                .build(),
+                        .material(XMaterial.LIME_DYE)
+                        .name(PluginLocale.INTERFACE_CONFIRM_DENY_NAME.toString())
+                        .lore(PluginLocale.INTERFACE_CONFIRM_DENY_LORE.toString())
+                        .glow(true)
+                        .build(),
                 (player, ui, clickType, event) -> {
                     confirmAction.accept(true);
                 });

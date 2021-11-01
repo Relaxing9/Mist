@@ -6,7 +6,6 @@ import com.illuzionzstudios.mist.scheduler.rate.Async;
 import com.illuzionzstudios.mist.scheduler.rate.Sync;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.Callable;

@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.config;
 
 import com.illuzionzstudios.mist.config.format.CommentStyle;
-import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

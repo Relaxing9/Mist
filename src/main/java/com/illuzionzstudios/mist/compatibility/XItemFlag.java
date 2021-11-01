@@ -44,7 +44,7 @@ public enum XItemFlag {
     /**
      * Tries to apply this item flag to the given item, fails silently
      */
-    public final void applyTo(ItemStack item) {
+    public final void applyTo(final ItemStack item) {
         try {
             final ItemMeta meta = item.getItemMeta();
             final ItemFlag bukkitFlag = ItemFlag.valueOf(toString());

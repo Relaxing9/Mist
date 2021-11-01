@@ -92,7 +92,7 @@ public final class ItemCreator {
     /**
      * Should we add glow to the item? (adds a fake enchant and uses
      * item flags to hide it)
-     *
+     * <p>
      * The enchant is visible on older MC versions.
      */
     @Builder.Default
@@ -229,8 +229,8 @@ public final class ItemCreator {
      * Convenience method to get a new item creator with material, name and lore set
      *
      * @param material The {@link XMaterial} to set
-     * @param name The name of the item
-     * @param lore Collection of lore strings
+     * @param name     The name of the item
+     * @param lore     Collection of lore strings
      * @return THe builder with these properties
      */
     public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final Collection<String> lore) {

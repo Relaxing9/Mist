@@ -1,4 +1,4 @@
-package com.illuzionzstudios.mist.compatibility.util;
+package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.util.ReflectionUtil;
@@ -14,13 +14,11 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * Main util class for cross-version compatibility.
- * <p>
- * Contains a lot of static methods in order to make our plugin
- * work from {@version 1.8.8} to the latest version
+ * Util class for registering commands into the server's command map.
+ * Not in main util package as internal util
  */
 @UtilityClass
-public final class VersionUtil {
+final class CommandUtil {
 
     /**
      * Injects an existing command into the command map
@@ -70,7 +68,7 @@ public final class VersionUtil {
             final Field f = SimpleCommandMap.class.getDeclaredField("knownCommands");
             f.setAccessible(true);
 
-            final Map<String, Command> cmdMap = (Map<String, Command>) f.get(VersionUtil.getCommandMap());
+            final Map<String, Command> cmdMap = (Map<String, Command>) f.get(CommandUtil.getCommandMap());
 
             cmdMap.remove(label);
 

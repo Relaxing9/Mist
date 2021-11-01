@@ -1,8 +1,8 @@
 package com.illuzionzstudios.mist.ui.button;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.illuzionzstudios.mist.ui.UserInterface;
 import com.illuzionzstudios.mist.item.ItemCreator;
+import com.illuzionzstudios.mist.ui.UserInterface;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +94,7 @@ public abstract class Button {
     /**
      * Easily create a {@link SimpleButton}
      *
-     * @param creator Creator for item to use
+     * @param creator  Creator for item to use
      * @param listener Listener (usually as lambda)
      * @return Created button to use
      */
@@ -154,9 +154,9 @@ public abstract class Button {
          * Invoked when the button is clicked on
          *
          * @param player The {@link Player} who clicked
-         * @param ui The instance of {@link UserInterface} that was clicked on
-         * @param type How the button was clicked on
-         * @param event The click event should we need it
+         * @param ui     The instance of {@link UserInterface} that was clicked on
+         * @param type   How the button was clicked on
+         * @param event  The click event should we need it
          */
         void onClickInInterface(Player player, UserInterface ui, ClickType type, InventoryClickEvent event);
 
@@ -164,7 +164,8 @@ public abstract class Button {
          * @return Simply returns a listener without functionality
          */
         static ButtonListener ofNull() {
-            return (i, j, k, e) -> {};
+            return (i, j, k, e) -> {
+            };
         }
     }
 

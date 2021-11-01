@@ -11,7 +11,6 @@ package com.illuzionzstudios.mist.command;
 
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.response.ReturnType;
-import com.illuzionzstudios.mist.compatibility.util.VersionUtil;
 import com.illuzionzstudios.mist.config.locale.MistString;
 import com.illuzionzstudios.mist.config.locale.PluginLocale;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
@@ -104,7 +103,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Create a new {@link SpigotCommand} with certain labels
      *
-     * @param label The main label for this command
+     * @param label   The main label for this command
      * @param aliases Additional labels that correspond to this {@link SpigotCommand}
      */
     protected SpigotCommand(@NotNull final String label, String... aliases) {
@@ -125,11 +124,11 @@ public abstract class SpigotCommand extends Command {
     public final void register() {
         register(true);
     }
-    
+
     /**
      * Register this command into Bukkit to be used.
      * Can throw {@link com.illuzionzstudios.mist.exception.PluginException} if {@link #isRegistered()}
-     * 
+     *
      * @param unregisterOldAliases If to unregister old aliases
      */
     public final void register(final boolean unregisterOldAliases) {
@@ -143,22 +142,22 @@ public abstract class SpigotCommand extends Command {
             if (!owningPlugin.equals(SpigotPlugin.getPluginName()))
                 Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...");
 
-            VersionUtil.unregisterCommand(oldCommand.getLabel(), unregisterOldAliases);
+            CommandUtil.unregisterCommand(oldCommand.getLabel(), unregisterOldAliases);
         }
 
         registered = true;
-        VersionUtil.registerCommand(this);
+        CommandUtil.registerCommand(this);
     }
 
     /**
      * Removes the command from Bukkit.
-     *
+     * <p>
      * Throws an error if the command is not {@link #isRegistered()}.
      */
     public final void unregister() {
         Valid.checkBoolean(registered, "The command /" + getLabel() + " is not registered!");
 
-        VersionUtil.unregisterCommand(getLabel());
+        CommandUtil.unregisterCommand(getLabel());
         registered = false;
     }
 
@@ -170,7 +169,7 @@ public abstract class SpigotCommand extends Command {
      * Execute this command, updates the {@link #sender}, {@link #label} and {@link #args} variables,
      * checks permission and returns if the sender lacks it,
      * checks minimum arguments and finally passes the command to the child class.
-     *
+     * <p>
      * Also contains various error handling scenarios
      */
     @Override
@@ -331,10 +330,10 @@ public abstract class SpigotCommand extends Command {
 
     /**
      * By default we check if the player has the permission you set in setPermission.
-     *
+     * <p>
      * If that is null, we check for the following:
      * {plugin.name}.command.{label} for {@link SpigotCommand}
-     *
+     * <p>
      * We handle lacking permissions automatically and return with a no-permission message
      * when the player lacks it.
      *
@@ -418,7 +417,7 @@ public abstract class SpigotCommand extends Command {
     /**
      * Show tab completion suggestions when the given sender
      * writes the command with the given arguments
-     *
+     * <p>
      * Tab completion is only shown if the sender has {@link #getPermission()}
      */
     @NotNull
@@ -437,10 +436,10 @@ public abstract class SpigotCommand extends Command {
 
     /**
      * Override this method to support tab completing in your command.
-     *
+     * <p>
      * You can then use "sender", "label" or "args" fields from {@link SpigotCommand}
      * class normally and return a list of tab completion suggestions.
-     *
+     * <p>
      * We already check for {@link #getPermission()} and only call this method if the
      * sender has it.
      *

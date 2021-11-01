@@ -7,7 +7,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  * An implementation of basic plugin settings. This handles settings that
  * all plugins with this library will have. For instance locale, main command etc.
  * Typically, used as the "config.yml"
- *
+ * <p>
  * This should be implemented by our {@link SpigotPlugin} and
  * define our own {@link ConfigSetting} specific to the plugin
  */
@@ -50,7 +50,7 @@ public abstract class PluginSettings extends YamlConfig {
     /**
      * Load these {@link PluginSettings} into the server, setting values
      * if not there, or loading the values into memory
-     *
+     * <p>
      * Call in the {@link SpigotPlugin#onPluginEnable()} to load plugin settings
      *
      * @param settings The instance of {@link PluginSettings} to load

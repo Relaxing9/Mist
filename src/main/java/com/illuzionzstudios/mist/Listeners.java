@@ -5,9 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * An object to encapsulate all listeners and allow us to
@@ -22,7 +20,7 @@ public final class Listeners {
     private final HashSet<Listener> registeredListeners = new HashSet<>();
 
     /**
-     * @param plugin The plugin to register this to
+     * @param plugin   The plugin to register this to
      * @param listener Register a new listener
      */
     public void register(SpigotPlugin plugin, Listener listener) {

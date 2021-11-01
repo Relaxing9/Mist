@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.ui.render;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.util.TextUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +23,7 @@ public final class InterfaceDrawer {
 
     /**
      * The title for the interface
-     *
+     * <p>
      * Updating does not update interface, you have
      * to manually redraw it
      */
@@ -40,7 +39,7 @@ public final class InterfaceDrawer {
     /**
      * Create a new drawer
      *
-     * @param size Pre defined size of the inventory
+     * @param size  Pre defined size of the inventory
      * @param title Title to display (supports colour codes)
      */
     private InterfaceDrawer(int size, String title) {
@@ -91,7 +90,7 @@ public final class InterfaceDrawer {
      *
      * @param slot The slot to get the item by
      * @return Found {@link ItemStack} otherwise {@code null} if slot is outside
-     *         total slots
+     * total slots
      */
     public ItemStack getItem(int slot) {
         return slot < content.length ? content[slot] : null;
@@ -111,7 +110,7 @@ public final class InterfaceDrawer {
 
     /**
      * Set the full content of this inventory
-     *
+     * <p>
      * If the given content is shorter, all additional inventory slots are replaced with air
      *
      * @param newContent the new content

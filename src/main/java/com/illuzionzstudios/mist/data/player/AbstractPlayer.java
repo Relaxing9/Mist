@@ -23,12 +23,12 @@ public abstract class AbstractPlayer {
     /**
      * Cached name of the player
      */
-    private String name;
+    private final String name;
 
     /**
      * Identifier of the player
      */
-    private UUID uuid;
+    private final UUID uuid;
 
     /**
      * Keys in the data to always be replaced
@@ -69,7 +69,7 @@ public abstract class AbstractPlayer {
      * Get player data from a class
      *
      * @param type The class type
-     * @param <T> Player data type to return
+     * @param <T>  Player data type to return
      */
     public <T extends PlayerData<?>> T get(Class<T> type) {
         for (AbstractPlayerData<?> info : data) {
@@ -131,7 +131,7 @@ public abstract class AbstractPlayer {
 
     /**
      * Save cached data to the database
-     *
+     * <p>
      * CAN BE PERFORMED ON MAIN THREAD
      *
      * @param doAfter Perform an action afterwards
@@ -162,7 +162,7 @@ public abstract class AbstractPlayer {
 
     /**
      * BE VERY CAREFUL USING THIS
-     *
+     * <p>
      * This will wipe all data for this current user
      */
     public void clearAllData() {
@@ -178,7 +178,7 @@ public abstract class AbstractPlayer {
 
     /**
      * Upload cached data into database
-     *
+     * <p>
      * NEVER SERVER THREAD SAFE
      */
     public boolean upload() {
