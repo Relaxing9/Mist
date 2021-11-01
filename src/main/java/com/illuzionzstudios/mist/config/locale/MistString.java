@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -185,6 +186,14 @@ public class MistString {
         this.loaded = false;
         loadString();
         return TextUtil.formatText(toSend);
+    }
+
+    /**
+     * Returns a list of strings made from this string
+     */
+    public List<String> toStringList() {
+        List<String> lines = Arrays.asList(toString().split("\\r?\\n"));
+        return lines;
     }
 
     /**
