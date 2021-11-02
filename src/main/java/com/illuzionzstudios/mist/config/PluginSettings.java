@@ -25,14 +25,6 @@ public abstract class PluginSettings extends YamlConfig {
         super(plugin, Mist.SETTINGS_NAME);
     }
 
-    /**
-     * Add any defaults from internal resources
-     */
-    @Override
-    public final boolean load() {
-        return loadResourceToServer("", Mist.SETTINGS_NAME);
-    }
-
     //  -------------------------------------------------------------------------
     //  Main config settings provided by default
     //  -------------------------------------------------------------------------

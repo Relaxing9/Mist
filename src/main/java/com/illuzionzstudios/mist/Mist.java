@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 /**
  * Main library class to handle utils and other stuff
  * Will contain a lot of static utils for our convenience
+ * Global static utils
  *
  * <p>
  * Mist is a library which aims to make developing standalone Spigot

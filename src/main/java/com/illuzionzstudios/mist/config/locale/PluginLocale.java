@@ -34,19 +34,6 @@ public abstract class PluginLocale extends YamlConfig {
      */
     protected final static HashMap<String, String> localeCache = new HashMap<>();
 
-    /**
-     * This loads our lang file if the "locales/LOCALE.lang" exists
-     * in internal resources.
-     * <p>
-     * Prefix comes from {@link PluginSettings}
-     *
-     * @return If the locale was loaded/exists
-     */
-    @Override
-    public final boolean load() {
-        return loadLocale(PluginSettings.LOCALE.getString());
-    }
-
     //  -------------------------------------------------------------------------
     //  Main messages provided by default
     //  If these are found in the locale, we use those, otherwise use these

@@ -16,8 +16,7 @@ import java.util.regex.Matcher;
  * would usually use a {@link String}. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
  * <p>
- * <p>
- * Reset value once has been queried
+ * Contains full text engine for manipulating text
  */
 public class MistString {
 
@@ -79,22 +78,37 @@ public class MistString {
     }
 
     /**
+     * Construct a {@link MistString} from single string
+     */
+    public static MistString of(final String string) {
+        // Faster than iterate list of 1 item
+        return new MistString(string);
+    }
+
+    /**
+     * Construct a {@link MistString} from multi strings
+     */
+    public static MistString of(final String... strings) {
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < strings.length; i++) {
+            builder.append(strings[i]);
+
+            // Can't compare values have to compare index
+            if (i != strings.length - 1)
+                builder.append("\n");
+        }
+
+        return new MistString(builder.toString());
+    }
+
+    /**
      * Converts a list of strings to one mist string
      *
      * @param list The list of strings to convert
      * @return One {@link MistString}
      */
-    public static MistString fromList(final List<String> list) {
-        final StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            builder.append(list.get(i));
-
-            // Can't compare values have to compare index
-            if (i != list.size() - 1)
-                builder.append("\n");
-        }
-
-        return new MistString(builder.toString());
+    public static MistString of(final List<String> list) {
+        return MistString.of(list.toArray(new String[0]));
     }
 
     /**
@@ -115,7 +129,7 @@ public class MistString {
      * @param list The list to convert
      * @return The list of string with the original list's values
      */
-    public static List<String> fromMistList(final List<MistString> list) {
+    public static List<String> fromList(final List<MistString> list) {
         ArrayList<String> strings = new ArrayList<>();
         list.forEach(string -> strings.add(string.toString()));
         return strings;
@@ -164,15 +178,6 @@ public class MistString {
     public MistString toString(final Map<String, Object> replacements) {
         replacements.forEach(this::toString);
         return this;
-    }
-
-    /**
-     * Chain replace placeholders.
-     * See {@link #toString(String, Object)}
-     */
-    @Deprecated
-    public MistString toString(final String placeholder1, final Object replacement1, final String placeholder2, final Object replacement2) {
-        return this.toString(placeholder1, replacement1).toString(placeholder2, replacement2);
     }
 
     /**

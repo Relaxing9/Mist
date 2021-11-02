@@ -117,7 +117,7 @@ public class CustomItem {
             creator.name(customName.toString());
 
         if (lore != null)
-            creator.lores(MistString.fromMistList(lore));
+            creator.lores(MistString.fromList(lore));
 
         creator.amount(amount);
         creator.customModelData(customModelData);

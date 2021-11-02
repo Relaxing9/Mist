@@ -75,18 +75,6 @@ public final class TextUtil {
         return formatted;
     }
 
-    public void sendTitle(final CommandSender sender, final MistString title, final MistString subtitle) {
-        if (sender instanceof Player) {
-            if (ServerVersion.atLeast(ServerVersion.V.v1_11)) {
-                ((Player) sender).sendTitle(title.toString(), subtitle.toString(), 10, 20, 10);
-            } else {
-                ((Player) sender).sendTitle(title.toString(), subtitle.toString());
-            }
-        } else {
-            sender.sendMessage(title.toString());
-        }
-    }
-
     /**
      * See {@link #formatText(String)}
      * <p>
@@ -124,7 +112,9 @@ public final class TextUtil {
      *
      * @param list List to convert
      * @return As singular string
+     * @deprecated See {@link MistString#of#toString()}
      */
+    @Deprecated
     public static String listToString(List<?> list) {
         StringBuilder builder = new StringBuilder();
 
@@ -159,52 +149,6 @@ public final class TextUtil {
     }
 
     /**
-     * Convert a string to an invisible colored string that's lore-safe <br />
-     * (Safe to use as lore) <br />
-     * Note: Do not use semi-colons in this string, or they will be lost when decoding!
-     *
-     * @param s string to convert
-     * @return encoded string
-     */
-    public static String convertToInvisibleLoreString(String s) {
-        if (s == null || s.equals(""))
-            return "";
-        StringBuilder hidden = new StringBuilder();
-        for (char c : s.toCharArray())
-            hidden.append(ChatColor.COLOR_CHAR).append(';').append(ChatColor.COLOR_CHAR).append(c);
-        return hidden.toString();
-    }
-
-    /**
-     * Convert a string to an invisible colored string <br />
-     * (Not safe to use as lore) <br />
-     * Note: Do not use semi-colons in this string, or they will be lost when decoding!
-     *
-     * @param s string to convert
-     * @return encoded string
-     */
-    public static String convertToInvisibleString(String s) {
-        if (s == null || s.equals(""))
-            return "";
-        StringBuilder hidden = new StringBuilder();
-        for (char c : s.toCharArray()) hidden.append(ChatColor.COLOR_CHAR).append(c);
-        return hidden.toString();
-    }
-
-    /**
-     * Removes color markers used to encode strings as invisible text
-     *
-     * @param s encoded string
-     * @return string with color markers removed
-     */
-    public static String convertFromInvisibleString(String s) {
-        if (s == null || s.equals("")) {
-            return "";
-        }
-        return s.replaceAll(ChatColor.COLOR_CHAR + ";" + ChatColor.COLOR_CHAR + "|" + ChatColor.COLOR_CHAR, "");
-    }
-
-    /**
      * Util method to get amount of ' ' chars in {@link String} before the first non-space char
      */
     public static int getOffset(String s) {
@@ -215,65 +159,6 @@ public final class TextUtil {
             }
         }
         return -1;
-    }
-
-    public static Charset detectCharset(File f, Charset def) {
-        byte[] buffer = new byte[2048];
-        int read = -1;
-        // read the first 2kb of the file and test the file's encoding
-        try (FileInputStream input = new FileInputStream(f)) {
-            read = input.read(buffer);
-        } catch (Exception ex) {
-            return null;
-        }
-        return read != -1 ? detectCharset(buffer, read, def) : def;
-    }
-
-    public static Charset detectCharset(BufferedInputStream reader, Charset def) {
-        byte[] buffer = new byte[2048];
-        int read;
-        try {
-            reader.mark(2048);
-            read = reader.read(buffer);
-            reader.reset();
-        } catch (Exception ex) {
-            return null;
-        }
-        return read != -1 ? detectCharset(buffer, read, def) : def;
-    }
-
-    public static Charset detectCharset(byte[] data, int len, Charset def) {
-        // check the file header
-        if (len > 4) {
-            if (data[0] == (byte) 0xFF && data[1] == (byte) 0xFE) {
-                return StandardCharsets.UTF_16LE;
-                // FF FE 00 00 is UTF-32LE
-            } else if (data[0] == (byte) 0xFE && data[1] == (byte) 0xFF) {
-                return StandardCharsets.UTF_16BE;
-                // 00 00 FE FF is UTF-32BE
-            } else if (data[0] == (byte) 0xEF && data[1] == (byte) 0xBB && data[2] == (byte) 0xBF) { // UTF-8 with BOM, same sig as ISO-8859-1
-                return StandardCharsets.UTF_8;
-            }
-        }
-
-        // iterate through sets to test, and return the first that is ok
-        for (Charset charset : supportedCharsets) {
-            if (charset != null && isCharset(data, charset)) {
-                return charset;
-            }
-        }
-        return def;
-    }
-
-    public static boolean isCharset(byte[] data, Charset charset) {
-        try {
-            CharsetDecoder decoder = charset.newDecoder();
-            decoder.reset();
-            decoder.decode(ByteBuffer.wrap(data));
-            return true;
-        } catch (CharacterCodingException e) {
-        }
-        return false;
     }
 
     public static String replaceLast(String string, String toReplace, String replacement) {

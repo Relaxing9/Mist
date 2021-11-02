@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.illuzionzstudios.mist.config.ConfigSection;
 import com.illuzionzstudios.mist.config.locale.MistString;
-import com.illuzionzstudios.mist.config.serialization.loader.SectionLoader;
+import com.illuzionzstudios.mist.config.serialization.loader.type.YamlSectionLoader;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.item.CustomItem;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  * with another custom item by overriding {@link #returnImplementedObject(ConfigSection)} and creating
  * new instance of custom item with loading already done for that item.
  */
-public abstract class BaseCustomItemLoader<T extends CustomItem> extends SectionLoader<T> {
+public abstract class BaseCustomItemLoader<T extends CustomItem> extends YamlSectionLoader<T> {
 
     public BaseCustomItemLoader(ConfigSection section) {
         super(section);
@@ -36,13 +36,13 @@ public abstract class BaseCustomItemLoader<T extends CustomItem> extends Section
 
         // Set base options
 
-        item.setIdentifier(getSectionName());
+        item.setIdentifier(getLoader().getNodeKey());
 
-        String customName = section.getString("item-name");
+        String customName = getLoader().getString("item-name");
         if (customName != null)
             item.setCustomName(new MistString(customName));
 
-        List<String> lore = section.getStringList("lore");
+        List<String> lore = getLoader().getStringList("lore");
         if (!lore.isEmpty())
             item.setLore(MistString.fromStringList(lore));
 

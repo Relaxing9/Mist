@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config;
 
+import com.google.common.base.Charsets;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
@@ -49,7 +50,7 @@ public class YamlConfig extends ConfigSection {
     /**
      * This is the REGEX to parse YAML syntax. Matches "key: value" making sure syntax is right
      */
-    protected final Pattern yamlNode = Pattern.compile("^( *)([^:{}\\[\\],&*#?|<>=!%@`]+):(.*)$");
+    protected final Pattern YAML_REGEX = Pattern.compile("^( *)([^:{}\\[\\],&*#?|<>=!%@`]+):(.*)$");
 
     /**
      * This is the path to the directory to store the file in. This
@@ -308,10 +309,20 @@ public class YamlConfig extends ConfigSection {
      */
     public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
         YamlConfig toLoad = new YamlConfig(plugin, File.separator + directory, fileName);
-        toLoad.loadResourceToServer(directory, fileName);
+        toLoad.load();
     }
 
     /**
+     * Load the {@link #file} into memory
+     *
+     * @return If loaded successfully
+     */
+    public boolean load() {
+        return load(getFile());
+    }
+
+    /**
+     * See {@link #load()}
      * Loads an internal resource onto the server
      * For instance file in resources/locales/en_US.lang will be loaded
      * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
@@ -322,15 +333,14 @@ public class YamlConfig extends ConfigSection {
      * <p>
      * If file already exists on disk it just loads that.
      *
-     * @param directory The directory to load from, "" if none
-     * @param fileName  File name with extension to load
-     * @return If was found and loaded successfully
+     * @param file The file object to load
      */
-    protected final boolean loadResourceToServer(final String directory, final String fileName) {
-        Objects.requireNonNull(fileName, "Must provide a file to load");
+    public boolean load(@NotNull File file) {
+        Validate.notNull(file, "File cannot be null");
+        String fileName = file.getName();
 
         // Internal path to locale
-        final String internalPath = (directory.trim().equalsIgnoreCase("") ? "" : directory + "/") + fileName;
+        final String internalPath = (this.directory.trim().equalsIgnoreCase("") ? "" : directory + "/") + fileName;
         // Attempt to find resource
         final InputStream input = FileUtil.getInternalResource(internalPath);
 
@@ -368,54 +378,6 @@ public class YamlConfig extends ConfigSection {
         return false;
     }
 
-    /**
-     * Load a locale file from internal resources. If file doesn't already exist
-     * on the server, we create it.
-     *
-     * @param locale The locale name, eg "en_US"
-     */
-    protected final boolean loadLocale(final String locale) {
-        return loadResourceToServer("locales", locale + ".lang");
-    }
-
-    /**
-     * Load the {@link #file} into memory
-     *
-     * @return If loaded successfully
-     */
-    public boolean load() {
-        return load(getFile());
-    }
-
-    /**
-     * See {@link #load()}
-     *
-     * @param file The file object to load
-     */
-    public boolean load(@NotNull File file) {
-        Validate.notNull(file, "File cannot be null");
-
-        // Start loading
-        preLoad();
-        this.loaded = true;
-
-        if (file.exists()) {
-            try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
-                Charset charset = TextUtil.detectCharset(stream, StandardCharsets.UTF_8);
-                // Upgrade charset if file was saved in a more complex format
-                if (charset == StandardCharsets.UTF_16BE || charset == StandardCharsets.UTF_16LE) {
-                    defaultCharset = StandardCharsets.UTF_16;
-                }
-                this.load(new InputStreamReader(stream, charset));
-                return true;
-            } catch (IOException | InvalidConfigurationException ex) {
-                (plugin != null ? plugin.getLogger() : Bukkit.getLogger()).log(Level.SEVERE, "Failed to load config file: " + file.getName(), ex);
-            }
-            return false;
-        }
-        return true;
-    }
-
     public void load(@NotNull Reader reader) throws IOException, InvalidConfigurationException {
         StringBuilder builder = new StringBuilder();
 
@@ -430,10 +392,13 @@ public class YamlConfig extends ConfigSection {
                 builder.append(line).append('\n');
             }
         }
+
         this.loadFromString(builder.toString());
     }
 
     public void loadFromString(@NotNull String contents) throws InvalidConfigurationException {
+        Validate.notNull(contents, "Contents cannot be null");
+
         Map<?, ?> input;
         try {
             input = this.yaml.load(contents);
@@ -442,7 +407,10 @@ public class YamlConfig extends ConfigSection {
         } catch (ClassCastException e3) {
             throw new InvalidConfigurationException("Top level is not a Map.");
         }
+
         if (input != null) {
+            // Override old values
+            this.map.clear();
             if (loadComments) {
                 this.parseComments(contents, input);
             }
@@ -498,7 +466,7 @@ public class YamlConfig extends ConfigSection {
                 int lineOffset = TextUtil.getOffset(line);
                 insideScalar &= lineOffset <= index;
                 Matcher m;
-                if (!insideScalar && (m = yamlNode.matcher(line)).find()) {
+                if (!insideScalar && (m = YAML_REGEX.matcher(line)).find()) {
                     // we found a config node! ^.^
                     // check to see what the full path is
                     int depth = (m.group(1).length() / indentation);
@@ -653,7 +621,7 @@ public class YamlConfig extends ConfigSection {
             int lineOffset = TextUtil.getOffset(line);
             insideScalar &= lineOffset <= index;
             Matcher m;
-            if (!insideScalar && (m = yamlNode.matcher(line)).find()) {
+            if (!insideScalar && (m = YAML_REGEX.matcher(line)).find()) {
                 // we found a config node! ^.^
                 // check to see what the full path is
                 int depth = (m.group(1).length() / indentation);
