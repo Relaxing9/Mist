@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.util;
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
-import com.illuzionzstudios.mist.config.locale.MistString;
 import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringEscapeUtils;

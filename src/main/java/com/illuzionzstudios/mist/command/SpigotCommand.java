@@ -37,48 +37,20 @@ import java.util.*;
 public abstract class SpigotCommand extends Command {
 
     /**
-     * A unique immutable list of all registered commands in the {@link com.illuzionzstudios.mist.plugin.SpigotPlugin}
-     */
-    @Getter
-    private static final HashSet<SpigotCommand> registeredCommands = new HashSet<>();
-
-    //  -------------------------------------------------------------------------
-    //  Properties of the command
-    //  -------------------------------------------------------------------------
-
-    /**
      * This is the default permission syntax for a {@link SpigotCommand}
      * {plugin.name} The plugin's name
      * {label} The main command label
      */
     protected static final String DEFAULT_PERMISSION_SYNTAX = "{plugin.name}.command.{label}";
 
-    /**
-     * Flag indicating if this {@link SpigotCommand} has been registered
-     */
-    @Getter
-    private boolean registered = false;
-
-    /**
-     * These are the minimum amount of arguments to be passed to the command
-     * for it to actually execute
-     */
-    @Getter
-    @Setter
-    private int minArguments = 0;
-
-    /**
-     * Should we automatically send usage message when the first argument
-     * equals to "help" or "?" ?
-     */
-    @Setter
-    @Getter
-    private boolean autoHandleHelp = true;
-
     //  -------------------------------------------------------------------------
-    //  Values that get set upon execution
+    //  Properties of the command
     //  -------------------------------------------------------------------------
-
+    /**
+     * A unique immutable list of all registered commands in the {@link com.illuzionzstudios.mist.plugin.SpigotPlugin}
+     */
+    @Getter
+    private static final HashSet<SpigotCommand> registeredCommands = new HashSet<>();
     /**
      * The main label for the command. This means when this label is
      * passed as a command, use this {@link SpigotCommand} functionality
@@ -86,19 +58,40 @@ public abstract class SpigotCommand extends Command {
      */
     @Getter
     protected String label;
-
     /**
      * This is the instance of {@link CommandSender} who executed this command.
      * Updated dynamically when executing the command
      */
     @Getter
     protected CommandSender sender;
-
     /**
      * These are the last parsed arguments to the command. Updated
      * dynamically every time we execute the command
      */
     protected String[] args;
+
+    //  -------------------------------------------------------------------------
+    //  Values that get set upon execution
+    //  -------------------------------------------------------------------------
+    /**
+     * Flag indicating if this {@link SpigotCommand} has been registered
+     */
+    @Getter
+    private boolean registered = false;
+    /**
+     * These are the minimum amount of arguments to be passed to the command
+     * for it to actually execute
+     */
+    @Getter
+    @Setter
+    private int minArguments = 0;
+    /**
+     * Should we automatically send usage message when the first argument
+     * equals to "help" or "?" ?
+     */
+    @Setter
+    @Getter
+    private boolean autoHandleHelp = true;
 
     /**
      * Create a new {@link SpigotCommand} with certain labels
@@ -345,13 +338,6 @@ public abstract class SpigotCommand extends Command {
     }
 
     /**
-     * Get the permission without replacing {plugin.name}, {label} or {sublabel}
-     */
-    public final String getRawPermission() {
-        return super.getPermission();
-    }
-
-    /**
      * Sets the permission required for this command to run. If you set the
      * permission to null we will not require any permission (unsafe).
      *
@@ -360,6 +346,13 @@ public abstract class SpigotCommand extends Command {
     @Override
     public final void setPermission(final String permission) {
         super.setPermission(permission);
+    }
+
+    /**
+     * Get the permission without replacing {plugin.name}, {label} or {sublabel}
+     */
+    public final String getRawPermission() {
+        return super.getPermission();
     }
 
     /**

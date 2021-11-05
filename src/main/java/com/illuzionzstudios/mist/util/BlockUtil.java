@@ -17,7 +17,7 @@ public class BlockUtil {
      * Get nearby blocks in a radius of a location. (Cuboid)
      *
      * @param location Center location
-     * @param radius Radius in blocks
+     * @param radius   Radius in blocks
      * @return List of all blocks
      */
     public List<Block> getNearbyBlocks(Location location, int radius) {

@@ -36,18 +36,16 @@ import java.util.function.Consumer;
 public abstract class MinecraftScheduler {
 
     /**
-     * This holds the set of registered synchronization services that are
-     * currently ticking. Objects must be dismissed after being used
-     */
-    protected static volatile Set<SynchronizationService> SYNC_SERVICE_REGISTRATION;
-
-    /**
      * These are the amount of synchronized ticks the application
      * has undergone. Async ticks are not counted as this will keep track
      * of total application time
      */
     private static final AtomicLong synchronousTicks = new AtomicLong();
-
+    /**
+     * This holds the set of registered synchronization services that are
+     * currently ticking. Objects must be dismissed after being used
+     */
+    protected static volatile Set<SynchronizationService> SYNC_SERVICE_REGISTRATION;
     /**
      * Instance of the {@link MinecraftScheduler}
      */

@@ -13,24 +13,15 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  */
 public abstract class PluginSettings extends YamlConfig {
 
+    public static final ConfigSettings GENERAL_GROUP = new ConfigSettings("settings");
     /**
      * The current loaded {@link PluginSettings} instance
      */
     public static YamlConfig SETTINGS_FILE;
 
-    /**
-     * @param plugin Make sure we pass owning plugin
-     */
-    public PluginSettings(SpigotPlugin plugin) {
-        super(plugin, Mist.SETTINGS_NAME);
-    }
-
     //  -------------------------------------------------------------------------
     //  Main config settings provided by default
     //  -------------------------------------------------------------------------
-
-    public static final ConfigSettings GENERAL_GROUP = new ConfigSettings("settings");
-
     /**
      * The locale type to use, for instance
      * "en_US"
@@ -38,6 +29,13 @@ public abstract class PluginSettings extends YamlConfig {
     public static ConfigSetting LOCALE = GENERAL_GROUP.create("settings.locale", "en_US",
             "The language file to use for the plugin",
             "More language files (if available) can be found in the plugins locale folder.");
+
+    /**
+     * @param plugin Make sure we pass owning plugin
+     */
+    public PluginSettings(SpigotPlugin plugin) {
+        super(plugin, Mist.SETTINGS_NAME);
+    }
 
     /**
      * Load these {@link PluginSettings} into the server, setting values

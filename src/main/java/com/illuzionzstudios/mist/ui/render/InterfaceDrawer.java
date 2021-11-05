@@ -20,7 +20,10 @@ public final class InterfaceDrawer {
      */
     @Getter
     private final int size;
-
+    /**
+     * The items (or content) inside the inventory
+     */
+    private final ItemStack[] content;
     /**
      * The title for the interface
      * <p>
@@ -30,11 +33,6 @@ public final class InterfaceDrawer {
     @Getter
     @Setter
     private String title;
-
-    /**
-     * The items (or content) inside the inventory
-     */
-    private final ItemStack[] content;
 
     /**
      * Create a new drawer
@@ -47,6 +45,13 @@ public final class InterfaceDrawer {
         this.title = title;
 
         this.content = new ItemStack[size];
+    }
+
+    /**
+     * Shorthand constructor. See {@link #InterfaceDrawer(int, String)}
+     */
+    public static InterfaceDrawer of(int size, String title) {
+        return new InterfaceDrawer(size, title);
     }
 
     /**
@@ -137,13 +142,6 @@ public final class InterfaceDrawer {
             player.closeInventory();
 
         player.openInventory(inventory);
-    }
-
-    /**
-     * Shorthand constructor. See {@link #InterfaceDrawer(int, String)}
-     */
-    public static InterfaceDrawer of(int size, String title) {
-        return new InterfaceDrawer(size, title);
     }
 
 }

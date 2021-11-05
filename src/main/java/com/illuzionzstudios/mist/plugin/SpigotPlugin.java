@@ -9,10 +9,10 @@ import com.illuzionzstudios.mist.data.controller.BukkitPlayerController;
 import com.illuzionzstudios.mist.data.controller.PlayerDataController;
 import com.illuzionzstudios.mist.data.database.Database;
 import com.illuzionzstudios.mist.data.player.BukkitPlayer;
+import com.illuzionzstudios.mist.model.UpdateChecker;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import com.illuzionzstudios.mist.ui.InterfaceController;
-import com.illuzionzstudios.mist.model.UpdateChecker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -35,23 +35,40 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     //  Internal plugin settings that determine if certain things are loaded
     //  -------------------------------------------------------------------------
 
-    @Getter
-    protected boolean checkUpdates = false;
-
-    //  -------------------------------------------------------------------------
-    //  Static instances that stay final
-    //  -------------------------------------------------------------------------
-
     /**
      * If our {@link SpigotPlugin} is currently reloading
      */
     @Getter
     private static volatile boolean reloading = false;
 
+    //  -------------------------------------------------------------------------
+    //  Static instances that stay final
+    //  -------------------------------------------------------------------------
     /**
      * Singleton instance of our {@link SpigotPlugin}
      */
     private static volatile SpigotPlugin INSTANCE;
+    /**
+     * An easy way to handle listeners for reloading
+     */
+    private final Reloadables reloadables = new Reloadables(this);
+    @Getter
+    protected boolean checkUpdates = false;
+    /**
+     * If this plugin is currently enabled and running.
+     * Checked at different loading stages
+     */
+    protected boolean isEnabled = true;
+    /**
+     * The main command for this plugin, can be {@code null}
+     */
+    @Getter
+    protected SpigotCommandGroup mainCommand;
+    /**
+     * Our player controller for our player data objects
+     * Also used as a flag if we want to use player data
+     */
+    protected BukkitPlayerController<? extends BukkitPlayer> playerController;
 
     /**
      * Return our instance of the {@link SpigotPlugin}
@@ -71,6 +88,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         return INSTANCE;
     }
+
+    //  -------------------------------------------------------------------------
+    //  Variables specific to the plugin instance
+    //  -------------------------------------------------------------------------
 
     /**
      * Get if the instance that is used across the library has been set. Normally it
@@ -96,6 +117,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         return getInstance().getDescription().getVersion();
     }
 
+    //  -------------------------------------------------------------------------
+    //  Player data - Only loaded if we choose to use player data
+    //  -------------------------------------------------------------------------
+
     /**
      * Shortcut for getFile()
      *
@@ -106,39 +131,18 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     }
 
     //  -------------------------------------------------------------------------
-    //  Variables specific to the plugin instance
-    //  -------------------------------------------------------------------------
-
-    /**
-     * If this plugin is currently enabled and running.
-     * Checked at different loading stages
-     */
-    protected boolean isEnabled = true;
-
-    /**
-     * An easy way to handle listeners for reloading
-     */
-    private final Reloadables reloadables = new Reloadables(this);
-
-    /**
-     * The main command for this plugin, can be {@code null}
-     */
-    @Getter
-    protected SpigotCommandGroup mainCommand;
-
-    //  -------------------------------------------------------------------------
-    //  Player data - Only loaded if we choose to use player data
-    //  -------------------------------------------------------------------------
-
-    /**
-     * Our player controller for our player data objects
-     * Also used as a flag if we want to use player data
-     */
-    protected BukkitPlayerController<SpigotPlugin, ? extends BukkitPlayer> playerController;
-
-    //  -------------------------------------------------------------------------
     //  Plugin loading methods
     //  -------------------------------------------------------------------------
+
+    /**
+     * Check if a given label is for the main plugin command
+     *
+     * @param label Label to check
+     * @return If it's an aliases for the main command
+     */
+    public static boolean isMainCommand(final String label) {
+        return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
+    }
 
     /**
      * Called when the plugin is loaded into the server
@@ -318,16 +322,16 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         reloadables.shutdown();
     }
 
+    //  -------------------------------------------------------------------------
+    //  Additional features of our main plugin
+    //  -------------------------------------------------------------------------
+
     /**
      * @param listener Register a listener for this plugin
      */
     protected final void registerListener(final Listener listener) {
         reloadables.registerEvent(listener);
     }
-
-    //  -------------------------------------------------------------------------
-    //  Additional features of our main plugin
-    //  -------------------------------------------------------------------------
 
     /**
      * The start-up fancy logo
@@ -337,6 +341,10 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     public String[] getStartupLogo() {
         return null;
     }
+
+    //  -------------------------------------------------------------------------
+    //  Stuff we need to implement
+    //  -------------------------------------------------------------------------
 
     /**
      * Opt in to using custom player data.
@@ -349,15 +357,11 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @param playerController Our custom player controller for operations
      */
     protected <BP extends BukkitPlayer> void initializePlayerData(Class<? extends BukkitPlayer> playerClass, Database database,
-                                                                  BukkitPlayerController<SpigotPlugin, BP> playerController) {
+                                                                  BukkitPlayerController<BP> playerController) {
         this.playerController = playerController;
 
         new PlayerDataController<>().initialize(playerClass, database);
     }
-
-    //  -------------------------------------------------------------------------
-    //  Stuff we need to implement
-    //  -------------------------------------------------------------------------
 
     /**
      * @return Our custom implementation of {@link PluginSettings}
@@ -394,16 +398,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     protected void registerMainCommand(final SpigotCommandGroup command, String... labels) {
         this.mainCommand = command;
         this.mainCommand.register(labels);
-    }
-
-    /**
-     * Check if a given label is for the main plugin command
-     *
-     * @param label Label to check
-     * @return If it's an aliases for the main command
-     */
-    public static boolean isMainCommand(final String label) {
-        return getInstance().getMainCommand() != null && getInstance().getMainCommand().getLabel().equalsIgnoreCase(label);
     }
 
 }

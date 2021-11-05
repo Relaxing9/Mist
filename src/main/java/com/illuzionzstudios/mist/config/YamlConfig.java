@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.config;
 
-import com.google.common.base.Charsets;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.Mist;
 import com.illuzionzstudios.mist.config.format.Comment;
@@ -11,7 +10,6 @@ import com.illuzionzstudios.mist.util.TextUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
@@ -27,7 +25,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -194,6 +191,19 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
+     * Static method to just load an internal YAML file right onto the server without having
+     * to create a custom class because we aren't doing any internal loading.
+     *
+     * @param plugin    The plugin this file is apart of
+     * @param directory The directory to put the file in
+     * @param fileName  The name of the file
+     */
+    public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
+        YamlConfig toLoad = new YamlConfig(plugin, File.separator + directory, fileName);
+        toLoad.load();
+    }
+
+    /**
      * Get the {@link File} for this instance
      *
      * @return The file if directory isn't null, otherwise file with name "config.yml"
@@ -211,6 +221,18 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
+     * @return {@link String} lines from {@link #headerComment}
+     */
+    @NotNull
+    public List<String> getHeader() {
+        if (headerComment != null) {
+            return headerComment.getLines();
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
      * Set the {@link #headerComment} from VarArgs of {@link String}
      *
      * @param description Strings to set for comment
@@ -224,6 +246,18 @@ public class YamlConfig extends ConfigSection {
     }
 
     /**
+     * @return {@link String} lines from {@link #footerComment}
+     */
+    @NotNull
+    public List<String> getFooter() {
+        if (footerComment != null) {
+            return footerComment.getLines();
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
      * Set the {@link #footerComment} from VarArgs of {@link String}
      *
      * @param description Strings to set for comment
@@ -233,30 +267,6 @@ public class YamlConfig extends ConfigSection {
             footerComment = null;
         } else {
             footerComment = new Comment(CommentStyle.BLOCKED, description);
-        }
-    }
-
-    /**
-     * @return {@link String} lines from {@link #headerComment}
-     */
-    @NotNull
-    public List<String> getHeader() {
-        if (headerComment != null) {
-            return headerComment.getLines();
-        } else {
-            return Collections.EMPTY_LIST;
-        }
-    }
-
-    /**
-     * @return {@link String} lines from {@link #footerComment}
-     */
-    @NotNull
-    public List<String> getFooter() {
-        if (footerComment != null) {
-            return footerComment.getLines();
-        } else {
-            return Collections.EMPTY_LIST;
         }
     }
 
@@ -275,6 +285,10 @@ public class YamlConfig extends ConfigSection {
         }
     }
 
+    //  -------------------------------------------------------------------------
+    //  File Loading
+    //  -------------------------------------------------------------------------
+
     /**
      * Clear all default options in the {@link ConfigSection}
      */
@@ -282,10 +296,6 @@ public class YamlConfig extends ConfigSection {
         root.defaultComments.clear();
         root.defaults.clear();
     }
-
-    //  -------------------------------------------------------------------------
-    //  File Loading
-    //  -------------------------------------------------------------------------
 
     /**
      * To be overridden, called before loading the file into memory
@@ -297,19 +307,6 @@ public class YamlConfig extends ConfigSection {
      * To be overridden, called after loading the file into memory
      */
     protected void postLoad() {
-    }
-
-    /**
-     * Static method to just load an internal YAML file right onto the server without having
-     * to create a custom class because we aren't doing any internal loading.
-     *
-     * @param plugin    The plugin this file is apart of
-     * @param directory The directory to put the file in
-     * @param fileName  The name of the file
-     */
-    public static void loadInternalYaml(final SpigotPlugin plugin, final String directory, final String fileName) {
-        YamlConfig toLoad = new YamlConfig(plugin, File.separator + directory, fileName);
-        toLoad.load();
     }
 
     /**

@@ -77,18 +77,19 @@ public final class ItemCreator {
      */
     @Singular
     private final List<XItemFlag> flags = new ArrayList<>();
-
+    /**
+     * The actual metadata of the item stack
+     */
+    private final ItemMeta meta;
     /**
      * If the {@link ItemStack} has the unbreakable flag
      */
     private boolean unbreakable;
-
     /**
      * Should we hide all tags from the item (enchants, etc.)?
      */
     @Builder.Default
     private boolean hideTags = false;
-
     /**
      * Should we add glow to the item? (adds a fake enchant and uses
      * item flags to hide it)
@@ -98,14 +99,40 @@ public final class ItemCreator {
     @Builder.Default
     private boolean glow = false;
 
-    /**
-     * The actual metadata of the item stack
-     */
-    private final ItemMeta meta;
-
     //  -------------------------------------------------------------------------
     //  Constructing
     //  -------------------------------------------------------------------------
+
+    /**
+     * Convenience method to get a new item creator with material, name and lore set
+     *
+     * @param material The {@link XMaterial} to set
+     * @param name     The name of the item
+     * @param lore     Collection of lore strings
+     * @return THe builder with these properties
+     */
+    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final Collection<String> lore) {
+        return of(material, name, lore.toArray(new String[lore.size()]));
+    }
+
+    /**
+     * See {@link #of(XMaterial, String, Collection)}
+     */
+    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final String... lore) {
+        return ItemCreator.builder().material(material).name(name).lores(Arrays.asList(lore)).hideTags(true);
+    }
+
+    /**
+     * Get a new item creator from material
+     *
+     * @param mat existing material
+     * @return the new item creator
+     */
+    public static ItemCreatorBuilder of(final XMaterial mat) {
+        Valid.checkNotNull(mat, "Material cannot be null!");
+
+        return ItemCreator.builder().material(mat);
+    }
 
     /**
      * @return This item suitable for a {@link com.illuzionzstudios.mist.ui.UserInterface}
@@ -223,37 +250,6 @@ public final class ItemCreator {
         stack.setItemMeta(stackMeta);
 
         return stack;
-    }
-
-    /**
-     * Convenience method to get a new item creator with material, name and lore set
-     *
-     * @param material The {@link XMaterial} to set
-     * @param name     The name of the item
-     * @param lore     Collection of lore strings
-     * @return THe builder with these properties
-     */
-    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final Collection<String> lore) {
-        return of(material, name, lore.toArray(new String[lore.size()]));
-    }
-
-    /**
-     * See {@link #of(XMaterial, String, Collection)}
-     */
-    public static ItemCreatorBuilder of(final XMaterial material, final String name, @NonNull final String... lore) {
-        return ItemCreator.builder().material(material).name(name).lores(Arrays.asList(lore)).hideTags(true);
-    }
-
-    /**
-     * Get a new item creator from material
-     *
-     * @param mat existing material
-     * @return the new item creator
-     */
-    public static ItemCreatorBuilder of(final XMaterial mat) {
-        Valid.checkNotNull(mat, "Material cannot be null!");
-
-        return ItemCreator.builder().material(mat);
     }
 
 }

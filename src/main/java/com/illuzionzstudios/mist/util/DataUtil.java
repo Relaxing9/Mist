@@ -175,7 +175,7 @@ public class DataUtil {
         return meta != null && getBooleanData(meta, key);
     }
 
-    public class DoubleArray implements PersistentDataType<byte[], double[]> {
+    public static class DoubleArray implements PersistentDataType<byte[], double[]> {
 
         @Override
         @NotNull
@@ -211,7 +211,7 @@ public class DataUtil {
         }
     }
 
-    public class StringArray implements PersistentDataType<byte[], String[]> {
+    public static class StringArray implements PersistentDataType<byte[], String[]> {
 
         private final Charset charset;
 
@@ -272,7 +272,7 @@ public class DataUtil {
         }
     }
 
-    public class UUIDDataType implements PersistentDataType<byte[], UUID> {
+    public static class UUIDDataType implements PersistentDataType<byte[], UUID> {
 
         @NotNull
         @Override

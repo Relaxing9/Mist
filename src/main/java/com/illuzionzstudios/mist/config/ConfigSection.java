@@ -28,42 +28,23 @@ public class ConfigSection extends MemoryConfiguration {
     //  -------------------------------------------------------------------------
 
     /**
-     * This is the full node path to this section.
-     * For instance if this section is for a player, the
-     * full path may be "data.player.<player_name>"
-     */
-    @Getter
-    private final String fullPath;
-
-    /**
-     * This is the relevant node for the section, could
-     * also be called the name. For instance take the above
-     * example for {@link #fullPath}, this would be "<player_name>"
-     */
-    @Getter
-    private final String nodeKey;
-
-    /**
      * This is the main {@link ConfigSection} for the file
      * All sections come under it
      */
     @Getter
     protected final ConfigSection root;
-
     /**
      * This is the {@link ConfigSection} that this section
      * is under
      */
     @Getter
     protected final ConfigSection parent;
-
     /**
      * These are the current {@link Comment} loaded for this section
      * Each comment is mapped to the absolute path to the value
      */
     @Getter
     protected final HashMap<String, Comment> configComments;
-
     /**
      * These are the default {@link Comment} for each value. These are
      * loaded when default values are set. Again each comment
@@ -71,26 +52,22 @@ public class ConfigSection extends MemoryConfiguration {
      */
     @Getter
     protected final HashMap<String, Comment> defaultComments;
-
     /**
      * These are the loaded key value pairs for this {@link ConfigSection}
      */
     @Getter
     protected final Map<String, Object> values;
-
     /**
      * These are the default key value pairs for this {@link ConfigSection}
      * They're what are automatically loaded if no values are found
      */
     protected final Map<String, Object> defaults;
-
     /**
      * Flag if this section is a default {@link ConfigSection}
      * Meaning it gets loaded into the file if not found
      */
     @Getter
     protected final boolean isDefault;
-
     /**
      * This object here is invoked on by the {@code synchronized} tag
      * This is to lock performing operations on our section across threads.
@@ -103,11 +80,24 @@ public class ConfigSection extends MemoryConfiguration {
      * {@link ConfigSection} as we want to lock each actual {@link YamlConfig} instance
      */
     protected final Object lock = new Object();
+    /**
+     * This is the full node path to this section.
+     * For instance if this section is for a player, the
+     * full path may be "data.player.<player_name>"
+     */
+    @Getter
+    private final String fullPath;
+    /**
+     * This is the relevant node for the section, could
+     * also be called the name. For instance take the above
+     * example for {@link #fullPath}, this would be "<player_name>"
+     */
+    @Getter
+    private final String nodeKey;
 
     //  -------------------------------------------------------------------------
     //  Values we may want to change
     //  -------------------------------------------------------------------------
-
     /**
      * The amount of SPACE chars to use as indentation.
      * This means space of each key from the parent section

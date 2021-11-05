@@ -33,16 +33,16 @@ public class DataField<T> {
     private final AbstractPlayerData<?> playerData;
 
     /**
+     * Stored data of this field
+     */
+    public T localValue;
+
+    /**
      * Default data for this field if not set
      */
     @Getter
     @Setter
     private T defaultData;
-
-    /**
-     * Stored data of this field
-     */
-    public T localValue;
 
     public DataField(AbstractPlayerData<?> playerData, String field, T defaultData) {
         this.playerData = playerData;

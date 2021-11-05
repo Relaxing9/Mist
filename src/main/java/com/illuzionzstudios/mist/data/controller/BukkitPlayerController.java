@@ -24,16 +24,16 @@ import java.util.List;
 /**
  * Controls all Bukkit players
  */
-public abstract class BukkitPlayerController<P extends SpigotPlugin, BP extends BukkitPlayer> extends AbstractPlayerController<BP> implements Listener, PluginController<P> {
+public abstract class BukkitPlayerController<BP extends BukkitPlayer> extends AbstractPlayerController<BP> implements Listener, PluginController {
 
     /**
      * Instances
      */
-    public static BukkitPlayerController<?, ?> INSTANCE;
+    public static BukkitPlayerController<?> INSTANCE;
     public static Plugin PLUGIN;
 
     @Override
-    public void initialize(P plugin) {
+    public void initialize(SpigotPlugin plugin) {
         INSTANCE = this;
         PLUGIN = plugin;
 
@@ -43,7 +43,7 @@ public abstract class BukkitPlayerController<P extends SpigotPlugin, BP extends 
     }
 
     @Override
-    public void stop(P plugin) {
+    public void stop(SpigotPlugin plugin) {
         // Save everyone
         for (BP player : new ArrayList<>(players)) {
             try {

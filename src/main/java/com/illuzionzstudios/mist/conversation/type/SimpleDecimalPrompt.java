@@ -42,6 +42,13 @@ public class SimpleDecimalPrompt extends SimplePrompt {
     }
 
     /**
+     * Show the question with the action to the player
+     */
+    public static void show(final Player player, final String question, final Consumer<Double> successAction) {
+        new SimpleDecimalPrompt(question, successAction).show(player);
+    }
+
+    /**
      * The menu question
      */
     @Override
@@ -87,13 +94,6 @@ public class SimpleDecimalPrompt extends SimplePrompt {
 
         successAction.accept(input);
         return Prompt.END_OF_CONVERSATION;
-    }
-
-    /**
-     * Show the question with the action to the player
-     */
-    public static void show(final Player player, final String question, final Consumer<Double> successAction) {
-        new SimpleDecimalPrompt(question, successAction).show(player);
     }
 }
 

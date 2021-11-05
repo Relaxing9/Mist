@@ -35,6 +35,13 @@ public abstract class SimplePrompt extends ValidatingPrompt implements Cloneable
     }
 
     /**
+     * Show the given prompt to the player
+     */
+    public static void show(final Player player, final SimplePrompt prompt) {
+        prompt.show(player);
+    }
+
+    /**
      * Return the prefix before tell messages
      */
     protected String getCustomPrefix() {
@@ -177,13 +184,6 @@ public abstract class SimplePrompt extends ValidatingPrompt implements Cloneable
     @Override
     public SimplePrompt clone() {
         return (SimplePrompt) super.clone();
-    }
-
-    /**
-     * Show the given prompt to the player
-     */
-    public static void show(final Player player, final SimplePrompt prompt) {
-        prompt.show(player);
     }
 }
 

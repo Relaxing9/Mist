@@ -1,12 +1,9 @@
 package com.illuzionzstudios.mist.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Utility class for mathematical operations.

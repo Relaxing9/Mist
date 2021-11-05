@@ -14,28 +14,25 @@ import java.io.File;
 public abstract class FileLoader<T> {
 
     /**
-     * Our data object to get properties from
-     */
-    @Getter
-    protected T object;
-
-    /**
      * File location for template on disk
      */
     @Getter
     protected final File file;
-
     /**
      * Name of the file without extensions
      */
     @Getter
     protected final String name;
-
     /**
      * Extension for this file
      */
     @Getter
     protected final String extension;
+    /**
+     * Our data object to get properties from
+     */
+    @Getter
+    protected T object;
 
     /**
      * @param directory The directory from plugin folder

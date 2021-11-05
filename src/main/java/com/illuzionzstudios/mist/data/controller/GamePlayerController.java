@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Default game player controllers
  */
-public class GamePlayerController extends BukkitPlayerController<SpigotPlugin, GamePlayer> {
+public class GamePlayerController extends BukkitPlayerController<GamePlayer> {
 
     public static GamePlayerController INSTANCE;
 

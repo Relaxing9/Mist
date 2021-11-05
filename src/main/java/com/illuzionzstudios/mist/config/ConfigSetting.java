@@ -18,18 +18,16 @@ import java.util.List;
 public class ConfigSetting {
 
     /**
+     * The node path (or key) this value is set at
+     */
+    @Getter
+    private final String key;
+    /**
      * The {@link YamlConfig} instance this value is apart of. Can set
      * if we want to dynamically change the config file or reset it.
      */
     @Setter
     private YamlConfig config;
-
-    /**
-     * The node path (or key) this value is set at
-     */
-    @Getter
-    private final String key;
-
     /**
      * Default value of this setting
      */

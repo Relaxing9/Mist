@@ -35,10 +35,14 @@ import java.util.Map;
 public class CustomItem {
 
     /**
+     * Damage to the item for setting custom metadata
+     */
+    @Builder.Default
+    private final int damage = -1;
+    /**
      * Actual item stack constructed to perform more operations on
      */
     private ItemStack item;
-
     /**
      * The identifier of this custom item. Usually so we can
      * include this in a map if need be
@@ -46,38 +50,27 @@ public class CustomItem {
     @NotNull
     @Builder.Default
     private String identifier = "null";
-
     /**
      * The material of this item
      */
     @NotNull
     @Builder.Default
     private XMaterial material = XMaterial.AIR;
-
     /**
      * Custom name of the item
      */
     @Nullable
     private MistString customName;
-
     /**
      * Custom lore of the item
      */
     @Nullable
     private List<MistString> lore;
-
     /**
      * Amount of the item
      */
     @Builder.Default
     private int amount = 1;
-
-    /**
-     * Damage to the item for setting custom metadata
-     */
-    @Builder.Default
-    private final int damage = -1;
-
     /**
      * Item custom model data
      */

@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.config.serialization.loader;
 
-import com.illuzionzstudios.mist.config.ConfigSection;
 import lombok.Getter;
 
 /**

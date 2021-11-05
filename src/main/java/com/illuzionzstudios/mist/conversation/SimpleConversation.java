@@ -41,6 +41,20 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
     }
 
     /**
+     * Shortcut method for direct message send to the player
+     */
+    protected static void tell(final Conversable conversable, final String message) {
+        Mist.tellConversing(conversable, message);
+    }
+
+    /**
+     * Send a message to the conversable player later
+     */
+    protected static void tellLater(final Conversable conversable, final String message, final int delayTicks) {
+        Mist.tellLaterConversing(conversable, message, delayTicks);
+    }
+
+    /**
      * Start a conversation with the player, throwing error if {@link Player#isConversing()}
      */
     public final void start(final Player player) {
@@ -139,6 +153,10 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
         return true;
     }
 
+    // ------------------------------------------------------------------------------------------------------------
+    // Static access
+    // ------------------------------------------------------------------------------------------------------------
+
     /**
      * Get the timeout in seconds before automatically exiting the convo
      */
@@ -151,24 +169,6 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
      */
     public void setMenuToReturnTo(final UserInterface menu) {
         this.menuToReturnTo = menu;
-    }
-
-    // ------------------------------------------------------------------------------------------------------------
-    // Static access
-    // ------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Shortcut method for direct message send to the player
-     */
-    protected static void tell(final Conversable conversable, final String message) {
-        Mist.tellConversing(conversable, message);
-    }
-
-    /**
-     * Send a message to the conversable player later
-     */
-    protected static void tellLater(final Conversable conversable, final String message, final int delayTicks) {
-        Mist.tellLaterConversing(conversable, message, delayTicks);
     }
 
     /**

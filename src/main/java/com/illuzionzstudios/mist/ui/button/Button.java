@@ -29,20 +29,6 @@ public abstract class Button {
     private static XMaterial infoButtonMaterial = XMaterial.NETHER_STAR;
 
     /**
-     * @return The implemented {@link ButtonListener} to give functionality
-     */
-    public abstract ButtonListener getListener();
-
-    /**
-     * @return The {@link ItemStack} that represents this button as an icon
-     */
-    public abstract ItemStack getItem();
-
-    //  -------------------------------------------------------------------------
-    //  Pre construct buttons
-    //  -------------------------------------------------------------------------
-
-    /**
      * Construct a button that uses name and lore to display lines of text
      *
      * @param description Lines to display
@@ -69,6 +55,10 @@ public abstract class Button {
     public static IconButton makeIcon(final ItemCreator.ItemCreatorBuilder builder) {
         return makeIcon(builder.build());
     }
+
+    //  -------------------------------------------------------------------------
+    //  Pre construct buttons
+    //  -------------------------------------------------------------------------
 
     /**
      * Construct an icon from a {@link ItemCreator}
@@ -100,6 +90,41 @@ public abstract class Button {
      */
     public static SimpleButton of(final ItemCreator creator, final ButtonListener listener) {
         return new SimpleButton(creator.makeUIItem(), listener);
+    }
+
+    /**
+     * @return The implemented {@link ButtonListener} to give functionality
+     */
+    public abstract ButtonListener getListener();
+
+    /**
+     * @return The {@link ItemStack} that represents this button as an icon
+     */
+    public abstract ItemStack getItem();
+
+    /**
+     * Represents a listener for a {@link Button} to
+     * provide functionality
+     */
+    public interface ButtonListener {
+
+        /**
+         * @return Simply returns a listener without functionality
+         */
+        static ButtonListener ofNull() {
+            return (i, j, k, e) -> {
+            };
+        }
+
+        /**
+         * Invoked when the button is clicked on
+         *
+         * @param player The {@link Player} who clicked
+         * @param ui     The instance of {@link UserInterface} that was clicked on
+         * @param type   How the button was clicked on
+         * @param event  The click event should we need it
+         */
+        void onClickInInterface(Player player, UserInterface ui, ClickType type, InventoryClickEvent event);
     }
 
     /**
@@ -142,31 +167,6 @@ public abstract class Button {
          */
         @Getter
         private final ButtonListener listener;
-    }
-
-    /**
-     * Represents a listener for a {@link Button} to
-     * provide functionality
-     */
-    public interface ButtonListener {
-
-        /**
-         * Invoked when the button is clicked on
-         *
-         * @param player The {@link Player} who clicked
-         * @param ui     The instance of {@link UserInterface} that was clicked on
-         * @param type   How the button was clicked on
-         * @param event  The click event should we need it
-         */
-        void onClickInInterface(Player player, UserInterface ui, ClickType type, InventoryClickEvent event);
-
-        /**
-         * @return Simply returns a listener without functionality
-         */
-        static ButtonListener ofNull() {
-            return (i, j, k, e) -> {
-            };
-        }
     }
 
 }

@@ -326,7 +326,7 @@ public class ReflectionUtil {
     /**
      * Represents an exception during reflection operation
      */
-    public final class ReflectionException extends RuntimeException {
+    public static final class ReflectionException extends RuntimeException {
         private static final long serialVersionUID = 1L;
 
         public ReflectionException(final String msg) {

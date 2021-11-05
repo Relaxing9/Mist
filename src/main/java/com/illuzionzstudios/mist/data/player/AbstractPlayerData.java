@@ -11,31 +11,29 @@ import java.util.HashMap;
  */
 public abstract class AbstractPlayerData<P extends AbstractPlayer> implements PlayerData<P> {
 
-    public AbstractPlayerData(P player) {
-        this.player = player;
-    }
-
+    /**
+     * Keys to replace when querying
+     */
+    public HashMap<String, String> localKeys = new HashMap<>();
     /**
      * The player that owns this data
      */
     @Getter
     protected P player;
+    /**
+     * If the scheduler is registered
+     */
+    private boolean schedulerRegistered = false;
+
+    public AbstractPlayerData(P player) {
+        this.player = player;
+    }
 
     /**
      * Run when attempting to save data
      */
     public void onSave() {
     }
-
-    /**
-     * Keys to replace when querying
-     */
-    public HashMap<String, String> localKeys = new HashMap<>();
-
-    /**
-     * If the scheduler is registered
-     */
-    private boolean schedulerRegistered = false;
 
     public void unregister() {
         if (schedulerRegistered) {

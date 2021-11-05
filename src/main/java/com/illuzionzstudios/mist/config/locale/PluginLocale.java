@@ -16,100 +16,77 @@ import java.util.HashMap;
 public abstract class PluginLocale extends YamlConfig {
 
     /**
-     * @param plugin Make sure we pass owning plugin
+     * Messages loaded on startup
      */
-    public PluginLocale(SpigotPlugin plugin) {
-        super(plugin, "/locales", PluginSettings.LOCALE.getString() + ".lang");
-    }
-
-    /**
-     * The current loaded {@link PluginLocale} instance
-     */
-    public static YamlConfig LOCALE_FILE;
-
+    public static final MistStringGroup STARTUP_GROUP = new MistStringGroup();
     /**
      * This is a cache of all loaded translations for a key. If we go to get a value by
      * a key it will first check here. If not found it will look through the file and if found
      * update it here. If not found anywhere it will simply return the default.
      */
     protected final static HashMap<String, String> localeCache = new HashMap<>();
+    /**
+     * The current loaded {@link PluginLocale} instance
+     */
+    public static YamlConfig LOCALE_FILE;
 
     //  -------------------------------------------------------------------------
     //  Main messages provided by default
     //  If these are found in the locale, we use those, otherwise use these
     //  defaults
     //  -------------------------------------------------------------------------
-
-    /**
-     * Messages loaded on startup
-     */
-    public static final MistStringGroup STARTUP_GROUP = new MistStringGroup();
-
     /**
      * The prefix to use before certain messages
      */
     public static MistString GENERAL_PLUGIN_PREFIX = STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7");
-
     /**
      * Message sent when reloading the plugin. Used in {@link com.illuzionzstudios.mist.command.type.ReloadCommand}
      */
     public static MistString GENERAL_PLUGIN_RELOAD = STARTUP_GROUP.create("general.reload", "&7Reloaded the plugin (Configuration files & controllers)");
-
     /**
      * If a command sender that isn't a player tries to execute a command
      */
     public static MistString COMMAND_PLAYER_ONLY = STARTUP_GROUP.create("command.player-only", "&cYou must be a player to execute this command.");
-
     /**
      * If the player doesn't have a required permission
      */
     public static MistString COMMAND_NO_PERMISSION = STARTUP_GROUP.create("command.no-permission", "&cYou must have the permission {permission} to do this.");
-
     /**
      * Sent when the executor provides too little arguments
      */
     public static MistString COMMAND_INVALID_USAGE = STARTUP_GROUP.create("command.invalid-usage", "&cInvalid usage. Try /{label} {args}");
-
     /**
      * If they try use a sub command that doesn't exist
      */
     public static MistString COMMAND_INVALID_SUB = STARTUP_GROUP.create("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help");
-
     /**
      * The optional arguments label
      */
     public static MistString COMMAND_LABEL_OPTIONAL_ARGS = STARTUP_GROUP.create("command.label-optional-args", "optional arguments");
-
     /**
      * The required arguments label
      */
     public static MistString COMMAND_LABEL_REQUIRED_ARGS = STARTUP_GROUP.create("command.label-required-args", "required arguments");
-
     /**
      * Message sent prompting to enter a value
      */
     public static MistString CONFIG_ENTER_VALUE = STARTUP_GROUP.create("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)");
-
     /**
      * Name of the confirm icon in the confirm inventory
      */
     public static MistString INTERFACE_CONFIRM_CONFIRM_NAME = STARTUP_GROUP.create("interface.confirm.confirm.name", "&a&lConfirm");
-
     /**
      * Lore of the confirm icon in the confirm inventory
      */
     public static MistString INTERFACE_CONFIRM_CONFIRM_LORE = STARTUP_GROUP.create("interface.confirm.confirm.lore", "&7&o(Click to confirm)");
-
     /**
      * Name of the deny icon in the confirm inventory
      */
     public static MistString INTERFACE_CONFIRM_DENY_NAME = STARTUP_GROUP.create("interface.confirm.deny.name", "&c&lDeny");
-
     /**
      * Lore of the deny icon in the confirm inventory
      */
     public static MistString INTERFACE_CONFIRM_DENY_LORE = STARTUP_GROUP.create("interface.confirm.deny.lore", "&7&o(Click to deny)");
-
     /**
      * The message if a new version is found
      */
@@ -117,6 +94,12 @@ public abstract class PluginLocale extends YamlConfig {
             + "&2Current version: &a{current}&2; Latest version: &a{new}\n"
             + "&2URL: &ahttps://spigotmc.org/resources/{resource_id}/.");
 
+    /**
+     * @param plugin Make sure we pass owning plugin
+     */
+    public PluginLocale(SpigotPlugin plugin) {
+        super(plugin, "/locales", PluginSettings.LOCALE.getString() + ".lang");
+    }
 
     /**
      * Load the {@link PluginLocale} into the server, setting values
@@ -142,12 +125,6 @@ public abstract class PluginLocale extends YamlConfig {
         // Load locale groups
         STARTUP_GROUP.load();
     }
-
-    /**
-     * Invoked to load all other custom settings that we implement
-     * in our own {@link PluginLocale}
-     */
-    public abstract void loadLocale();
 
     /**
      * Retrieve a message from the locale
@@ -202,5 +179,11 @@ public abstract class PluginLocale extends YamlConfig {
     public static void invalidateCache() {
         localeCache.clear();
     }
+
+    /**
+     * Invoked to load all other custom settings that we implement
+     * in our own {@link PluginLocale}
+     */
+    public abstract void loadLocale();
 
 }

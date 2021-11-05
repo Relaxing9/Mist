@@ -21,18 +21,15 @@ public class PlayerDataController<P extends AbstractPlayer, PD extends AbstractP
      * Instance of the data controller
      */
     public static PlayerDataController<?, ?> INSTANCE;
-
+    /**
+     * Registered default data
+     */
+    private final ArrayList<Class<? extends AbstractPlayerData<?>>> defaultData = new ArrayList<>();
     /**
      * The database to use for player data
      */
     @Getter
     private Database database;
-
-    /**
-     * Registered default data
-     */
-    private final ArrayList<Class<? extends AbstractPlayerData<?>>> defaultData = new ArrayList<>();
-
     /**
      * The player class we use for our operations
      */
