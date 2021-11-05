@@ -34,7 +34,7 @@ public class Cooldown {
      */
     public void setWait(int ticks) {
         this.expireTicks = MinecraftScheduler.getCurrentTick() + ticks;
-        this.expireTime = System.currentTimeMillis() + (ticks * 50);
+        this.expireTime = System.currentTimeMillis() + (ticks * 50L);
     }
 
     /**

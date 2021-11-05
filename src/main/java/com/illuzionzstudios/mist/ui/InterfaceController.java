@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * This controller handles events for {@link UserInterface}
  */
-public enum InterfaceController implements PluginController<SpigotPlugin>, Listener {
+public enum InterfaceController implements PluginController, Listener {
     INSTANCE;
 
     @Override

@@ -1,4 +1,4 @@
-package com.illuzionzstudios.mist.util;
+package com.illuzionzstudios.mist.model;
 
 import lombok.Getter;
 

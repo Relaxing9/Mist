@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.controller;
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import org.bukkit.event.Listener;
 
 /**
  * A tag that indicates a controller. A controller is class that handles things
@@ -12,20 +13,20 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin;
  *
  * @param <P> The instance of the plugin this controller is for
  */
-public interface PluginController<P extends SpigotPlugin> {
+public interface PluginController extends Listener {
 
     /**
      * Starts up our controller
      *
      * @param plugin The plugin starting the controller
      */
-    void initialize(final P plugin);
+    void initialize(final SpigotPlugin plugin);
 
     /**
      * Stops our controller
      *
      * @param plugin The plugin stopping the controller
      */
-    void stop(final P plugin);
+    void stop(final SpigotPlugin plugin);
 
 }

@@ -1,4 +1,4 @@
-package com.illuzionzstudios.mist.util;
+package com.illuzionzstudios.mist.model;
 
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;

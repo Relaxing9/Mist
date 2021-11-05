@@ -1,4 +1,4 @@
-package com.illuzionzstudios.mist.util;
+package com.illuzionzstudios.mist.random;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,6 @@ import java.util.Random;
  */
 @NoArgsConstructor
 public class RandomNumberGenerator {
-
-    /**
-     * Instanced random object to help us with random operations
-     */
-    private Random random;
 
     /**
      * The lower bound for a generated number
@@ -55,6 +50,8 @@ public class RandomNumberGenerator {
      * @return {@link RandomNumberGenerator} with those bounds
      */
     public static RandomNumberGenerator parse(String string) {
+        if (string == null) return new RandomNumberGenerator(0);
+
         // Remove whitespace
         string = string.replaceAll("\\s+", "");
         // Create tokens
@@ -70,7 +67,7 @@ public class RandomNumberGenerator {
      */
     public double generate() {
         // Give new serial for generation
-        random = new Random();
+        Random random = new Random();
 
         // Precise value to add on to generated value
         double precision = random.nextDouble();

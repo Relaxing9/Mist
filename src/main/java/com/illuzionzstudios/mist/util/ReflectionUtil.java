@@ -2,9 +2,8 @@ package com.illuzionzstudios.mist.util;
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.exception.PluginException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.ClassUtils;
 
 import java.lang.reflect.Constructor;
@@ -18,24 +17,24 @@ import java.util.List;
  * A utils class for help with reflection. Useful for NMS and
  * other things we may need to do
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ReflectionUtil {
+@UtilityClass
+public class ReflectionUtil {
 
     /**
      * The full package name for NMS
      */
-    public static final String NMS = "net.minecraft.server";
+    public final String NMS = "net.minecraft.server";
 
     /**
      * The package name for Craftbukkit
      */
-    public static final String CRAFTBUKKIT = "org.bukkit.craftbukkit";
+    public final String CRAFTBUKKIT = "org.bukkit.craftbukkit";
 
     /**
      * Find a class in net.minecraft.server package, adding the version
      * automatically
      */
-    public static Class<?> getNMSClass(final String name) {
+    public Class<?> getNMSClass(final String name) {
         return ReflectionUtil.lookupClass(NMS + "." + ServerVersion.getServerVersion() + "." + name);
     }
 
@@ -43,14 +42,14 @@ public final class ReflectionUtil {
      * Find a class in org.bukkit.craftbukkit package, adding the version
      * automatically
      */
-    public static Class<?> getOBCClass(final String name) {
+    public Class<?> getOBCClass(final String name) {
         return ReflectionUtil.lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name);
     }
 
     /**
      * Set the static field to the given value
      */
-    public static void setStaticField(@NonNull final Class<?> clazz, final String fieldName, final Object fieldValue) {
+    public void setStaticField(@NonNull final Class<?> clazz, final String fieldName, final Object fieldValue) {
         try {
             final Field field = getDeclaredField(clazz, fieldName);
 
@@ -64,7 +63,7 @@ public final class ReflectionUtil {
     /**
      * Set the static field to the given value
      */
-    public static void setStaticField(@NonNull final Object object, final String fieldName, final Object fieldValue) {
+    public void setStaticField(@NonNull final Object object, final String fieldName, final Object fieldValue) {
         try {
             final Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -79,7 +78,7 @@ public final class ReflectionUtil {
     /**
      * Convenience method for getting a static field content.
      */
-    public static <T> T getStaticFieldContent(@NonNull final Class<?> clazz, final String field) {
+    public <T> T getStaticFieldContent(@NonNull final Class<?> clazz, final String field) {
         return getFieldContent(clazz, field, null);
     }
 
@@ -87,7 +86,7 @@ public final class ReflectionUtil {
      * Return a constructor for the given NMS class. We prepend the class name
      * with the {@link #NMS} so you only have to give in the name of the class.
      */
-    public static Constructor<?> getNMSConstructor(@NonNull final String nmsClass, final Class<?>... params) {
+    public Constructor<?> getNMSConstructor(@NonNull final String nmsClass, final Class<?>... params) {
         return getConstructor(getNMSClass(nmsClass), params);
     }
 
@@ -95,7 +94,7 @@ public final class ReflectionUtil {
      * Return a constructor for the given OBC class. We prepend the class name
      * with the OBC so you only have to give in the name of the class.
      */
-    public static Constructor<?> getOBCConstructor(@NonNull final String obcClass, final Class<?>... params) {
+    public Constructor<?> getOBCConstructor(@NonNull final String obcClass, final Class<?>... params) {
         return getConstructor(getOBCClass(obcClass), params);
     }
 
@@ -103,7 +102,7 @@ public final class ReflectionUtil {
      * Return a constructor for the given fully qualified class path such as
      * org.mineacademy.boss.BossPlugin
      */
-    public static Constructor<?> getConstructor(@NonNull final String classPath, final Class<?>... params) {
+    public Constructor<?> getConstructor(@NonNull final String classPath, final Class<?>... params) {
         final Class<?> clazz = lookupClass(classPath);
 
         return getConstructor(clazz, params);
@@ -112,7 +111,7 @@ public final class ReflectionUtil {
     /**
      * Return a constructor for the given class
      */
-    public static Constructor<?> getConstructor(@NonNull final Class<?> clazz, final Class<?>... params) {
+    public Constructor<?> getConstructor(@NonNull final Class<?> clazz, final Class<?>... params) {
         try {
             final Constructor<?> constructor = clazz.getConstructor(params);
             constructor.setAccessible(true);
@@ -127,14 +126,14 @@ public final class ReflectionUtil {
     /**
      * Get the field content
      */
-    public static <T> T getFieldContent(final Object instance, final String field) {
+    public <T> T getFieldContent(final Object instance, final String field) {
         return getFieldContent(instance.getClass(), field, instance);
     }
 
     /**
      * Get the field content
      */
-    public static <T> T getFieldContent(Class<?> clazz, final String field, final Object instance) {
+    public <T> T getFieldContent(Class<?> clazz, final String field, final Object instance) {
         final String originalClassName = clazz.getSimpleName();
 
         do
@@ -150,7 +149,7 @@ public final class ReflectionUtil {
     /**
      * Get the field content
      */
-    public static Object getFieldContent(final Field field, final Object instance) {
+    public Object getFieldContent(final Field field, final Object instance) {
         try {
             field.setAccessible(true);
 
@@ -164,7 +163,7 @@ public final class ReflectionUtil {
     /**
      * Get all fields from the class and its super classes
      */
-    public static Field[] getAllFields(Class<?> clazz) {
+    public Field[] getAllFields(Class<?> clazz) {
         final List<Field> list = new ArrayList<>();
 
         do
@@ -177,7 +176,7 @@ public final class ReflectionUtil {
     /**
      * Gets the declared field in class by its name
      */
-    public static Field getDeclaredField(final Class<?> clazz, final String fieldName) {
+    public Field getDeclaredField(final Class<?> clazz, final String fieldName) {
         try {
             final Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -193,7 +192,7 @@ public final class ReflectionUtil {
     /**
      * Gets a class method
      */
-    public static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... args) {
+    public Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... args) {
         for (final Method method : clazz.getMethods())
             if (method.getName().equals(methodName) && isClassListEqual(args, method.getParameterTypes())) {
                 method.setAccessible(true);
@@ -205,7 +204,7 @@ public final class ReflectionUtil {
     }
 
     // Compares class lists
-    private static boolean isClassListEqual(final Class<?>[] first, final Class<?>[] second) {
+    private boolean isClassListEqual(final Class<?>[] first, final Class<?>[] second) {
         if (first.length != second.length)
             return false;
 
@@ -219,7 +218,7 @@ public final class ReflectionUtil {
     /**
      * Gets a class method
      */
-    public static Method getMethod(final Class<?> clazz, final String methodName, final Integer args) {
+    public Method getMethod(final Class<?> clazz, final String methodName, final Integer args) {
         for (final Method method : clazz.getMethods())
             if (method.getName().equals(methodName) && args.equals(new Integer(method.getParameterTypes().length))) {
                 method.setAccessible(true);
@@ -233,7 +232,7 @@ public final class ReflectionUtil {
     /**
      * Gets a class method
      */
-    public static Method getMethod(final Class<?> clazz, final String methodName) {
+    public Method getMethod(final Class<?> clazz, final String methodName) {
         for (final Method method : clazz.getMethods())
             if (method.getName().equals(methodName)) {
                 method.setAccessible(true);
@@ -246,14 +245,14 @@ public final class ReflectionUtil {
     /**
      * Wrapper for Class.forName
      */
-    public static <T> Class<T> lookupClass(final String path, final Class<T> type) {
+    public <T> Class<T> lookupClass(final String path, final Class<T> type) {
         return (Class<T>) lookupClass(path);
     }
 
     /**
      * Wrapper for Class.forName
      */
-    public static Class<?> lookupClass(final String path) {
+    public Class<?> lookupClass(final String path) {
         try {
             return Class.forName(path);
 
@@ -268,7 +267,7 @@ public final class ReflectionUtil {
      * @param clazz The class instance to make
      * @return The newly created class
      */
-    public static <T> T instantiate(final Class<T> clazz) {
+    public <T> T instantiate(final Class<T> clazz) {
         try {
             final Constructor<T> c = clazz.getDeclaredConstructor();
             c.setAccessible(true);
@@ -287,7 +286,7 @@ public final class ReflectionUtil {
      * @param params Parameters to create a new class
      * @return The newly created class
      */
-    public static <T> T instantiate(final Class<T> clazz, final Object... params) {
+    public <T> T instantiate(final Class<T> clazz, final Object... params) {
         try {
             final List<Class<?>> classes = new ArrayList<>();
 
@@ -316,7 +315,7 @@ public final class ReflectionUtil {
      * @param params      Parameters to create a new class
      * @return The newly created class
      */
-    public static <T> T instantiate(final Constructor<T> constructor, final Object... params) {
+    public <T> T instantiate(final Constructor<T> constructor, final Object... params) {
         try {
             return constructor.newInstance(params);
         } catch (final ReflectiveOperationException ex) {
@@ -327,7 +326,7 @@ public final class ReflectionUtil {
     /**
      * Represents an exception during reflection operation
      */
-    public static final class ReflectionException extends RuntimeException {
+    public final class ReflectionException extends RuntimeException {
         private static final long serialVersionUID = 1L;
 
         public ReflectionException(final String msg) {

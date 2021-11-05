@@ -1,4 +1,6 @@
-package com.illuzionzstudios.mist.util;
+package com.illuzionzstudios.mist.random;
+
+import com.illuzionzstudios.mist.model.Pair;
 
 import java.util.LinkedList;
 import java.util.List;

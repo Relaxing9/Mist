@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.util;
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
+import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,18 +16,21 @@ import java.util.*;
  * Utility class to deal with {@link org.bukkit.inventory.ItemStack}.
  * This could be parsing the data or dealing with NBT data on the item
  */
-public final class ItemStackUtil {
+@UtilityClass
+public class ItemUtil {
 
-    public static final String LORE_FIX_PREFIX = "fogus_loren-";
-    public static final String NAME_FIX_PREFIX = "fogus_namel-";
-    public static final String TAG_SPLITTER = "__x__";
-    private static final Map<String, NamespacedKey> LORE_KEYS_CACHE;
-    private static final Map<String, NamespacedKey> NAME_KEYS_CACHE;
+    /**
+     * Identify key from our plugin
+     */
+    public final String LORE_FIX_PREFIX = SpigotPlugin.getPluginName() + "-";
+    public final String NAME_FIX_PREFIX = SpigotPlugin.getPluginName() + "-";
+    public final String TAG_SPLITTER = "\n";
 
-    static {
-        LORE_KEYS_CACHE = new HashMap<>();
-        NAME_KEYS_CACHE = new HashMap<>();
-    }
+    /**
+     * A cache of name and lore keys
+     */
+    private final Map<String, NamespacedKey> NAME_KEYS_CACHE = new HashMap<>();
+    private final Map<String, NamespacedKey> LORE_KEYS_CACHE = new HashMap<>();
 
     /**
      * Serialize a {@link ItemStack} into a string blob
@@ -34,7 +38,7 @@ public final class ItemStackUtil {
      * @param itemStack ItemStack to serialize
      * @return ItemStack as a string blob
      */
-    public static String serialize(ItemStack itemStack) {
+    public String serialize(ItemStack itemStack) {
         YamlConfiguration config = new YamlConfiguration();
         config.set("i", itemStack);
         return config.saveToString();
@@ -47,7 +51,7 @@ public final class ItemStackUtil {
      * @param stringBlob String blob to convert to {@link ItemStack}
      * @return Formed {@link ItemStack}. {@code null} if didn't deserialize properly
      */
-    public static ItemStack deserialize(String stringBlob) {
+    public ItemStack deserialize(String stringBlob) {
         YamlConfiguration config = new YamlConfiguration();
         try {
             config.loadFromString(stringBlob);
@@ -58,12 +62,15 @@ public final class ItemStackUtil {
         return config.getItemStack("i", null);
     }
 
-    public static void clear() {
+    public void clear() {
         LORE_KEYS_CACHE.clear();
         NAME_KEYS_CACHE.clear();
     }
 
-    public static int addToLore(@NotNull List<String> lore, int pos, @NotNull String value) {
+    /**
+     * Insert a string value into lore at position and return new position of item
+     */
+    public int addToLore(@NotNull List<String> lore, int pos, @NotNull String value) {
         if (pos >= lore.size() || pos < 0) {
             lore.add(value);
         } else {
@@ -72,12 +79,12 @@ public final class ItemStackUtil {
         return pos + 1;
     }
 
-    public static void addLore(@NotNull ItemStack item, @NotNull String id, @NotNull String text, int pos) {
+    public void addLore(@NotNull ItemStack item, @NotNull String id, @NotNull String text, int pos) {
         String[] lines = text.split(TAG_SPLITTER);
         addLore(item, id, Arrays.asList(lines), pos);
     }
 
-    public static void addLore(@NotNull ItemStack item, @NotNull String id, @NotNull List<String> text, int pos) {
+    public void addLore(@NotNull ItemStack item, @NotNull String id, @NotNull List<String> text, int pos) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
@@ -101,7 +108,7 @@ public final class ItemStackUtil {
         addLoreTag(item, id, loreTag.toString());
     }
 
-    public static void delLore(@NotNull ItemStack item, @NotNull String id) {
+    public void delLore(@NotNull ItemStack item, @NotNull String id) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
@@ -124,11 +131,11 @@ public final class ItemStackUtil {
         delLoreTag(item, id);
     }
 
-    public static int getLoreIndex(@NotNull ItemStack item, @NotNull String id) {
+    public int getLoreIndex(@NotNull ItemStack item, @NotNull String id) {
         return getLoreIndex(item, id, 0);
     }
 
-    public static int getLoreIndex(@NotNull ItemStack item, @NotNull String id, int type) {
+    public int getLoreIndex(@NotNull ItemStack item, @NotNull String id, int type) {
         String storedText = DataUtil.getStringData(item, getLoreKey(id));
         if (storedText == null) return -1;
 
@@ -172,40 +179,40 @@ public final class ItemStackUtil {
     }
 
     @NotNull
-    private static NamespacedKey getLoreKey(@NotNull String id2) {
+    private NamespacedKey getLoreKey(@NotNull String id2) {
         String id = id2.toLowerCase();
         return LORE_KEYS_CACHE.computeIfAbsent(id, key -> new NamespacedKey(SpigotPlugin.getInstance(), LORE_FIX_PREFIX + id));
     }
 
     @NotNull
-    private static NamespacedKey getNameKey(@NotNull String id2) {
+    private NamespacedKey getNameKey(@NotNull String id2) {
         String id = id2.toLowerCase();
         return NAME_KEYS_CACHE.computeIfAbsent(id, key -> new NamespacedKey(SpigotPlugin.getInstance(), NAME_FIX_PREFIX + id));
     }
 
-    public static void addLoreTag(@NotNull ItemStack item, @NotNull String id, @NotNull String text) {
+    public void addLoreTag(@NotNull ItemStack item, @NotNull String id, @NotNull String text) {
         DataUtil.setData(item, getLoreKey(id), text);
     }
 
-    public static void delLoreTag(@NotNull ItemStack item, @NotNull String id) {
+    public void delLoreTag(@NotNull ItemStack item, @NotNull String id) {
         DataUtil.removeData(item, getLoreKey(id));
     }
 
     @Nullable
-    public static String getLoreTag(@NotNull ItemStack item, @NotNull String id) {
+    public String getLoreTag(@NotNull ItemStack item, @NotNull String id) {
         return DataUtil.getStringData(item, getLoreKey(id));
     }
 
-    public static void addNameTag(@NotNull ItemStack item, @NotNull String id, @NotNull String text) {
+    public void addNameTag(@NotNull ItemStack item, @NotNull String id, @NotNull String text) {
         DataUtil.setData(item, getNameKey(id), text);
     }
 
-    public static void delNameTag(@NotNull ItemStack item, @NotNull String id) {
+    public void delNameTag(@NotNull ItemStack item, @NotNull String id) {
         DataUtil.removeData(item, getNameKey(id));
     }
 
     @Nullable
-    public static String getNameTag(@NotNull ItemStack item, @NotNull String id) {
+    public String getNameTag(@NotNull ItemStack item, @NotNull String id) {
         return DataUtil.getStringData(item, getNameKey(id));
     }
 

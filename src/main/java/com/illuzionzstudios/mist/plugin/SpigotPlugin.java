@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.plugin;
 
-import com.illuzionzstudios.mist.Listeners;
 import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.command.SpigotCommand;
 import com.illuzionzstudios.mist.command.SpigotCommandGroup;
@@ -13,7 +12,7 @@ import com.illuzionzstudios.mist.data.player.BukkitPlayer;
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler;
 import com.illuzionzstudios.mist.ui.InterfaceController;
-import com.illuzionzstudios.mist.util.UpdateChecker;
+import com.illuzionzstudios.mist.model.UpdateChecker;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -119,7 +118,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
     /**
      * An easy way to handle listeners for reloading
      */
-    private final Listeners listeners = new Listeners();
+    private final Reloadables reloadables = new Reloadables(this);
 
     /**
      * The main command for this plugin, can be {@code null}
@@ -180,7 +179,7 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * <p>
      * In your plugin use it to register commands, events etc.
      */
-    public abstract void onReloadablesStart();
+    public abstract void onRegisterReloadables();
 
     @Override
     public final void onLoad() {
@@ -219,9 +218,8 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Enable our scheduler
             new BukkitScheduler(this).initialize();
-            InterfaceController.INSTANCE.initialize(this);
-
-            onReloadablesStart();
+            reloadables.registerController(InterfaceController.INSTANCE);
+            onRegisterReloadables();
 
             // Check update
             UpdateChecker.checkVersion(Bukkit.getServer().getConsoleSender());
@@ -230,7 +228,8 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Register main events
             registerListener(this);
-            registerListener(InterfaceController.INSTANCE);
+            // Start reloadables
+            reloadables.start();
 
             // Connect to database and allow player data
             if (playerController != null) {
@@ -260,8 +259,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         unregisterReloadables();
 
-        InterfaceController.INSTANCE.stop(this);
-
         // Try save all player data
         if (playerController != null) {
             playerController.stop(this);
@@ -283,7 +280,6 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
         try {
             unregisterReloadables();
             onPluginPreReload();
-            listeners.unregister();
 
             // Load settings and locale
             // Try save config if found
@@ -292,14 +288,15 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
             // Restart tickers
             MinecraftScheduler.get().initialize();
-            InterfaceController.INSTANCE.initialize(this);
-            onPluginReload();
 
-            onReloadablesStart();
+            // Reload controllers etc
+            reloadables.registerController(InterfaceController.INSTANCE);
+            onPluginReload();
+            onRegisterReloadables();
 
             // Register main events
             registerListener(this);
-            registerListener(InterfaceController.INSTANCE);
+            reloadables.start();
         } catch (final Throwable ex) {
             Logger.displayError(ex, "Error reloading plugin");
         } finally {
@@ -317,13 +314,15 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
 
         if (getMainCommand() != null && getMainCommand().isRegistered())
             getMainCommand().unregister();
+
+        reloadables.shutdown();
     }
 
     /**
      * @param listener Register a listener for this plugin
      */
     protected final void registerListener(final Listener listener) {
-        listeners.register(this, listener);
+        reloadables.registerEvent(listener);
     }
 
     //  -------------------------------------------------------------------------
@@ -379,14 +378,14 @@ public abstract class SpigotPlugin extends JavaPlugin implements Listener {
      * @param command Register a {@link SpigotCommand} for this plugin
      */
     protected final void registerCommand(final SpigotCommand command) {
-        command.register();
+        reloadables.registerCommand(command);
     }
 
     /**
      * @param command Register a {@link SpigotCommand} for this plugin
      */
     protected final void registerCommand(final SpigotCommandGroup command, String... labels) {
-        command.register(labels);
+        reloadables.registerCommand(command, labels);
     }
 
     /**

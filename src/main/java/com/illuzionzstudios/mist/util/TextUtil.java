@@ -2,19 +2,10 @@ package com.illuzionzstudios.mist.util;
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion;
 import com.illuzionzstudios.mist.config.locale.MistString;
+import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,37 +15,18 @@ import java.util.regex.Pattern;
 /**
  * Util methods to help parsing text
  */
-public final class TextUtil {
+@UtilityClass
+public class TextUtil {
 
     /**
      * Returns a long ------ smooth console line
      */
-    public static final String SMOOTH_LINE = org.bukkit.ChatColor.STRIKETHROUGH + "                                                               ";
+    public final String SMOOTH_LINE = org.bukkit.ChatColor.STRIKETHROUGH + "                                                               ";
 
     /**
      * Hexadecimal pattern
      */
-    private static final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
-
-    /**
-     * These are all the {@link Charset} we support for encoding/saving
-     */
-    private static final List<Charset> supportedCharsets = new ArrayList<>();
-
-    static {
-        supportedCharsets.add(StandardCharsets.UTF_8); // UTF-8 BOM: EF BB BF
-        supportedCharsets.add(StandardCharsets.ISO_8859_1); // also starts with EF BB BF
-        supportedCharsets.add(StandardCharsets.UTF_16LE); // FF FE
-        supportedCharsets.add(StandardCharsets.UTF_16BE); // FE FF
-        supportedCharsets.add(StandardCharsets.UTF_16);
-        try {
-            supportedCharsets.add(Charset.forName("windows-1253"));
-            supportedCharsets.add(Charset.forName("ISO-8859-7"));
-        } catch (Exception ignored) {
-        } // UnsupportedCharsetException technically can be thrown, but can also be ignored
-
-        supportedCharsets.add(StandardCharsets.US_ASCII);
-    }
+    private final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
 
     /**
      * Master method to format text. This will run formatting like
@@ -63,11 +35,11 @@ public final class TextUtil {
      * @param text {@link String} to format
      * @return The formatted {@link String}
      */
-    public static String formatText(String text) {
+    public String formatText(String text) {
         return formatText(text, false);
     }
 
-    public static List<String> formatText(List<String> text) {
+    public List<String> formatText(List<String> text) {
         List<String> formatted = new ArrayList<>();
         text.forEach(str -> {
             formatted.add(formatText(str));
@@ -80,7 +52,7 @@ public final class TextUtil {
      * <p>
      * Capitalize the text and set colours
      */
-    public static String formatText(String text, boolean capitalize) {
+    public String formatText(String text, boolean capitalize) {
         if (text == null || text.equals(""))
             return "";
         if (capitalize)
@@ -105,39 +77,13 @@ public final class TextUtil {
     }
 
     /**
-     * Converts list of objects into a string separated by \n char.
-     * Takes the toString() form.
-     * For instance list of objects "one" and "two" becomes
-     * "one\ntwo"
-     *
-     * @param list List to convert
-     * @return As singular string
-     * @deprecated See {@link MistString#of#toString()}
-     */
-    @Deprecated
-    public static String listToString(List<?> list) {
-        StringBuilder builder = new StringBuilder();
-
-        list.forEach(object -> {
-            builder.append(object.toString());
-
-            // Last element check
-            if (!list.get(list.size() - 1).equals(object)) {
-                builder.append("\n");
-            }
-        });
-
-        return builder.toString();
-    }
-
-    /**
      * This will turn camelCase into PascalCase.
      * For instance vanillaRewards becomes Vanilla Rewards
      *
      * @param text camelCase text
      * @return PascalCase text
      */
-    public static String convertCamelCase(String text) {
+    public String convertCamelCase(String text) {
         return formatText(text.replaceAll(
                 String.format("%s|%s|%s",
                         "(?<=[A-Z])(?=[A-Z][a-z])",
@@ -151,7 +97,7 @@ public final class TextUtil {
     /**
      * Util method to get amount of ' ' chars in {@link String} before the first non-space char
      */
-    public static int getOffset(String s) {
+    public int getOffset(String s) {
         char[] chars = s.toCharArray();
         for (int i = 0; i < chars.length; ++i) {
             if (chars[i] != ' ') {
@@ -161,7 +107,7 @@ public final class TextUtil {
         return -1;
     }
 
-    public static String replaceLast(String string, String toReplace, String replacement) {
+    public String replaceLast(String string, String toReplace, String replacement) {
         int index = string.lastIndexOf(toReplace);
         if (index == -1) {
             return string;
@@ -169,7 +115,7 @@ public final class TextUtil {
         return string.substring(0, index) + replacement + string.substring(index + toReplace.length());
     }
 
-    public static String getFormattedTime(long millis, boolean verbose) {
+    public String getFormattedTime(long millis, boolean verbose) {
         if (millis < 0) {
             throw new IllegalArgumentException("Duration must be greater than zero!");
         }

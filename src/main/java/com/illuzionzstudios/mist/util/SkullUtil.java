@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.util;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,7 +21,8 @@ import java.util.UUID;
  *
  * @author Dean B on 12/28/2016.
  */
-public final class SkullCreator {
+@UtilityClass
+public class SkullUtil {
 
     /**
      * Creates a player skull based on a player's name.
@@ -30,7 +32,7 @@ public final class SkullCreator {
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
-    public static ItemStack itemFromName(String name) {
+    public ItemStack itemFromName(String name) {
         ItemStack item = getPlayerSkullItem();
 
         return itemWithName(item, name);
@@ -45,7 +47,7 @@ public final class SkullCreator {
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
-    public static ItemStack itemWithName(ItemStack item, String name) {
+    public ItemStack itemWithName(ItemStack item, String name) {
         notNull(item, "item");
         notNull(name, "name");
 
@@ -60,7 +62,7 @@ public final class SkullCreator {
      * @param id The Player's UUID
      * @return The head of the Player
      */
-    public static ItemStack itemFromUuid(UUID id) {
+    public ItemStack itemFromUuid(UUID id) {
         ItemStack item = getPlayerSkullItem();
 
         return itemWithUuid(item, id);
@@ -73,7 +75,7 @@ public final class SkullCreator {
      * @param id   The Player's UUID
      * @return The head of the Player
      */
-    public static ItemStack itemWithUuid(ItemStack item, UUID id) {
+    public ItemStack itemWithUuid(ItemStack item, UUID id) {
         notNull(item, "item");
         notNull(id, "id");
 
@@ -90,7 +92,7 @@ public final class SkullCreator {
      * @param url The URL of the Mojang skin
      * @return The head associated with the URL
      */
-    public static ItemStack itemFromUrl(String url) {
+    public ItemStack itemFromUrl(String url) {
         ItemStack item = getPlayerSkullItem();
 
         return itemWithUrl(item, url);
@@ -104,7 +106,7 @@ public final class SkullCreator {
      * @param url  The URL of the Mojang skin
      * @return The head associated with the URL
      */
-    public static ItemStack itemWithUrl(ItemStack item, String url) {
+    public ItemStack itemWithUrl(ItemStack item, String url) {
         notNull(item, "item");
         notNull(url, "url");
 
@@ -117,7 +119,7 @@ public final class SkullCreator {
      * @param base64 The base64 string containing the texture
      * @return The head with a custom texture
      */
-    public static ItemStack itemFromBase64(String base64) {
+    public ItemStack itemFromBase64(String base64) {
         ItemStack item = getPlayerSkullItem();
         return itemWithBase64(item, base64);
     }
@@ -129,7 +131,7 @@ public final class SkullCreator {
      * @param base64 The base64 string containing the texture
      * @return The head with a custom texture
      */
-    public static ItemStack itemWithBase64(ItemStack item, String base64) {
+    public ItemStack itemWithBase64(ItemStack item, String base64) {
         notNull(item, "item");
         notNull(base64, "base64");
 
@@ -147,7 +149,7 @@ public final class SkullCreator {
      * @deprecated names don't make for good identifiers
      */
     @Deprecated
-    public static void blockWithName(Block block, String name) {
+    public void blockWithName(Block block, String name) {
         notNull(block, "block");
         notNull(name, "name");
 
@@ -161,7 +163,7 @@ public final class SkullCreator {
      * @param block The block to set
      * @param id    The player to set it to
      */
-    public static void blockWithUuid(Block block, UUID id) {
+    public void blockWithUuid(Block block, UUID id) {
         notNull(block, "block");
         notNull(id, "id");
 
@@ -175,7 +177,7 @@ public final class SkullCreator {
      * @param block The block to set
      * @param url   The mojang URL to set it to use
      */
-    public static void blockWithUrl(Block block, String url) {
+    public void blockWithUrl(Block block, String url) {
         notNull(block, "block");
         notNull(url, "url");
 
@@ -188,7 +190,7 @@ public final class SkullCreator {
      * @param block  The block to set
      * @param base64 The base64 to set it to use
      */
-    public static void blockWithBase64(Block block, String base64) {
+    public void blockWithBase64(Block block, String base64) {
         notNull(block, "block");
         notNull(base64, "base64");
 
@@ -209,7 +211,7 @@ public final class SkullCreator {
         }
     }
 
-    private static boolean newerApi() {
+    private boolean newerApi() {
         try {
 
             Material.valueOf("PLAYER_HEAD");
@@ -220,7 +222,7 @@ public final class SkullCreator {
         }
     }
 
-    private static ItemStack getPlayerSkullItem() {
+    private ItemStack getPlayerSkullItem() {
         if (newerApi()) {
             return new ItemStack(Material.valueOf("PLAYER_HEAD"));
         } else {
@@ -228,7 +230,7 @@ public final class SkullCreator {
         }
     }
 
-    private static void setBlockType(Block block) {
+    private void setBlockType(Block block) {
         try {
             block.setType(Material.valueOf("PLAYER_HEAD"), false);
         } catch (IllegalArgumentException e) {
@@ -236,14 +238,13 @@ public final class SkullCreator {
         }
     }
 
-    private static void notNull(Object o, String name) {
+    private void notNull(Object o, String name) {
         if (o == null) {
             throw new NullPointerException(name + " should not be null!");
         }
     }
 
-    private static String urlToBase64(String url) {
-
+    private String urlToBase64(String url) {
         URI actualUrl;
         try {
             actualUrl = new URI(url);

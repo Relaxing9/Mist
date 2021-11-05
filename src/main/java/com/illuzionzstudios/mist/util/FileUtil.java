@@ -3,6 +3,7 @@ package com.illuzionzstudios.mist.util;
 import com.illuzionzstudios.mist.plugin.SpigotPlugin;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,15 +14,15 @@ import java.util.jar.JarFile;
 /**
  * Utils to help with files
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FileUtil {
+@UtilityClass
+public class FileUtil {
 
     /**
      * Return an internal resource within our plugin's jar file
      *
      * @return the resource input stream, or null if not found
      */
-    public static InputStream getInternalResource(String path) {
+    public InputStream getInternalResource(String path) {
         // First attempt
         InputStream is = SpigotPlugin.getInstance().getClass().getResourceAsStream(path);
 
@@ -49,8 +50,8 @@ public final class FileUtil {
      *
      * @param dir File path to directory
      */
-    public static void purgeDirectory(File dir) {
-        Valid.checkNotNull(dir, "Cant purge a null directory");
+    public void purgeDirectory(File dir) {
+        Valid.checkNotNull(dir, "Cannot purge a null directory");
         // If not a directory just delete the file
         if (!dir.isDirectory()) dir.delete();
 

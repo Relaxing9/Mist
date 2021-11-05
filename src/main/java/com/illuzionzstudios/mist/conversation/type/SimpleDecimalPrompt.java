@@ -55,7 +55,7 @@ public class SimpleDecimalPrompt extends SimplePrompt {
      * Return true if input is a valid number
      */
     @Override
-    protected boolean isInputValid(final ConversationContext context, final String input) {
+    protected boolean isInputValid(@NotNull final ConversationContext context, @NotNull final String input) {
         return Valid.isDecimal(input) || Valid.isInteger(input);
     }
 
@@ -63,7 +63,7 @@ public class SimpleDecimalPrompt extends SimplePrompt {
      * Show the message when the input is not a number
      */
     @Override
-    protected String getFailedValidationText(final ConversationContext context, final String invalidInput) {
+    protected String getFailedValidationText(@NotNull final ConversationContext context, @NotNull final String invalidInput) {
         return "The number must be a whole or a decimal number.";
     }
 
@@ -80,8 +80,6 @@ public class SimpleDecimalPrompt extends SimplePrompt {
     /**
      * What happens when the number is entered
      *
-     * @param context
-     * @param input
      * @return the next prompt, or {@link Prompt#END_OF_CONVERSATION} (that is actualy null) to exit
      */
     protected Prompt acceptValidatedInput(final ConversationContext context, final double input) {
@@ -93,10 +91,6 @@ public class SimpleDecimalPrompt extends SimplePrompt {
 
     /**
      * Show the question with the action to the player
-     *
-     * @param player
-     * @param question
-     * @param successAction
      */
     public static void show(final Player player, final String question, final Consumer<Double> successAction) {
         new SimpleDecimalPrompt(question, successAction).show(player);
