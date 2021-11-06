@@ -9,6 +9,7 @@ import com.illuzionzstudios.mist.scheduler.MinecraftScheduler;
 import com.illuzionzstudios.mist.util.UUIDFetcher;
 import lombok.RequiredArgsConstructor;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,30 +30,41 @@ public class SqlDatabase implements Database {
      * Host server of the database
      */
     private final String host;
+
     /**
      * Port to connect to
      */
     private final int port;
+
     /**
      * Database to use
      */
     private final String database;
+
     /**
      * Connection username
      */
     private final String username;
+
     /**
      * Connection password
      */
     private final String password;
+
     /**
      * Table to store our player data
      */
     private final String tableName = SpigotPlugin.getPluginName() + "_PlayerData";
+
     /**
      * Our connection to handle SQL operations
      */
     protected Connection connection;
+
+    /**
+     * If to implement as a sqlite local db
+     */
+    private final boolean useSqlite;
 
     @Override
     public HashMap<String, Object> getFields(AbstractPlayer player) {
@@ -177,10 +189,28 @@ public class SqlDatabase implements Database {
                     if (connection != null && isAlive()) {
                         status.set(false);
                     }
-                    Class.forName("com.mysql.jdbc.Driver");
-                    connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password
-                            + "?useSSL=false");
-                    status.set(true);
+
+                    if (!this.useSqlite) {
+                        // MySQL
+                        Class.forName("com.mysql.jdbc.Driver");
+                        connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password
+                                + "?useSSL=false");
+                        status.set(true);
+                    } else {
+                        File dataFolder = new File(SpigotPlugin.getInstance().getDataFolder(), this.database + ".db");
+                        if (!dataFolder.exists()){
+                            try {
+                                dataFolder.createNewFile();
+                            } catch (final Throwable ex) {
+                                Logger.displayError(ex, "Could not create SQLite database");
+                            }
+                        }
+
+                        // SQLite
+                        Class.forName("org.sqlite.JDBC");
+                        connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
+                        status.set(true);
+                    }
                 }
             } catch (Exception ex) {
                 Logger.displayError(ex, "Couldn't connect to database");

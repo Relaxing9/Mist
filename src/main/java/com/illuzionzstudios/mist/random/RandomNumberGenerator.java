@@ -43,8 +43,8 @@ public class RandomNumberGenerator {
 
     /**
      * Parse a string into a {@link RandomNumberGenerator}.
-     * Syntax is "{lower}to{upper}". If just one number is provided, it is used
-     * as the upper bound with lower being 1.
+     * Syntax is "{lower}to{upper}". If just one number is provided, only generates
+     * that single number.
      *
      * @param string String as "{lower}to{upper}"
      * @return {@link RandomNumberGenerator} with those bounds
@@ -59,7 +59,7 @@ public class RandomNumberGenerator {
 
         // Else use first element as upper
         return tokens[1] != null ? new RandomNumberGenerator(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[1]))
-                : new RandomNumberGenerator(1, Double.parseDouble(tokens[0]));
+                : new RandomNumberGenerator(Double.parseDouble(tokens[0]), Double.parseDouble(tokens[0]));
     }
 
     /**
