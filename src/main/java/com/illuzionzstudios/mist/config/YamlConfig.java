@@ -337,7 +337,7 @@ public class YamlConfig extends ConfigSection {
         String fileName = file.getName();
 
         // Internal path to locale
-        final String internalPath = (this.directory.trim().equalsIgnoreCase("") ? "" : directory + "/") + fileName;
+        final String internalPath = (this.directory != null && this.directory.trim().equalsIgnoreCase("") ? "" : directory + "/") + fileName;
         // Attempt to find resource
         final InputStream input = FileUtil.getInternalResource(internalPath);
 
