@@ -1,0 +1,387 @@
+/**
+ * Copyright © 2020 Property of Illuzionz Studios, LLC
+ * All rights reserved. No part of this publication may be reproduced, distributed, or
+ * transmitted in any form or by any means, including photocopying, recording, or other
+ * electronic or mechanical methods, without the prior written permission of the publisher,
+ * except in the case of brief quotations embodied in critical reviews and certain other
+ * noncommercial uses permitted by copyright law. Any licensing of this software overrides
+ * this statement.
+ */
+package com.illuzionzstudios.mist.command
+
+import com.illuzionzstudios.mist.Logger.Companion.displayError
+import com.illuzionzstudios.mist.Logger.Companion.info
+import com.illuzionzstudios.mist.command.response.ReturnType
+import com.illuzionzstudios.mist.config.locale.MistString
+import com.illuzionzstudios.mist.config.locale.PluginLocale
+import com.illuzionzstudios.mist.plugin.Reloadables.registerCommand
+import com.illuzionzstudios.mist.plugin.SpigotPlugin
+import com.illuzionzstudios.mist.util.PlayerUtil
+import com.illuzionzstudios.mist.util.PlayerUtil.hasPerm
+import com.illuzionzstudios.mist.util.TextUtil
+import com.illuzionzstudios.mist.util.TextUtil.formatText
+import com.illuzionzstudios.mist.util.Valid
+import com.illuzionzstudios.mist.util.Valid.checkBoolean
+import lombok.*
+import org.bukkit.Bukkit
+import org.bukkit.command.*
+import org.bukkit.entity.Player
+import java.util.*
+
+/**
+ * This is an instance of a custom command for a [com.illuzionzstudios.mist.plugin.SpigotPlugin]
+ * Here we can create our own custom commands for functionality. These commands
+ * can have child commands which are executed by specifying certain arguments,
+ * eg, "/main arg", where "arg" will execute it's own functionality
+ */
+abstract class SpigotCommand protected constructor(
+    /**
+     * The main label for the command. This means when this label is
+     * passed as a command, use this [SpigotCommand] functionality
+     * This is updated based on what is sent, which must be on of our aliases
+     */
+    @field:Getter protected var label: String, vararg aliases: String?
+) : Command(
+    label, "", "", Arrays.asList(*aliases)
+) {
+    /**
+     * This is the instance of [CommandSender] who executed this command.
+     * Updated dynamically when executing the command
+     */
+    protected var sender: CommandSender? = null
+    get() = sender;
+
+    /**
+     * These are the last parsed arguments to the command. Updated
+     * dynamically every time we execute the command
+     */
+    protected lateinit var args: Array<String>
+    //  -------------------------------------------------------------------------
+    //  Values that get set upon execution
+    //  -------------------------------------------------------------------------
+    /**
+     * Flag indicating if this [SpigotCommand] has been registered
+     */
+    @Getter
+    private var registered = false
+
+    /**
+     * These are the minimum amount of arguments to be passed to the command
+     * for it to actually execute
+     */
+    @Getter
+    @Setter
+    private val minArguments = 0
+
+    /**
+     * Should we automatically send usage message when the first argument
+     * equals to "help" or "?" ?
+     */
+    @Setter
+    @Getter
+    private val autoHandleHelp = true
+    /**
+     * Register this command into Bukkit to be used.
+     * Can throw [com.illuzionzstudios.mist.exception.PluginException] if [.isRegistered]
+     *
+     * @param unregisterOldAliases If to unregister old aliases
+     */
+    /**
+     * See [.register]
+     */
+    @JvmOverloads
+    fun register(unregisterOldAliases: Boolean = true) {
+        Valid.checkBoolean(!registered, "The command /" + getLabel() + " has already been registered!")
+        val oldCommand = Bukkit.getPluginCommand(getLabel())
+        if (oldCommand != null) {
+            val owningPlugin = oldCommand.plugin.name
+            if (owningPlugin != SpigotPlugin.Companion.getPluginName()) Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...")
+            unregisterCommand(oldCommand.label, unregisterOldAliases)
+        }
+        registered = true
+        registerCommand(this)
+    }
+
+    /**
+     * Removes the command from Bukkit.
+     *
+     *
+     * Throws an error if the command is not [.isRegistered].
+     */
+    fun unregister() {
+        Valid.checkBoolean(registered, "The command /" + getLabel() + " is not registered!")
+        unregisterCommand(getLabel())
+        registered = false
+    }
+    // ----------------------------------------------------------------------
+    // Execution
+    // ----------------------------------------------------------------------w
+    /**
+     * Execute this command, updates the [.sender], [.label] and [.args] variables,
+     * checks permission and returns if the sender lacks it,
+     * checks minimum arguments and finally passes the command to the child class.
+     *
+     *
+     * Also contains various error handling scenarios
+     */
+    override fun execute(sender: CommandSender, label: String, args: Array<String>): Boolean {
+
+        // Update variables
+        this.sender = sender
+        this.label = label
+        this.args = args
+
+        // Attempt to execute commands and catch errors
+        try {
+
+            // Check permissions
+            if (permission != null) {
+                if (!hasPerm(permission)) {
+                    // Inform
+                    tell(Objects.requireNonNull(permissionMessage).replace("permission", permission!!))
+                    return true
+                }
+            }
+
+            // Too little arguments and inform help
+            if (args.size < getMinArguments() || autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0])) {
+                if (!usage.trim { it <= ' ' }.equals("", ignoreCase = true)) // Inform usage message
+                    tell(
+                        PluginLocale.Companion.COMMAND_INVALID_USAGE.toString("{label}", label)
+                            .toString("{args}", java.lang.String.join(" ", *args))
+                    )
+                return true
+            }
+
+            // Finally execute command
+            val response = onCommand()
+
+            // TODO: Implement properly once new lang system is written
+            if (response == ReturnType.NO_PERMISSION) {
+                tell("&cYou don't have enough permissions to do this...")
+            } else if (response == ReturnType.PLAYER_ONLY) {
+                tell(PluginLocale.Companion.COMMAND_PLAYER_ONLY)
+            } else if (response == ReturnType.UNKNOWN_ERROR) {
+                tell("&cThis was not supposed to happen...")
+            }
+        } catch (ex: Throwable) {
+            tell(
+                "&cFatal error occurred trying to execute command /" + getLabel(),
+                "&cPlease contact an administrator to resolve the issue"
+            )
+            Logger.displayError(
+                ex,
+                "Failed to execute command /" + getLabel() + " " + java.lang.String.join(" ", *args)
+            )
+        }
+        return true
+    }
+
+    /**
+     * This is invoked when the command is run. All dynamic information about the command
+     * can be accessed via the class and doesn't need to be passed to here
+     */
+    protected abstract fun onCommand(): ReturnType
+
+    protected fun tell(message: MistString?) {
+        message!!.sendMessage(sender)
+    }
+
+    /**
+     * @param message Tell the command sender a single message
+     */
+    protected fun tell(message: String?) {
+        if (getSender() != null) getSender().sendMessage(TextUtil.formatText(message))
+    }
+
+    /**
+     * @param messages Tell the command sender a set of messages
+     */
+    protected fun tell(vararg messages: String?) {
+        if (getSender() != null) {
+            for (message in messages) {
+                getSender().sendMessage(TextUtil.formatText(message))
+            }
+        }
+    }
+    // ----------------------------------------------------------------------
+    // Parsers
+    // ----------------------------------------------------------------------
+    /**
+     * Replaces placeholders in the message with arguments. For instance if the message is
+     * "set user {0} to {1} rank" it will take the first args and become maybe
+     * "set user IlluzionzDev to Owner rank".
+     *
+     * @param message Message to replace
+     * @return Message with placeholders handled
+     */
+    protected open fun replacePlaceholders(message: String): String {
+        // Replace basic labels
+        var message = message
+        message = replaceBasicPlaceholders(message)
+
+        // Replace {X} with arguments
+        for (i in args.indices) message = message.replace("{$i}", if (args[i] != null) args[i] else "")
+        return message
+    }
+
+    /**
+     * Internal method for replacing {label} {sublabel} and {plugin.name} placeholders
+     *
+     * @param message The message to replace
+     * @return Replaced message
+     */
+    private fun replaceBasicPlaceholders(message: String?): String {
+        return message
+            .replace("{label}", getLabel())
+            .replace("{sublabel}", if (this is SpigotSubCommand) this.subLabels[0] else super.getLabel())
+            .replace("{plugin.name}", SpigotPlugin.Companion.getPluginName().lowercase(Locale.getDefault()))
+    }
+
+    /**
+     * Checks if the sender is a console
+     */
+    protected fun checkConsole(): Boolean {
+        return !isPlayer()
+    }
+
+    /**
+     * A convenience check for quickly determining if the sender has a given
+     * permission.
+     *
+     * @param permission Permission to check
+     * @return If player does have permission
+     */
+    protected fun hasPerm(permission: String?): Boolean {
+        return PlayerUtil.hasPerm(sender, permission)
+    }
+
+    /**
+     * This is the instance of [Player] who executed this command.
+     * This only applies if the [.sender] is an instance of [Player]
+     * If is not an instance of [CommandSender], returns null
+     */
+    protected val player: Player?
+        protected get() = if (isPlayer()) getSender() as Player? else null
+
+    /**
+     * See [.getPlayer]
+     *
+     * @return Isn't null
+     */
+    protected fun isPlayer(): Boolean {
+        return sender is Player
+    }
+
+    /**
+     * Get the permission for this command, either the one you set or our from Localization
+     */
+    override fun getPermissionMessage(): String? {
+        return if (super.getPermissionMessage() != null && super.getPermissionMessage()!!
+                .trim { it <= ' ' } != ""
+        ) super.getPermissionMessage() else PluginLocale.Companion.COMMAND_NO_PERMISSION.toString()
+    }
+
+    /**
+     * By default we check if the player has the permission you set in setPermission.
+     *
+     *
+     * If that is null, we check for the following:
+     * {plugin.name}.command.{label} for [SpigotCommand]
+     *
+     *
+     * We handle lacking permissions automatically and return with a no-permission message
+     * when the player lacks it.
+     *
+     * @return The formatted permission
+     */
+    override fun getPermission(): String? {
+        return if (super.getPermission() == null) "" else replaceBasicPlaceholders(super.getPermission())
+    }
+
+    /**
+     * Get the permission without replacing {plugin.name}, {label} or {sublabel}
+     */
+    val rawPermission: String?
+        get() = super.getPermission()
+
+    /**
+     * Get the label given when the command was created or last updated with [.setLabel]
+     */
+    val mainLabel: String
+        get() = super.getLabel()
+
+    /**
+     * Updates the label of this command
+     */
+    override fun setLabel(name: String): Boolean {
+        label = name
+        return super.setLabel(name)
+    }
+
+    /**
+     * Show tab completion suggestions when the given sender
+     * writes the command with the given arguments
+     *
+     *
+     * Tab completion is only shown if the sender has [.getPermission]
+     */
+    @Throws(IllegalArgumentException::class)
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<String>): List<String> {
+        this.sender = sender
+        this.label = alias
+        this.args = args
+        return if (hasPerm(permission)) {
+            tabComplete()!!
+        } else ArrayList()
+    }
+
+    /**
+     * Override this method to support tab completing in your command.
+     *
+     *
+     * You can then use "sender", "label" or "args" fields from [SpigotCommand]
+     * class normally and return a list of tab completion suggestions.
+     *
+     *
+     * We already check for [.getPermission] and only call this method if the
+     * sender has it.
+     *
+     * @return the list of suggestions to complete, or null to complete player names automatically
+     */
+    protected open fun tabComplete(): List<String>? {
+        return null
+    }
+
+    companion object {
+        /**
+         * This is the default permission syntax for a [SpigotCommand]
+         * {plugin.name} The plugin's name
+         * {label} The main command label
+         */
+        protected const val DEFAULT_PERMISSION_SYNTAX = "{plugin.name}.command.{label}"
+        //  -------------------------------------------------------------------------
+        //  Properties of the command
+        //  -------------------------------------------------------------------------
+        /**
+         * A unique immutable list of all registered commands in the [com.illuzionzstudios.mist.plugin.SpigotPlugin]
+         */
+        @Getter
+        private val registeredCommands = HashSet<SpigotCommand>()
+    }
+
+    /**
+     * Create a new [SpigotCommand] with certain labels
+     *
+     * @param label   The main label for this command
+     * @param aliases Additional labels that correspond to this [SpigotCommand]
+     */
+    init {
+        // Set our permission formatting
+        permission = DEFAULT_PERMISSION_SYNTAX
+
+        // When creating this command instance, register it
+        // Not actually registered for execution
+        registeredCommands.add(this)
+    }
+}
