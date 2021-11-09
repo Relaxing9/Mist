@@ -1,27 +1,13 @@
-/**
- * Copyright © 2020 Property of Illuzionz Studios, LLC
- * All rights reserved. No part of this publication may be reproduced, distributed, or
- * transmitted in any form or by any means, including photocopying, recording, or other
- * electronic or mechanical methods, without the prior written permission of the publisher,
- * except in the case of brief quotations embodied in critical reviews and certain other
- * noncommercial uses permitted by copyright law. Any licensing of this software overrides
- * this statement.
- */
 package com.illuzionzstudios.mist.command
 
-import com.illuzionzstudios.mist.Logger.Companion.displayError
-import com.illuzionzstudios.mist.Logger.Companion.info
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.command.response.ReturnType
 import com.illuzionzstudios.mist.config.locale.MistString
 import com.illuzionzstudios.mist.config.locale.PluginLocale
-import com.illuzionzstudios.mist.plugin.Reloadables.registerCommand
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.PlayerUtil
-import com.illuzionzstudios.mist.util.PlayerUtil.hasPerm
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
 import lombok.*
 import org.bukkit.Bukkit
 import org.bukkit.command.*
@@ -40,9 +26,14 @@ abstract class SpigotCommand protected constructor(
      * passed as a command, use this [SpigotCommand] functionality
      * This is updated based on what is sent, which must be on of our aliases
      */
-    protected var label: String, vararg aliases: String?
+    commandLabel: String,
+
+    /**
+     * Command aliases
+     */
+    vararg aliases: String?
 ) : Command(
-    label, "", "", Arrays.asList(*aliases)
+    commandLabel, "", "", listOf(*aliases)
 ) {
     /**
      * This is the instance of [CommandSender] who executed this command.
@@ -94,11 +85,11 @@ abstract class SpigotCommand protected constructor(
         val oldCommand = Bukkit.getPluginCommand(getLabel())
         if (oldCommand != null) {
             val owningPlugin = oldCommand.plugin.name
-            if (owningPlugin != SpigotPlugin.Companion.getPluginName()) Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...")
-            unregisterCommand(oldCommand.label, unregisterOldAliases)
+            if (owningPlugin != SpigotPlugin.pluginName) Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...")
+            CommandUtil.unregisterCommand(oldCommand.label, unregisterOldAliases)
         }
         registered = true
-        registerCommand(this)
+        CommandUtil.registerCommand(this)
     }
 
     /**
@@ -109,7 +100,7 @@ abstract class SpigotCommand protected constructor(
      */
     fun unregister() {
         Valid.checkBoolean(registered, "The command /" + getLabel() + " is not registered!")
-        unregisterCommand(getLabel())
+        CommandUtil.unregisterCommand(getLabel())
         registered = false
     }
     // ----------------------------------------------------------------------
@@ -137,13 +128,13 @@ abstract class SpigotCommand protected constructor(
             if (permission != null) {
                 if (!hasPerm(permission)) {
                     // Inform
-                    tell(Objects.requireNonNull(permissionMessage).replace("permission", permission!!))
+                    tell(Objects.requireNonNull(permissionMessage)?.replace("permission", permission!!))
                     return true
                 }
             }
 
             // Too little arguments and inform help
-            if (args.size < getMinArguments() || autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0])) {
+            if (args.size < minArguments || autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0])) {
                 if (!usage.trim { it <= ' ' }.equals("", ignoreCase = true)) // Inform usage message
                     tell(
                         PluginLocale.Companion.COMMAND_INVALID_USAGE.toString("{label}", label)
@@ -214,13 +205,13 @@ abstract class SpigotCommand protected constructor(
      * @param message Message to replace
      * @return Message with placeholders handled
      */
-    protected open fun replacePlaceholders(message: String): String {
+    open fun replacePlaceholders(message: String?): String? {
         // Replace basic labels
         var message = message
         message = replaceBasicPlaceholders(message)
 
         // Replace {X} with arguments
-        for (i in args.indices) message = message.replace("{$i}", args[i])
+        for (i in args.indices) message = message?.replace("{$i}", args[i])
         return message
     }
 
@@ -230,11 +221,11 @@ abstract class SpigotCommand protected constructor(
      * @param message The message to replace
      * @return Replaced message
      */
-    private fun replaceBasicPlaceholders(message: String?): String {
+    private fun replaceBasicPlaceholders(message: String?): String? {
         return message
-            .replace("{label}", getLabel())
-            .replace("{sublabel}", if (this is SpigotSubCommand) this.subLabels[0] else super.getLabel())
-            .replace("{plugin.name}", SpigotPlugin.pluginName.lowercase(Locale.getDefault()))
+            ?.replace("{label}", getLabel())
+            ?.replace("{sublabel}", if (this is SpigotSubCommand) this.subLabels[0] else super.getLabel())
+            ?.replace("{plugin.name}", SpigotPlugin.pluginName.lowercase(Locale.getDefault()))
     }
 
     /**
@@ -261,7 +252,7 @@ abstract class SpigotCommand protected constructor(
      * If is not an instance of [CommandSender], returns null
      */
     protected val player: Player?
-        protected get() = if (isPlayer()) getSender() as Player? else null
+        protected get() = if (isPlayer()) sender as Player? else null
 
     /**
      * See [.getPlayer]
@@ -358,10 +349,8 @@ abstract class SpigotCommand protected constructor(
          * {plugin.name} The plugin's name
          * {label} The main command label
          */
-        protected const val DEFAULT_PERMISSION_SYNTAX = "{plugin.name}.command.{label}"
-        //  -------------------------------------------------------------------------
-        //  Properties of the command
-        //  -------------------------------------------------------------------------
+        const val DEFAULT_PERMISSION_SYNTAX = "{plugin.name}.command.{label}"
+
         /**
          * A unique immutable list of all registered commands in the [com.illuzionzstudios.mist.plugin.SpigotPlugin]
          */

@@ -14,7 +14,7 @@ import java.util.*
  * Acts as a normal command that runs based of a [SpigotCommandGroup]
  */
 abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup, vararg aliases: String) :
-    SpigotCommand(parent.label) {
+    SpigotCommand(parent.label!!) {
 
     /**
      * The registered sub labels, or aliases this command has
@@ -25,7 +25,7 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
      * The latest sub label used when the sub command was run,
      * always updated on executing
      */
-    val subLabel: String
+    var subLabel: String
 
     /**
      * Create a new [SpigotCommand] with certain labels
@@ -50,8 +50,8 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
      * Replace additional {sublabel} placeholder for this subcommand.
      * See [SpigotCommand.replacePlaceholders]
      */
-    override fun replacePlaceholders(message: String): String {
-        return super.replacePlaceholders(message).replace("{sublabel}", getSubLabel())
+    override fun replacePlaceholders(message: String?): String? {
+        return super.replacePlaceholders(message)?.replace("{sublabel}", subLabel)
     }
 
     /**
@@ -61,16 +61,22 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
         return obj is SpigotCommand && Arrays.equals((obj as SpigotSubCommand).subLabels, subLabels)
     }
 
+    override fun hashCode(): Int {
+        var result = subLabels.contentHashCode()
+        result = 31 * result + subLabel.hashCode()
+        return result
+    }
+
     companion object {
         /**
          * @return Main [SpigotCommandGroup] for the plugin
          */
         private val mainCommandGroup: SpigotCommandGroup
-            private get() {
-                val main: SpigotCommandGroup = SpigotPlugin.Companion.getInstance().getMainCommand()
+            get() {
+                val main: SpigotCommandGroup = SpigotPlugin.instance!!.mainCommand!!
                 Valid.checkNotNull(
                     main,
-                    SpigotPlugin.Companion.getPluginName() + " does not define a main command group!"
+                    SpigotPlugin.instance!!.name + " does not define a main command group!"
                 )
                 return main
             }
@@ -85,14 +91,14 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
     init {
 
         // Set sub labels
-        subLabels = aliases
+        subLabels = aliases as Array<String>
 
         // Set main label
         subLabel = subLabels[0]
 
         // If the default perm was not changed, improve it
-        if (rawPermission == SpigotCommand.Companion.DEFAULT_PERMISSION_SYNTAX) permission =
-            if (SpigotPlugin.Companion.isMainCommand(this.mainLabel)) rawPermission.replace(
+        if (rawPermission == DEFAULT_PERMISSION_SYNTAX) permission =
+            if (SpigotPlugin.isMainCommand(this.mainLabel)) rawPermission?.replace(
                 "{label}",
                 "{sublabel}"
             ) // simply replace label with sublabel

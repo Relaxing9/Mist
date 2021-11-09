@@ -49,7 +49,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     /**
      * The main command for this plugin, can be `null`
      */
-    protected var mainCommand: SpigotCommandGroup? = null
+    var mainCommand: SpigotCommandGroup? = null
 
     /**
      * Our player controller for our player data objects

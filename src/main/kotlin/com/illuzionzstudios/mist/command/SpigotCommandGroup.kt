@@ -116,7 +116,7 @@ abstract class SpigotCommandGroup {
      * @return String array of messages
      */
     protected val helpHeader: Array<String>
-        protected get() = arrayOf(
+        get() = arrayOf(
             "&8",
             "&8" + TextUtil.SMOOTH_LINE,
             headerPrefix + "  " + SpigotPlugin.pluginName + " &7v" + SpigotPlugin.pluginVersion
@@ -135,7 +135,7 @@ abstract class SpigotCommandGroup {
      * @return Header prefix colours
      */
     protected val headerPrefix: String
-        protected get() = "" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD
+        get() = "" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD
 
     /**
      * Handles our main command to detect sub commands and run functionality
@@ -148,7 +148,7 @@ abstract class SpigotCommandGroup {
         override fun onCommand(): ReturnType {
             // Show our help
             // Assures arg[0] isn't null
-            if (args.size == 0 || helpLabel.contains(args[0])) {
+            if (args.isEmpty() || helpLabel.contains(args[0])) {
                 tellSubCommandsHelp()
                 return ReturnType.SUCCESS
             }
@@ -162,12 +162,12 @@ abstract class SpigotCommandGroup {
                 // Run the command
                 command.execute(
                     sender!!,
-                    getLabel(),
-                    if (args.size == 1) arrayOf() else Arrays.copyOfRange(args, 1, args.size)
+                    label,
+                    if (args.size == 1) arrayOf() else args.copyOfRange(1, args.size)
                 )
             } else {
                 // Couldn't find sub command
-                tell(PluginLocale.Companion.COMMAND_INVALID_SUB.toString("label", mainLabel))
+                tell(PluginLocale.COMMAND_INVALID_SUB.toString("label", mainLabel))
             }
             return ReturnType.SUCCESS
         }
@@ -219,10 +219,10 @@ abstract class SpigotCommandGroup {
          * Handle tabcomplete for subcommands and their tabcomplete
          */
         public override fun tabComplete(): MutableList<String>? {
-            if (args.size == 1) return tabCompleteSubcommands(sender!!, args[0])
+            if (args.size == 1) return tabCompleteSubcommands(sender!!, args[0]).toMutableList()
             if (args.size > 1) {
                 val cmd = findSubcommand(args[0])
-                if (cmd != null) return cmd.tabComplete(sender!!, getLabel(), Arrays.copyOfRange(args, 1, args.size))
+                if (cmd != null) return cmd.tabComplete(sender!!, label, args.copyOfRange(1, args.size)).toMutableList()
             }
             return null
         }
@@ -230,12 +230,12 @@ abstract class SpigotCommandGroup {
         /**
          * Automatically tab-complete subcommands
          */
-        private fun tabCompleteSubcommands(sender: CommandSender, param: String): List<String?> {
+        private fun tabCompleteSubcommands(sender: CommandSender, param: String): List<String> {
             var param = param
             param = param.lowercase(Locale.getDefault())
-            val tab: MutableList<String?> = ArrayList()
-            for (subcommand in subCommands) if (hasPerm(subcommand.permission)) for (label in subcommand.subLabels) if (!label.trim { it <= ' ' }
-                    .isEmpty() && label.startsWith(param)) tab.add(label)
+            val tab: MutableList<String> = ArrayList()
+            for (subcommand in subCommands) if (hasPerm(subcommand.permission)) for (label in subcommand.subLabels) if (label.trim { it <= ' ' }
+                    .isNotEmpty() && label.startsWith(param)) tab.add(label)
             return tab
         }
 
@@ -243,10 +243,8 @@ abstract class SpigotCommandGroup {
          * @param label Create the main command with the main label
          */
         init {
-
             // Let everyone view info
             permission = null
-            isAutoHandleHelp = false
         }
     }
 }
