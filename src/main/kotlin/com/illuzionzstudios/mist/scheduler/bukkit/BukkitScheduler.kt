@@ -16,18 +16,20 @@ import java.util.function.Consumer
  * An instance of a [MinecraftScheduler] that handles ticking objects
  * Simply implements our methods that provide functionality
  */
-@RequiredArgsConstructor
-class BukkitScheduler : MinecraftScheduler() {
+class BukkitScheduler(
     /**
-     * The [SpigotPlugin] we invoke services for
+     * Instance of plugin to tick
      */
-    private val plugin: SpigotPlugin? = null
+    val plugin: SpigotPlugin?
+) : MinecraftScheduler() {
 
     /**
      * Ids of the schedulers
      */
     private var SYNC_SCHEDULER = -1
+
     private var ASYNC_SCHEDULER = -1
+
     public override fun start() {
         // The Bukkit SYNC scheduler thread
         SYNC_SCHEDULER = plugin!!.server.scheduler.scheduleSyncRepeatingTask(plugin, {

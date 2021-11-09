@@ -12,11 +12,9 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
  *
  * We provide some common messages but can implement your own
  */
-abstract class PluginLocale
-/**
- * @param plugin Make sure we pass owning plugin
- */
-    (plugin: SpigotPlugin) : YamlConfig(plugin, "/locales", PluginSettings.Companion.LOCALE.getString() + ".lang") {
+abstract class PluginLocale(
+    plugin: SpigotPlugin
+) : YamlConfig(plugin, "/locales", PluginSettings.LOCALE.string + ".lang") {
     /**
      * Invoked to load all other custom settings that we implement
      * in our own [PluginLocale]
@@ -27,28 +25,31 @@ abstract class PluginLocale
         /**
          * Messages loaded on startup
          */
-        val STARTUP_GROUP = MistStringGroup()
+        private val STARTUP_GROUP = MistStringGroup()
 
         /**
          * This is a cache of all loaded translations for a key. If we go to get a value by
          * a key it will first check here. If not found it will look through the file and if found
          * update it here. If not found anywhere it will simply return the default.
          */
-        protected val localeCache = HashMap<String, String?>()
+        private val localeCache = HashMap<String, String?>()
 
         /**
          * The current loaded [PluginLocale] instance
          */
-        var LOCALE_FILE: YamlConfig? = null
+        private var LOCALE_FILE: YamlConfig? = null
+
         //  -------------------------------------------------------------------------
         //  Main messages provided by default
         //  If these are found in the locale, we use those, otherwise use these
         //  defaults
         //  -------------------------------------------------------------------------
+
         /**
          * The prefix to use before certain messages
          */
-        var GENERAL_PLUGIN_PREFIX = STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7")
+        var GENERAL_PLUGIN_PREFIX =
+            STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7")
 
         /**
          * Message sent when reloading the plugin. Used in [com.illuzionzstudios.mist.command.type.ReloadCommand]
@@ -141,11 +142,11 @@ abstract class PluginLocale
             // Set instance
             LOCALE_FILE = settings
             // Load settings loadLocale
-            LOCALE_FILE.load()
+            settings.load()
 
             // Load our other custom settings
             settings.loadLocale()
-            LOCALE_FILE.saveChanges()
+            settings.saveChanges()
 
             // Reset cache
             invalidateCache()
@@ -191,8 +192,8 @@ abstract class PluginLocale
             }
 
             // Not found so add default
-            LOCALE_FILE!!.addDefault(key, def)
-            LOCALE_FILE!!.saveChanges()
+            LOCALE_FILE?.addDefault(key, def)
+            LOCALE_FILE?.saveChanges()
 
             // Return default
             return def
@@ -201,7 +202,7 @@ abstract class PluginLocale
         /**
          * Clear the locale cache. Usually good for a plugin reload
          */
-        fun invalidateCache() {
+        private fun invalidateCache() {
             localeCache.clear()
         }
     }

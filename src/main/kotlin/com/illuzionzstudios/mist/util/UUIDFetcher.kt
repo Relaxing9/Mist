@@ -13,16 +13,17 @@ import java.util.function.Consumer
 /**
  * External UUID library included for our plugin. Runs Async
  */
-class UUIDFetcher {
+class UUIDFetcher(
     /**
      * Cached name
      */
-    private val name: String? = null
+    private val name: String? = null,
 
     /**
      * Cached [UUID]
      */
     private val id: UUID? = null
+) {
 
     companion object {
         private val gson = GsonBuilder().registerTypeAdapter(UUID::class.java, UUIDTypeAdapter()).create()
@@ -80,7 +81,10 @@ class UUIDFetcher {
                     URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection() as HttpURLConnection
                 connection.readTimeout = 5000
                 val data =
-                    gson.fromJson(BufferedReader(InputStreamReader(connection.inputStream)), UUIDFetcher::class.java)
+                    gson.fromJson(
+                        BufferedReader(InputStreamReader(connection.inputStream)),
+                        UUIDFetcher::class.java
+                    )
                 uuidCache[name] = data.id
                 nameCache[data.id] = data.name
                 return data.id
@@ -113,7 +117,12 @@ class UUIDFetcher {
             }
             try {
                 val connection =
-                    URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection() as HttpURLConnection
+                    URL(
+                        String.format(
+                            NAME_URL,
+                            UUIDTypeAdapter.fromUUID(uuid)
+                        )
+                    ).openConnection() as HttpURLConnection
                 connection.readTimeout = 5000
                 val nameHistory = gson.fromJson(
                     BufferedReader(InputStreamReader(connection.inputStream)),

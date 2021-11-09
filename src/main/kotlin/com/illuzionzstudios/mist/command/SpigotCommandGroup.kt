@@ -5,8 +5,6 @@ import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.TextUtil
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
 import lombok.*
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -18,19 +16,18 @@ import java.util.*
  * allows us to group functionality for commands and interact with each other. Also will
  * provide a help sub command that lists all available commands for the group
  */
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class SpigotCommandGroup {
+
     /**
      * The [SpigotSubCommand] that belong to this group
      */
-    @Getter
     protected val subCommands = HashSet<SpigotSubCommand>()
 
     /**
      * The main [SpigotCommand] which [SpigotSubCommand] are
      * executed through
      */
-    protected var mainCommand: SpigotCommand? = null
+    private var mainCommand: SpigotCommand? = null
 
     /**
      * Register this command group with the main label,
@@ -45,10 +42,10 @@ abstract class SpigotCommandGroup {
         mainCommand = MainCommand(labels[0])
 
         // Set the aliases
-        if (labels.size > 1) mainCommand.setAliases(Arrays.asList(*Arrays.copyOfRange(labels, 1, labels.size)))
+        if (labels.size > 1) mainCommand?.aliases = listOf(*labels.copyOfRange(1, labels.size))
 
         // Register it
-        mainCommand.register()
+        mainCommand?.register()
 
         // Register sub commands
         registerSubcommands()
@@ -89,7 +86,7 @@ abstract class SpigotCommandGroup {
     val label: String?
         get() {
             Valid.checkBoolean(isRegistered, "Main command has not yet been set!")
-            return mainCommand.getMainLabel()
+            return mainCommand?.mainLabel
         }
 
     /**
@@ -97,7 +94,7 @@ abstract class SpigotCommandGroup {
      *
      * @return If main command is set
      */
-    val isRegistered: Boolean
+    private val isRegistered: Boolean
         get() = mainCommand != null
 
     /**
@@ -110,7 +107,7 @@ abstract class SpigotCommandGroup {
      * @return List of labels
      */
     protected val helpLabel: List<String>
-        protected get() = Arrays.asList("help", "?")
+        get() = listOf("help", "?")
 
     /**
      * Return the header messages used in /{label} help|? typically,
@@ -122,13 +119,12 @@ abstract class SpigotCommandGroup {
         protected get() = arrayOf(
             "&8",
             "&8" + TextUtil.SMOOTH_LINE,
-            headerPrefix + "  " + SpigotPlugin.Companion.getPluginName() + " &7v" + SpigotPlugin.Companion.getPluginVersion()
-                    + if (!SpigotPlugin.Companion.getInstance().getDescription().getAuthors()
-                    .isEmpty()
-            ) " by " + SpigotPlugin.Companion.getInstance().getDescription().getAuthors().get(0) else "",
+            headerPrefix + "  " + SpigotPlugin.pluginName + " &7v" + SpigotPlugin.pluginVersion
+                    + if (SpigotPlugin.instance!!.description.authors.isNotEmpty()
+            ) " by " + SpigotPlugin.instance!!.description.authors[0] else "",
             " ",
-            "&2  [] &7= " + PluginLocale.Companion.COMMAND_LABEL_OPTIONAL_ARGS,
-            "&6  <> &7= " + PluginLocale.Companion.COMMAND_LABEL_REQUIRED_ARGS,
+            "&2  [] &7= " + PluginLocale.COMMAND_LABEL_OPTIONAL_ARGS,
+            "&6  <> &7= " + PluginLocale.COMMAND_LABEL_REQUIRED_ARGS,
             " "
         )
 

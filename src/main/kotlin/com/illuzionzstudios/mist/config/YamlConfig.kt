@@ -58,7 +58,6 @@ open class YamlConfig : ConfigSection {
      * This is the instance of the [SpigotPlugin] that this [YamlConfig]
      * belongs to.
      */
-    @Getter
     protected val plugin: SpigotPlugin?
 
     /**
@@ -67,20 +66,26 @@ open class YamlConfig : ConfigSection {
     private val yamlOptions = DumperOptions()
     private val yamlRepresenter: Representer = YamlRepresenter()
     private val yaml = Yaml(YamlConstructor(), yamlRepresenter, yamlOptions)
-    //  -------------------------------------------------------------------------
-    //  Properties of the config
-    //  -------------------------------------------------------------------------
+
     /**
      * Flag indicating if the file is loaded
      */
-    @Getter
-    @Setter
-    protected var loaded = false
+    protected var isLoaded = false
 
     /**
      * This is the actual file that this [YamlConfig] is
      */
     protected var file: File? = null
+        get() {
+        if (field == null) {
+            field = if (directory != null) {
+                File(plugin!!.dataFolder.toString() + directory, fileName ?: Mist.SETTINGS_NAME)
+            } else {
+                File(plugin!!.dataFolder, fileName ?: Mist.SETTINGS_NAME)
+            }
+        }
+        return field
+    }
 
     /**
      * Comments to display at the top/bottom of the file
@@ -173,22 +178,6 @@ open class YamlConfig : ConfigSection {
         this.plugin = plugin
         this.directory = directory
         fileName = file
-    }
-
-    /**
-     * Get the [File] for this instance
-     *
-     * @return The file if directory isn't null, otherwise file with name "config.yml"
-     */
-    fun getFile(): File {
-        if (file == null) {
-            if (directory != null) {
-                file = File(plugin!!.dataFolder.toString() + directory, fileName ?: Mist.SETTINGS_NAME)
-            } else {
-                file = File(plugin!!.dataFolder, fileName ?: Mist.SETTINGS_NAME)
-            }
-        }
-        return file!!
     }
 
     /**

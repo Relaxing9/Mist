@@ -1,8 +1,5 @@
 package com.illuzionzstudios.mist.config.format
 
-import lombok.Getter
-import lombok.NoArgsConstructor
-import lombok.Setter
 import java.io.IOException
 import java.io.Writer
 import java.util.*
@@ -13,29 +10,26 @@ import java.util.stream.Collectors
  * This represents a comment in a [com.illuzionzstudios.mist.config.YamlConfig]
  * Usually declared by the "#" char
  */
-@NoArgsConstructor
 class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
+
     /**
      * A list of strings to display for the comment
      */
-    @Getter
     private val lines: MutableList<String> = ArrayList()
 
     /**
      * [CommentStyle] to use for this comment instance
      */
-    @Getter
-    @Setter
     private var styling: CommentStyle? = null
 
     //  -------------------------------------------------------------------------
     //  Construct our comment
     //  -------------------------------------------------------------------------
-    constructor(vararg lines: String?) : this(null, Arrays.asList<String>(*lines))
+    constructor(vararg lines: String) : this(null, listOf<String>(*lines))
     constructor(lines: List<String>?) : this(null, lines)
-    constructor(commentStyle: CommentStyle?, vararg lines: String?) : this(
+    constructor(commentStyle: CommentStyle?, vararg lines: String) : this(
         commentStyle,
-        Arrays.asList<String>(*lines)
+        listOf<String>(*lines)
     )
 
     /**
@@ -168,7 +162,7 @@ class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
         styling = commentStyle
         lines?.forEach(Consumer { s: String ->
             this.lines.addAll(
-                Arrays.asList(
+                listOf(
                     *s.split("\n".toRegex()).toTypedArray()
                 )
             )

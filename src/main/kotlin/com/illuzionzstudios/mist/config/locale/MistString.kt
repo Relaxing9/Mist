@@ -3,7 +3,6 @@ package com.illuzionzstudios.mist.config.locale
 import com.illuzionzstudios.mist.compatibility.ServerVersion
 import com.illuzionzstudios.mist.compatibility.ServerVersion.V
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
@@ -16,7 +15,6 @@ import java.util.regex.Matcher
  * This represents a custom translatable string that can be used in the plugin where we
  * would usually use a [String]. It is based of plugin translation files and includes
  * utils for formatting and replacing parts of the string.
- *
  *
  * Contains full text engine for manipulating text
  */
@@ -49,7 +47,7 @@ class MistString(
          */
         fun of(vararg strings: String?): MistString {
             val builder = StringBuilder()
-            for (i in 0 until strings.size) {
+            for (i in strings.indices) {
                 builder.append(strings[i])
 
                 // Can't compare values have to compare index
@@ -224,11 +222,6 @@ class MistString(
      *
      * @param sender   command sender to send the message to
      * @param subtitle Subtitle to send
-     */
-    /**
-     * Format and send the held message to a player as a title message
-     *
-     * @param sender command sender to send the message to
      */
     @JvmOverloads
     fun sendTitle(sender: CommandSender?, subtitle: MistString = MistString("")) {

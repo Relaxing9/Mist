@@ -14,16 +14,15 @@ import java.util.function.Predicate
  * Handles all players on the server
  */
 abstract class AbstractPlayerController<P : AbstractPlayer?> {
+
     /**
      * Cache of loaded players
      */
-    @Getter
     protected var players: MutableList<P?> = ArrayList()
 
     /**
      * Cache of offline players
      */
-    @Getter
     protected var offlineCache: MutableMap<UUID?, OfflinePlayer> = ConcurrentHashMap()
 
     /**
@@ -50,7 +49,7 @@ abstract class AbstractPlayerController<P : AbstractPlayer?> {
      * @param uuid The UUID of player
      */
     fun getPlayer(uuid: UUID): P? {
-        return getPlayer { player: P? -> player.getUUID() == uuid }.orElse(null)
+        return getPlayer { player: P? -> player?.UUID == uuid }.orElse(null)
     }
 
     /**

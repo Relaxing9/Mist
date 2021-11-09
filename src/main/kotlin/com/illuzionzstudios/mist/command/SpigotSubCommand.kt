@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.command
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
 import lombok.*
 import java.util.*
 
@@ -16,19 +15,17 @@ import java.util.*
  */
 abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup, vararg aliases: String) :
     SpigotCommand(parent.label) {
+
     /**
      * The registered sub labels, or aliases this command has
      */
-    @Getter
-    private val subLabels: Array<String>
+    val subLabels: Array<String>
 
     /**
      * The latest sub label used when the sub command was run,
      * always updated on executing
      */
-    @Setter(value = AccessLevel.PROTECTED)
-    @Getter(value = AccessLevel.PROTECTED)
-    private val subLabel: String
+    val subLabel: String
 
     /**
      * Create a new [SpigotCommand] with certain labels

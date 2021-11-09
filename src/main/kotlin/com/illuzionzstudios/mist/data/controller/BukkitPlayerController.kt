@@ -25,18 +25,19 @@ import java.util.function.Consumer
  * Controls all Bukkit players
  */
 abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerController<BP>(), Listener, PluginController {
+
     override fun initialize(plugin: SpigotPlugin?) {
         INSTANCE = this
         PLUGIN = plugin
         Bukkit.getServer().pluginManager.registerEvents(this, plugin!!)
-        MinecraftScheduler.Companion.get()!!.registerSynchronizationService(this)
+        MinecraftScheduler.get()!!.registerSynchronizationService(this)
     }
 
     override fun stop(plugin: SpigotPlugin?) {
         // Save everyone
         for (player in ArrayList(players)) {
             try {
-                unregister(player)
+                unregister(player!!)
             } finally {
                 try {
                     player!!.unsafeSave()
@@ -55,7 +56,7 @@ abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerContro
             .disconnect()
     }
 
-    fun getPlayer(name: String?): BP {
+    fun getPlayer(name: String?): BP? {
         return getPlayer { wp: BP? ->
             val player = wp.getBukkitPlayer()
             player != null && wp.getName().equals(name, ignoreCase = true)

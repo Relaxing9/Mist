@@ -36,7 +36,7 @@ class Reloadables(val plugin: SpigotPlugin) {
     fun start() {
         listeners.forEach { listener ->
             Bukkit.getServer().pluginManager.registerEvents(
-                listener, SpigotPlugin.instance
+                listener, SpigotPlugin.instance!!
             )
         }
         commandGroups.forEach { (obj, labels) ->

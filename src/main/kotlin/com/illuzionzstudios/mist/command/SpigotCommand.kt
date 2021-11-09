@@ -40,7 +40,7 @@ abstract class SpigotCommand protected constructor(
      * passed as a command, use this [SpigotCommand] functionality
      * This is updated based on what is sent, which must be on of our aliases
      */
-    @field:Getter protected var label: String, vararg aliases: String?
+    protected var label: String, vararg aliases: String?
 ) : Command(
     label, "", "", Arrays.asList(*aliases)
 ) {
@@ -49,7 +49,6 @@ abstract class SpigotCommand protected constructor(
      * Updated dynamically when executing the command
      */
     protected var sender: CommandSender? = null
-    get() = sender;
 
     /**
      * These are the last parsed arguments to the command. Updated
@@ -191,16 +190,16 @@ abstract class SpigotCommand protected constructor(
      * @param message Tell the command sender a single message
      */
     protected fun tell(message: String?) {
-        if (getSender() != null) getSender().sendMessage(TextUtil.formatText(message))
+        if (sender != null) sender?.sendMessage(TextUtil.formatText(message))
     }
 
     /**
      * @param messages Tell the command sender a set of messages
      */
     protected fun tell(vararg messages: String?) {
-        if (getSender() != null) {
+        if (sender != null) {
             for (message in messages) {
-                getSender().sendMessage(TextUtil.formatText(message))
+                sender?.sendMessage(TextUtil.formatText(message))
             }
         }
     }
@@ -221,7 +220,7 @@ abstract class SpigotCommand protected constructor(
         message = replaceBasicPlaceholders(message)
 
         // Replace {X} with arguments
-        for (i in args.indices) message = message.replace("{$i}", if (args[i] != null) args[i] else "")
+        for (i in args.indices) message = message.replace("{$i}", args[i])
         return message
     }
 
@@ -235,7 +234,7 @@ abstract class SpigotCommand protected constructor(
         return message
             .replace("{label}", getLabel())
             .replace("{sublabel}", if (this is SpigotSubCommand) this.subLabels[0] else super.getLabel())
-            .replace("{plugin.name}", SpigotPlugin.Companion.getPluginName().lowercase(Locale.getDefault()))
+            .replace("{plugin.name}", SpigotPlugin.pluginName.lowercase(Locale.getDefault()))
     }
 
     /**

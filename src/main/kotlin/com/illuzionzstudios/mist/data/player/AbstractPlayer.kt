@@ -18,7 +18,7 @@ abstract class AbstractPlayer(
     /**
      * Identifier of the player
      */
-    val uUID: UUID,
+    val UUID: UUID,
     /**
      * Cached name of the player
      */

@@ -83,7 +83,7 @@ class Logger {
                 println("[Unloaded Plugin] " + String.format(message.toString(), *parameters))
                 return
             }
-            SpigotPlugin.instance.logger.log(level, String.format(message.toString(), *parameters))
+            SpigotPlugin.instance?.logger?.log(level, String.format(message.toString(), *parameters))
         }
 
         //  -------------------------------------------------------------------------

@@ -34,6 +34,7 @@ import java.util.function.Consumer
  * or [Map], will check the elements for [Tickable] and invoke those
  */
 abstract class MinecraftScheduler {
+
     /**
      * Start up our scheduler
      * Called in the [SpigotPlugin.onEnable]
@@ -105,7 +106,7 @@ abstract class MinecraftScheduler {
 
                         // Took too long
                         if (System.currentTimeMillis() - start > Mist.TIME_WARNING_THRESHOLD
-                            && type == Sync::class.java
+                            && type == Sync::class
                         ) {
                             severe("WARNING: Synchronization block took way too long to invoke! (" + (System.currentTimeMillis() - start) + "ms)")
                             severe("Block " + method.name + "() in " + service.source.javaClass)
@@ -402,7 +403,7 @@ abstract class MinecraftScheduler {
          * currently ticking. Objects must be dismissed after being used
          */
         @Volatile
-        protected var SYNC_SERVICE_REGISTRATION: MutableSet<SynchronizationService>? = null
+        private var SYNC_SERVICE_REGISTRATION: MutableSet<SynchronizationService>? = null
 
         /**
          * Instance of the [MinecraftScheduler]

@@ -17,7 +17,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 class ReloadCommand : SpigotSubCommand("reload", "rl") {
     override fun onCommand(): ReturnType {
         // Just call this method to reload
-        SpigotPlugin.Companion.getInstance().reload()
+        SpigotPlugin.instance!!.reload()
 
         // Inform
         PluginLocale.Companion.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.Companion.GENERAL_PLUGIN_RELOAD)

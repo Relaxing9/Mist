@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.plugin
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.Logger.Companion.info
 import com.illuzionzstudios.mist.Logger.Companion.warn
@@ -34,31 +35,27 @@ import java.util.*
  * {@version 1.8.8} to {@version 1.17.1}
  */
 abstract class SpigotPlugin : JavaPlugin(), Listener {
+
     /**
      * An easy way to handle listeners for reloading
      */
     private val reloadables = Reloadables(this)
 
-    @Getter
-    protected var checkUpdates = false
-
     /**
-     * If this plugin is currently enabled and running.
-     * Checked at different loading stages
+     * If to check for plugin updates on load
      */
-    protected var isEnabled = true
+    protected var isCheckUpdates = false
 
     /**
      * The main command for this plugin, can be `null`
      */
-    @Getter
     protected var mainCommand: SpigotCommandGroup? = null
 
     /**
      * Our player controller for our player data objects
      * Also used as a flag if we want to use player data
      */
-    protected var playerController: BukkitPlayerController<out BukkitPlayer>? = null
+    private var playerController: BukkitPlayerController<out BukkitPlayer>? = null
 
     /**
      * Called when the plugin is loaded into the server
@@ -101,13 +98,14 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      * In your plugin use it to register commands, events etc.
      */
     abstract fun onRegisterReloadables()
+
     override fun onLoad() {
         try {
             // Try set instance
             instance
         } catch (ex: Throwable) {
             // If can't set manually
-            INSTANCE = this
+            instance = this
             throw ex
         }
         onPluginLoad()
@@ -125,7 +123,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         // Main enabled
         try {
             // Startup logo
-            if (startupLogo != null) Arrays.stream(startupLogo).sequential().forEach { obj: String? -> info() }
+            if (startupLogo != null) Arrays.stream(startupLogo).sequential().forEach { Logger.info(it) }
 
             // Load settings and locale
             // Try save config if found
@@ -156,7 +154,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
             // Errors on startup could break the plugin,
             // so just kill it
             this.isEnabled = false
-            setEnabled(false)
+            isEnabled = false
         }
     }
 
@@ -175,28 +173,28 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         if (playerController != null) {
             playerController!!.stop(this)
         }
-        Objects.requireNonNull(INSTANCE, "Plugin $name has already been shutdown!")
-        INSTANCE = null
+        Objects.requireNonNull(instance, "Plugin $name has already been shutdown!")
+        instance = null
     }
 
     /**
      * Attempt to reload the plugin
      */
     fun reload() {
-        info("Reloading plugin " + pluginName + " v" + pluginVersion)
+        info("Reloading plugin $pluginName v$pluginVersion")
         info(" ")
-        reloading = true
+        isReloading = true
         try {
             unregisterReloadables()
             onPluginPreReload()
 
             // Load settings and locale
             // Try save config if found
-            PluginSettings.Companion.loadSettings(pluginSettings)
-            PluginLocale.Companion.loadLocale(pluginLocale)
+            PluginSettings.loadSettings(pluginSettings)
+            PluginLocale.loadLocale(pluginLocale)
 
             // Restart tickers
-            MinecraftScheduler.Companion.get()!!.initialize()
+            MinecraftScheduler.get()!!.initialize()
 
             // Reload controllers etc
             reloadables.registerController(InterfaceController.INSTANCE)
@@ -212,7 +210,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         } catch (ex: Throwable) {
             displayError(ex, "Error reloading plugin")
         } finally {
-            reloading = false
+            isReloading = false
         }
     }
 
@@ -221,9 +219,9 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      */
     private fun unregisterReloadables() {
         // Stop ticking all tasks
-        MinecraftScheduler.Companion.get()!!.stopInvocation()
+        MinecraftScheduler.get()!!.stopInvocation()
         InterfaceController.INSTANCE.stop(this)
-        if (getMainCommand() != null && getMainCommand().isRegistered()) getMainCommand().unregister()
+        if (mainCommand != null && mainCommand?.isRegistered()) mainCommand?.unregister()
         reloadables.shutdown()
     }
     //  -------------------------------------------------------------------------
@@ -243,9 +241,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      */
     val startupLogo: Array<String>?
         get() = null
-    //  -------------------------------------------------------------------------
-    //  Stuff we need to implement
-    //  -------------------------------------------------------------------------
+
     /**
      * Opt in to using custom player data.
      *
@@ -298,50 +294,35 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      * @param command Register a new [SpigotCommandGroup]
      */
     protected fun registerMainCommand(command: SpigotCommandGroup?, vararg labels: String?) {
-        mainCommand = command
-        mainCommand!!.register(*labels)
+        this.mainCommand = command
+        mainCommand?.register(*labels)
     }
 
     companion object {
-        //  -------------------------------------------------------------------------
-        //  Internal plugin settings that determine if certain things are loaded
-        //  -------------------------------------------------------------------------
         /**
          * If our [SpigotPlugin] is currently reloading
          */
-        @Getter
         @Volatile
-        private var reloading = false
-        //  -------------------------------------------------------------------------
-        //  Static instances that stay final
-        //  -------------------------------------------------------------------------
-        /**
-         * Singleton instance of our [SpigotPlugin]
-         */
-        @Volatile
-        private var INSTANCE: SpigotPlugin? = null// Assign if null
+        private var isReloading = false
 
         /**
          * Return our instance of the [SpigotPlugin]
-         *
          *
          * Should be overridden in your own [SpigotPlugin] class
          * as a way to implement your own methods per plugin
          *
          * @return This instance of the plugin
          */
-        val instance: SpigotPlugin?
+        var instance: SpigotPlugin? = null
             get() {
                 // Assign if null
-                if (INSTANCE == null) {
-                    INSTANCE = getPlugin(SpigotPlugin::class.java)
-                    Objects.requireNonNull(INSTANCE, "Cannot create instance of plugin. Did you reload?")
+                if (field == null) {
+                    field = getPlugin(SpigotPlugin::class.java)
+                    Objects.requireNonNull(field, "Cannot create instance of plugin. Did you reload?")
                 }
-                return INSTANCE
+                return field
             }
-        //  -------------------------------------------------------------------------
-        //  Variables specific to the plugin instance
-        //  -------------------------------------------------------------------------
+
         /**
          * Get if the instance that is used across the library has been set. Normally it
          * is always set, except for testing.
@@ -349,7 +330,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
          * @return if the instance has been set.
          */
         fun hasInstance(): Boolean {
-            return INSTANCE != null
+            return instance != null
         }
 
         /**
@@ -363,9 +344,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
          */
         val pluginVersion: String
             get() = instance!!.description.version
-        //  -------------------------------------------------------------------------
-        //  Player data - Only loaded if we choose to use player data
-        //  -------------------------------------------------------------------------
+
         /**
          * Shortcut for getFile()
          *
@@ -373,9 +352,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
          */
         val source: File
             get() = instance!!.file
-        //  -------------------------------------------------------------------------
-        //  Plugin loading methods
-        //  -------------------------------------------------------------------------
+
         /**
          * Check if a given label is for the main plugin command
          *
@@ -383,7 +360,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
          * @return If it's an aliases for the main command
          */
         fun isMainCommand(label: String?): Boolean {
-            return instance.getMainCommand() != null && instance.getMainCommand().getLabel()
+            return instance!!.mainCommand != null && instance!!.mainCommand?.label
                 .equals(label, ignoreCase = true)
         }
     }
