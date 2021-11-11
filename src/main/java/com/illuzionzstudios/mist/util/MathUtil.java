@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.util;
 
+import com.illuzionzstudios.mist.random.RandomNumberGenerator;
 import lombok.experimental.UtilityClass;
 
 import java.text.DecimalFormat;
@@ -176,7 +177,7 @@ public class MathUtil {
      * @return If the odds were in it's favour
      */
     public boolean chance(double percent) {
-        return new Random().nextInt(100) <= percent;
+        return new RandomNumberGenerator(0, 100).generate() <= percent;
     }
 
     // ----------------------------------------------------------------------------------------------------
