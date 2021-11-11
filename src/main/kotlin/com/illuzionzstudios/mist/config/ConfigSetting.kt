@@ -38,16 +38,16 @@ class ConfigSetting {
     /**
      * Comments
      */
-    private var comments: Array<String>
+    private lateinit var comments: Array<out String?>
 
     constructor(key: String) {
         this.key = key
     }
 
-    constructor(key: String, defaultValue: Any, vararg comment: String) {
+    constructor(key: String, defaultValue: Any, vararg comment: String?) {
         this.key = key
         this.defaultValue = defaultValue
-        comments = comment
+        this.comments = comment
     }
 
     constructor(key: String, defaultValue: Any, commentStyle: CommentStyle, vararg comment: String?) : this(
@@ -126,11 +126,11 @@ class ConfigSetting {
         return config!![key, def]
     }
 
-    fun <T> getObject(clazz: Class<T>): T {
+    fun <T> getObject(clazz: Class<T>): T? {
         return config!!.getObject(key, clazz)
     }
 
-    fun <T> getObject(clazz: Class<T>, def: T?): T {
+    fun <T> getObject(clazz: Class<T>, def: T?): T? {
         return config!!.getObject(key, clazz, def)
     }
 

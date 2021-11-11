@@ -3,23 +3,22 @@ package com.illuzionzstudios.mist.ui.button
 import com.cryptomorin.xseries.XMaterial
 import com.illuzionzstudios.mist.item.ItemCreator
 import com.illuzionzstudios.mist.ui.UserInterface
-import lombok.*
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
 /**
  * This represents a button in a [com.illuzionzstudios.mist.ui.UserInterface]
  * that can be interacted with an perform actions
  */
 abstract class Button {
+
     /**
      * @return The implemented [ButtonListener] to give functionality
      */
-    abstract val listener: ButtonListener
+    abstract val listener: ButtonListener?
 
     /**
      * @return The [ItemStack] that represents this button as an icon
@@ -46,7 +45,16 @@ abstract class Button {
              * @return Simply returns a listener without functionality
              */
             fun ofNull(): ButtonListener {
-                return ButtonListener { i: Player?, j: UserInterface?, k: ClickType?, e: InventoryClickEvent? -> }
+                return object : ButtonListener {
+                    override fun onClickInInterface(
+                        player: Player?,
+                        ui: UserInterface?,
+                        type: ClickType?,
+                        event: InventoryClickEvent?
+                    ) {
+                        // Nothing
+                    }
+                }
             }
         }
     }
@@ -55,46 +63,34 @@ abstract class Button {
      * Represents a "blank" button. This means it doesn't do anything
      * when clicked but just renders an item stack
      */
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    class IconButton : Button() {
+    class IconButton(
         /**
          * The [ItemStack] to render
          */
-        @Getter
-        private override val item: ItemStack? = null
-
-        /**
-         * Null listener
-         */
-        override fun getListener(): ButtonListener {
-            return ButtonListener.ofNull()
-        }
-    }
+        override val item: ItemStack,
+        override val listener: ButtonListener? = ButtonListener.ofNull()
+    ) : Button()
 
     /**
      * A simple button that renders an item and does
      * something when clicked
      */
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    class SimpleButton : Button() {
+    class SimpleButton(
         /**
          * The [ItemStack] to render
          */
-        @Getter
-        private override val item: ItemStack? = null
+        override val item: ItemStack? = null,
 
         /**
          * Listener to execute when clicked on
          */
-        @Getter
-        private override val listener: ButtonListener? = null
-    }
+        override val listener: ButtonListener? = null
+    ) : Button()
 
     companion object {
         /**
          * The material representing info button, see [.makeInfo]
          */
-        @Setter
         private val infoButtonMaterial = XMaterial.NETHER_STAR
 
         /**
@@ -105,31 +101,18 @@ abstract class Button {
          */
         fun makeInfo(vararg description: String?): IconButton {
             // Get all except first
-            val lore = Arrays.asList(*description).subList(1, Arrays.asList(*description).size)
+            val lore = listOf(*description).subList(1, listOf(*description).size).toMutableList()
 
             // Format lines
             for (i in lore.indices) {
                 lore[i] = "&7" + lore[i]
             }
+
             return makeIcon(
-                ItemCreator.Companion.of(infoButtonMaterial).name(
-                    description[0]
-                ).hideTags(true).lores(lore)
+                ItemCreator(material = infoButtonMaterial, name = description[0], hideTags = true, lores = lore.toList())
             )
         }
 
-        /**
-         * Construct an icon from a [ItemCreator.ItemCreatorBuilder]
-         *
-         * @param builder Builder of item
-         * @return The now appropriate item
-         */
-        fun makeIcon(builder: ItemCreator.ItemCreatorBuilder): IconButton {
-            return makeIcon(builder.build())
-        }
-        //  -------------------------------------------------------------------------
-        //  Pre construct buttons
-        //  -------------------------------------------------------------------------
         /**
          * Construct an icon from a [ItemCreator]
          *
@@ -141,7 +124,7 @@ abstract class Button {
         }
 
         fun makeIcon(stack: ItemStack?): IconButton {
-            return IconButton(stack)
+            return IconButton(stack!!)
         }
 
         /**

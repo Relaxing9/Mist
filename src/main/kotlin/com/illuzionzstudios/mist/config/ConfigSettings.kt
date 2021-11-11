@@ -1,19 +1,13 @@
 package com.illuzionzstudios.mist.config
 
 import com.illuzionzstudios.mist.config.format.CommentStyle
-import lombok.*
+import lombok.Getter
 import java.util.function.Consumer
 
 /**
  * A group of config settings that we load from a config file.
  */
-@RequiredArgsConstructor
 class ConfigSettings {
-    /**
-     * Name of this group
-     */
-    @Getter
-    val name: String? = null
 
     /**
      * List of strings in group
@@ -41,7 +35,7 @@ class ConfigSettings {
     fun load() {
         settings.forEach(Consumer { setting: ConfigSetting ->
             // Set config file then load
-            setting.loadSetting(PluginSettings.Companion.SETTINGS_FILE!!)
+            setting.loadSetting(PluginSettings.SETTINGS_FILE!!)
         })
     }
 }

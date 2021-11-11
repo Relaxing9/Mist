@@ -1,13 +1,11 @@
 package com.illuzionzstudios.mist.config
 
-import com.illuzionzstudios.mist.Logger.Companion.displayError
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Mist
 import com.illuzionzstudios.mist.config.format.Comment
 import com.illuzionzstudios.mist.config.format.CommentStyle
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.*
-import com.illuzionzstudios.mist.util.FileUtil.getInternalResource
-import com.illuzionzstudios.mist.util.TextUtil.getOffset
 import lombok.*
 import org.apache.commons.lang.Validate
 import org.bukkit.configuration.InvalidConfigurationException
@@ -77,15 +75,15 @@ open class YamlConfig : ConfigSection {
      */
     protected var file: File? = null
         get() {
-        if (field == null) {
-            field = if (directory != null) {
-                File(plugin!!.dataFolder.toString() + directory, fileName ?: Mist.SETTINGS_NAME)
-            } else {
-                File(plugin!!.dataFolder, fileName ?: Mist.SETTINGS_NAME)
+            if (field == null) {
+                field = if (directory != null) {
+                    File(plugin!!.dataFolder.toString() + directory, fileName ?: Mist.SETTINGS_NAME)
+                } else {
+                    File(plugin!!.dataFolder, fileName ?: Mist.SETTINGS_NAME)
+                }
             }
+            return field
         }
-        return field
-    }
 
     /**
      * Comments to display at the top/bottom of the file
@@ -185,9 +183,9 @@ open class YamlConfig : ConfigSection {
      */
     val header: List<String?>
         get() = if (headerComment != null) {
-            headerComment.getLines()
+            headerComment!!.lines!!
         } else {
-            Collections.EMPTY_LIST
+            ArrayList()
         }
 
     /**
@@ -211,9 +209,9 @@ open class YamlConfig : ConfigSection {
      */
     val footer: List<String?>
         get() = if (footerComment != null) {
-            footerComment.getLines()
+            footerComment!!.lines!!
         } else {
-            Collections.EMPTY_LIST
+            ArrayList()
         }
 
     /**
@@ -253,7 +251,7 @@ open class YamlConfig : ConfigSection {
      */
     fun clearDefaults() {
         root!!.defaultComments!!.clear()
-        root.defaults.clear()
+        root.defaultValues.clear()
     }
 
     /**
@@ -265,6 +263,7 @@ open class YamlConfig : ConfigSection {
      * To be overridden, called after loading the file into memory
      */
     protected fun postLoad() {}
+
     /**
      * See [.load]
      * Loads an internal resource onto the server
@@ -287,7 +286,7 @@ open class YamlConfig : ConfigSection {
      * @return If loaded successfully
      */
     @JvmOverloads
-    fun load(file: File = getFile()): Boolean {
+    fun load(file: File = this.file!!): Boolean {
         Validate.notNull(file, "File cannot be null")
         val fileName = file.name
 
@@ -295,7 +294,7 @@ open class YamlConfig : ConfigSection {
         val internalPath = (if (directory != null && directory.trim { it <= ' ' }
                 .equals("", ignoreCase = true)) "" else "$directory/") + fileName
         // Attempt to find resource
-        val input: InputStream = FileUtil.getInternalResource(internalPath)
+        val input: InputStream? = FileUtil.getInternalResource(internalPath)
 
         // Existing file
         val existingFile = File(plugin!!.dataFolder, internalPath)
@@ -303,7 +302,7 @@ open class YamlConfig : ConfigSection {
         // Load buffers
         // Input stream for internal file and existing file
         try {
-            BufferedInputStream(input).use { defaultIn ->
+            BufferedInputStream(input!!).use { defaultIn ->
                 try {
                     BufferedReader(InputStreamReader(defaultIn)).use { defaultReader ->
 
@@ -419,15 +418,15 @@ open class YamlConfig : ConfigSection {
                 // check to see if this is a line that we can process
                 val lineOffset: Int = TextUtil.getOffset(line)
                 insideScalar = insideScalar and (lineOffset <= index)
-                var m: Matcher
+                var m: Matcher? = null
                 if (!insideScalar && YAML_REGEX.matcher(line).also { m = it }.find()) {
                     // we found a config node! ^.^
                     // check to see what the full path is
-                    val depth = m.group(1).length / indentation
+                    val depth = m!!.group(1).length / indentation
                     while (depth < currentPath.size) {
                         currentPath.removeLast()
                     }
-                    currentPath.add(m.group(2))
+                    currentPath.add(m!!.group(2))
 
                     // do we have a comment for this node?
                     if (!commentBlock.isEmpty()) {
@@ -440,7 +439,7 @@ open class YamlConfig : ConfigSection {
 
                     // ignore scalars
                     index = lineOffset
-                    if (m.group(3).trim { it <= ' ' } == "|" || m.group(3).trim { it <= ' ' } == ">") {
+                    if (m!!.group(3).trim { it <= ' ' } == "|" || m!!.group(3).trim { it <= ' ' } == ">") {
                         insideScalar = true
                     }
                 }
@@ -458,7 +457,7 @@ open class YamlConfig : ConfigSection {
      */
     fun deleteNonDefaultSettings() {
         // Delete old config values (thread-safe)
-        val defaultKeys = Arrays.asList(*defaults.keys.toTypedArray())
+        val defaultKeys = listOf(*defaultValues.keys.toTypedArray())
         for (key in values!!.keys.toTypedArray()) {
             if (!defaultKeys.contains(key)) {
                 values.remove(key)
@@ -492,7 +491,7 @@ open class YamlConfig : ConfigSection {
      */
     fun hasNewDefaults(): Boolean {
         if (file != null && !file!!.exists()) return true
-        for (def in defaults.keys) {
+        for (def in defaultValues.keys) {
             if (!values!!.containsKey(def)) return true
         }
         return false
@@ -504,7 +503,7 @@ open class YamlConfig : ConfigSection {
     }
 
     @JvmOverloads
-    fun save(file: File = getFile()): Boolean {
+    fun save(file: File = this.file!!): Boolean {
         Validate.notNull(file, "File cannot be null")
         if (file.parentFile != null && !file.parentFile.exists()) {
             file.parentFile.mkdirs()
@@ -566,15 +565,15 @@ open class YamlConfig : ConfigSection {
             // check to see if this is a line that we can process
             val lineOffset: Int = TextUtil.getOffset(line)
             insideScalar = insideScalar and (lineOffset <= index)
-            var m: Matcher
+            var m: Matcher? = null
             if (!insideScalar && YAML_REGEX.matcher(line).also { m = it }.find()) {
                 // we found a config node! ^.^
                 // check to see what the full path is
-                val depth = m.group(1).length / indentation
+                val depth = m!!.group(1).length / indentation
                 while (depth < currentPath.size) {
                     currentPath.removeLast()
                 }
-                currentPath.add(m.group(2))
+                currentPath.add(m!!.group(2))
                 val path = currentPath.stream().collect(Collectors.joining(pathSeparator.toString()))
 
                 // if this is a root-level node, apply extra spacing if we aren't the first node
@@ -600,7 +599,7 @@ open class YamlConfig : ConfigSection {
                     var style = comment.styling
                     if (style == null) {
                         // check to see what type of node this is
-                        style = if (!m.group(3).trim { it <= ' ' }.isEmpty()) {
+                        style = if (!m!!.group(3).trim { it <= ' ' }.isEmpty()) {
                             // setting node
                             defaultNodeCommentFormat
                         } else {
@@ -622,7 +621,7 @@ open class YamlConfig : ConfigSection {
                 }
                 // ignore scalars
                 index = lineOffset
-                if (m.group(3).trim { it <= ' ' } == "|" || m.group(3).trim { it <= ' ' } == ">") {
+                if (m!!.group(3).trim { it <= ' ' } == "|" || m!!.group(3).trim { it <= ' ' } == ">") {
                     insideScalar = true
                 }
             }

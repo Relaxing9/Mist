@@ -91,8 +91,8 @@ enum class CommentStyle {
             } else if (lines[0].trim { it <= ' ' } == "#" && lines[lines.size - 1].trim { it <= ' ' } == "#") {
                 return SPACED
             }
-            val hasBorders = lines[0].trim { it <= ' ' }.matches("^##+$") && lines[lines.size - 1].trim { it <= ' ' }
-                .matches("^##+$")
+            val hasBorders = lines[0].trim { it <= ' ' }.matches(Regex("^##+$")) && lines[lines.size - 1].trim { it <= ' ' }
+                .matches(Regex("^##+$"))
             if (!hasBorders) {
                 // default return
                 return SIMPLE
@@ -101,8 +101,8 @@ enum class CommentStyle {
             val replace = ("^#"
                     + BLOCKSPACED.spacePrefixTop + BLOCKSPACED.spaceCharTop + "+"
                     + BLOCKSPACED.spaceSuffixTop + "#$").replace("|", "\\|")
-            return if (lines.size > 4 && lines[1].trim { it <= ' ' }.matches(replace)
-                && lines[1].trim { it <= ' ' }.matches(replace)
+            return if (lines.size > 4 && lines[1].trim { it <= ' ' }.matches(Regex(replace))
+                && lines[1].trim { it <= ' ' }.matches(Regex(replace))
             ) {
                 BLOCKSPACED
             } else BLOCKED

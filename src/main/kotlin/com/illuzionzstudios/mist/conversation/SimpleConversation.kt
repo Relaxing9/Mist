@@ -7,7 +7,6 @@ import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
 import lombok.*
 import org.bukkit.conversations.*
 import org.bukkit.entity.Player
@@ -37,7 +36,7 @@ abstract class SimpleConversation
 
         // Setup
         val conversation = CustomConversation(player)
-        val inactivityCanceller = InactivityConversationCanceller(SpigotPlugin.Companion.getInstance(), 45)
+        val inactivityCanceller = InactivityConversationCanceller(SpigotPlugin.instance!!, 45)
         inactivityCanceller.setConversation(conversation)
         conversation.cancellers.add(inactivityCanceller)
         conversation.cancellers.add(canceller)
@@ -57,18 +56,17 @@ abstract class SimpleConversation
         val conversing = event.context.forWhom
         val source = event.source
         if (source is CustomConversation) {
-            val lastPrompt: SimplePrompt = source.getLastSimplePrompt()
-            if (lastPrompt != null) lastPrompt.onConversationEnd(this, event)
+            val lastPrompt: SimplePrompt? = source.lastSimplePrompt
+            lastPrompt?.onConversationEnd(this, event)
         }
         onConversationEnd(event)
         if (conversing is Player) {
-            val player = conversing
             (if (event.gracefulExit()) XSound.BLOCK_NOTE_BLOCK_PLING else XSound.BLOCK_NOTE_BLOCK_BASS).play(
-                player,
+                conversing,
                 1f,
                 1f
             )
-            if (menuToReturnTo != null && reopenMenu()) menuToReturnTo!!.newInstance().show(player)
+            if (menuToReturnTo != null && reopenMenu()) menuToReturnTo!!.newInstance().show(conversing)
         }
     }
 
@@ -88,7 +86,7 @@ abstract class SimpleConversation
      * TIP: You can use [SimplePrefix]
      */
     protected open val prefix: ConversationPrefix
-        protected get() = SimplePrefix(PluginLocale.Companion.GENERAL_PLUGIN_PREFIX.toString() + " ")
+        protected get() = SimplePrefix(PluginLocale.GENERAL_PLUGIN_PREFIX.toString() + " ")
 
     private fun addLastSpace(prefix: String): String {
         return if (prefix.endsWith(" ")) prefix else "$prefix "
@@ -133,13 +131,12 @@ abstract class SimpleConversation
     /**
      * Custom conversation class used for only showing the question once per 20 seconds interval
      */
-    private inner class CustomConversation(forWhom: Conversable) :
-        Conversation(SpigotPlugin.Companion.getInstance(), forWhom, firstPrompt) {
-        /**
-         * Holds the information about the last prompt, used to invoke onConversationEnd
-         */
-        @Getter(value = AccessLevel.PRIVATE)
-        private var lastSimplePrompt: SimplePrompt? = null
+    private inner class CustomConversation(
+        forWhom: Conversable,
+        var lastSimplePrompt: SimplePrompt? = null
+    ) :
+        Conversation(SpigotPlugin.instance, forWhom, firstPrompt) {
+
         override fun outputNextPrompt() {
             if (currentPrompt == null) abandon(ConversationAbandonedEvent(this)) else {
                 // Edit start
@@ -173,7 +170,7 @@ abstract class SimpleConversation
 
         init {
             localEchoEnabled = false
-            if (insertPrefix() && this@SimpleConversation.prefix != null) prefix = this@SimpleConversation.prefix
+            if (insertPrefix()) prefix = this@SimpleConversation.prefix
         }
     }
 
@@ -192,8 +189,4 @@ abstract class SimpleConversation
             tellLaterConversing(conversable!!, message, delayTicks)
         }
     }
-    /**
-     * Creates a simple conversation that opens the
-     * menu when finished
-     */
 }

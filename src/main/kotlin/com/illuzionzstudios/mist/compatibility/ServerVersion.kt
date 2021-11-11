@@ -1,10 +1,9 @@
 package com.illuzionzstudios.mist.compatibility
 
-import com.illuzionzstudios.mist.Logger.Companion.displayError
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.exception.PluginException
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
-import lombok.*
+import lombok.Getter
 import org.bukkit.Bukkit
 
 /**
@@ -53,7 +52,7 @@ object ServerVersion {
     // Compares two versions by the number
     private fun compareWith(version: V): Int {
         return try {
-            ServerVersion.getCurrent().ver - version.ver
+            current?.ver?.minus(version.ver)!!
         } catch (t: Throwable) {
             t.printStackTrace()
             0
@@ -70,10 +69,7 @@ object ServerVersion {
     /**
      * The version wrapper
      */
-    enum class V
-    /**
-     * Creates new enum for a MC version that is tested
-     */ @JvmOverloads constructor(
+    enum class V(
         /**
          * The numeric version (the second part of the 1.x number)
          */
@@ -107,30 +103,30 @@ object ServerVersion {
     // Initialize the version
     init {
         try {
-            val packageName = if (Bukkit.getServer() == null) "" else Bukkit.getServer().javaClass.getPackage().name
-            val curr: String = com.illuzionzstudios.mist.compatibility.packageName.substring(
-                com.illuzionzstudios.mist.compatibility.packageName.lastIndexOf('.') + 1
+            val packageName = Bukkit.getServer().javaClass.getPackage().name
+            val curr: String = packageName.substring(
+                packageName.lastIndexOf('.') + 1
             )
-            val hasGatekeeper = "craftbukkit" != com.illuzionzstudios.mist.compatibility.curr
-            serverVersion = com.illuzionzstudios.mist.compatibility.curr
-            if (com.illuzionzstudios.mist.compatibility.hasGatekeeper) {
-                val pos = 0
-                for (ch in com.illuzionzstudios.mist.compatibility.curr.toCharArray()) {
-                    com.illuzionzstudios.mist.compatibility.pos++
-                    if (com.illuzionzstudios.mist.compatibility.pos > 2 && com.illuzionzstudios.mist.compatibility.ch == 'R') break
+            val hasGatekeeper = "craftbukkit" != curr
+            serverVersion = curr
+            if (hasGatekeeper) {
+                var pos = 0
+                for (ch in curr.toCharArray()) {
+                    pos++
+                    if (pos > 2 && ch == 'R') break
                 }
-                val numericVersion: String = com.illuzionzstudios.mist.compatibility.curr.substring(
+                val numericVersion: String = curr.substring(
                     1,
-                    com.illuzionzstudios.mist.compatibility.pos - 2
+                    pos - 2
                 ).replace("_", ".")
-                val found = 0
-                for (ch in com.illuzionzstudios.mist.compatibility.numericVersion.toCharArray()) if (com.illuzionzstudios.mist.compatibility.ch == '.') com.illuzionzstudios.mist.compatibility.found++
+                var found = 0
+                for (ch in numericVersion.toCharArray()) if (ch == '.') found++
                 Valid.checkBoolean(
-                    com.illuzionzstudios.mist.compatibility.found == 1,
-                    "Minecraft Version checker malfunction. Could not detect your server version. Detected: " + com.illuzionzstudios.mist.compatibility.numericVersion + " Current: " + com.illuzionzstudios.mist.compatibility.curr
+                    found == 1,
+                    "Minecraft Version checker malfunction. Could not detect your server version. Detected: $numericVersion Current: $curr"
                 )
                 current = V.parse(
-                    com.illuzionzstudios.mist.compatibility.numericVersion.split("\\.".toRegex()).toTypedArray().get(1)
+                    numericVersion.split("\\.".toRegex()).toTypedArray()[1]
                         .toInt()
                 )
             } else current = V.v1_3_AND_BELOW

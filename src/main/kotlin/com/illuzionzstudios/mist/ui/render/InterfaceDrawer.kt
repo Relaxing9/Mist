@@ -16,7 +16,7 @@ class InterfaceDrawer private constructor(
     /**
      * Amount of slots in the inventory
      */
-    @field:Getter private val size: Int,
+    @field:Getter val size: Int,
     /**
      * The title for the interface
      *

@@ -12,11 +12,8 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
  * This should be implemented by our [SpigotPlugin] and
  * define our own [ConfigSetting] specific to the plugin
  */
-abstract class PluginSettings
-/**
- * @param plugin Make sure we pass owning plugin
- */
-    (plugin: SpigotPlugin) : YamlConfig(plugin, Mist.SETTINGS_NAME) {
+abstract class PluginSettings(plugin: SpigotPlugin) : YamlConfig(plugin, Mist.SETTINGS_NAME) {
+
     /**
      * Invoked to load all other custom settings that we implement
      * in our own [PluginSettings]
@@ -24,7 +21,7 @@ abstract class PluginSettings
     abstract fun loadSettings()
 
     companion object {
-        val GENERAL_GROUP = ConfigSettings("settings")
+        val GENERAL_GROUP = ConfigSettings()
 
         /**
          * The current loaded [PluginSettings] instance
@@ -53,14 +50,16 @@ abstract class PluginSettings
          * @param settings The instance of [PluginSettings] to load
          */
         fun loadSettings(settings: PluginSettings) {
-            SETTINGS_FILE = settings
+
             // Load settings file
-            SETTINGS_FILE.load()
+            settings.load()
             GENERAL_GROUP.load()
 
             // Load our other custom settings
             settings.loadSettings()
-            SETTINGS_FILE.saveChanges()
+            settings.saveChanges()
+
+            SETTINGS_FILE = settings
         }
     }
 }

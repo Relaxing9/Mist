@@ -13,8 +13,10 @@ import java.util.*
  * Some properties of things.
  * TODO: I think this needs to be tweaked does it actually have any use?
  */
-@RequiredArgsConstructor
-enum class XProperty {
+enum class XProperty(
+    private val requiredClass: Class<*>?,
+    private val setterMethodType: Class<*>?
+) {
     // ItemMeta
     /**
      * The unbreakable property of ItemMeta
@@ -45,17 +47,6 @@ enum class XProperty {
      * The god mode entity property
      */
     INVULNERABLE(Entity::class.java, Boolean::class.javaPrimitiveType);
-
-    /**
-     * The class that this enum applies for, for example [Entity]
-     */
-    @Getter
-    private val requiredClass: Class<*>? = null
-
-    /**
-     * The "setter" field type, for example setSilent method accepts boolean
-     */
-    private val setterMethodType: Class<*>? = null
 
     /**
      * Apply the property to the entity. Class must be compatible with [.requiredClass]

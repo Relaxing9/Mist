@@ -9,10 +9,6 @@ import com.illuzionzstudios.mist.ui.button.Button
 import com.illuzionzstudios.mist.ui.button.type.ReturnBackButton
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer
 import com.illuzionzstudios.mist.util.*
-import com.illuzionzstudios.mist.util.ReflectionUtil.getFieldContent
-import com.illuzionzstudios.mist.util.ReflectionUtil.instantiate
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
 import lombok.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -98,7 +94,6 @@ abstract class UserInterface protected constructor(
      * This is the description of the menu that can be displayed
      * at a certain slot
      */
-    @Getter(value = AccessLevel.PROTECTED)
     private var info: Array<String>? = null
     /**
      * Get the viewer that this instance of this menu is associated with
@@ -165,9 +160,9 @@ abstract class UserInterface protected constructor(
                 Modifier.isFinal(field.modifiers),
                 "Button[] field must be final: $field"
             )
-            val buttons = ReflectionUtil.getFieldContent(field, this) as Array<Button>?
-            Valid.checkBoolean(buttons != null && buttons.size > 0, "Null " + field.name + "[] in " + this)
-            registeredButtons.addAll(Arrays.asList(*buttons))
+            val buttons = ReflectionUtil.getFieldContent(field, this) as Array<Button?>
+            Valid.checkBoolean(buttons.isNotEmpty(), "Null " + field.name + "[] in " + this)
+            registeredButtons.addAll(listOf(*buttons))
         }
         buttonsRegisteredViaReflection = true
     }
@@ -190,8 +185,8 @@ abstract class UserInterface protected constructor(
             for (button in registeredButtons) {
                 // Make sure valid button
                 Valid.checkNotNull(button, "Menu button is null at " + javaClass.simpleName)
-                if (button.getItem() == null) return null
-                if (equals(icon, button.getItem())) {
+                if (button?.item == null) return null
+                if (equals(icon, button.item)) {
                     return button
                 }
             }
@@ -272,7 +267,7 @@ abstract class UserInterface protected constructor(
         val previous = getInterface(player)
         if (previous != null) player.setMetadata(
             TAG_PREVIOUS,
-            FixedMetadataValue(SpigotPlugin.Companion.getInstance(), previous)
+            FixedMetadataValue(SpigotPlugin.instance!!, previous)
         )
 
         // Register current menu
@@ -280,7 +275,7 @@ abstract class UserInterface protected constructor(
             drawer.display(player)
             player.setMetadata(
                 TAG_CURRENT,
-                FixedMetadataValue(SpigotPlugin.Companion.getInstance(), this@UserInterface)
+                FixedMetadataValue(SpigotPlugin.instance!!, this@UserInterface)
             )
         }, 1)
     }
@@ -352,8 +347,7 @@ abstract class UserInterface protected constructor(
      */
     private fun compileBottomBar(): Map<Int, ItemStack?> {
         val items: MutableMap<Int, ItemStack?> = HashMap()
-        if (addInfoButton() && getInfo() != null) items[infoButtonPosition] =
-            Button.Companion.makeInfo(*getInfo()).getItem()
+        if (addInfoButton() && info != null) items[infoButtonPosition] = Button.makeInfo(*info!!).item
         if (addReturnButton() && returnButton !is Button.IconButton) items[returnButtonPosition] = returnButton.item
         return items
     }
@@ -423,20 +417,6 @@ abstract class UserInterface protected constructor(
             val pos = size / 2
             return if (size % 2 == 1) pos else pos - 5
         }
-
-    /**
-     * Set the menu's description
-     *
-     *
-     *
-     * Used to create an info bottom in bottom left corner, see
-     * [Button.makeInfo]
-     *
-     * @param info the info to set
-     */
-    protected fun setInfo(vararg info: String) {
-        this.info = info
-    }
 
     /**
      * Return the top opened inventory if viewer exists
@@ -548,7 +528,7 @@ abstract class UserInterface protected constructor(
     ) {
         // By default cancel moving items
         event.isCancelled = true
-        button.listener.onClickInInterface(player, this, click, event)
+        button.listener?.onClickInInterface(player, this, click, event)
     }
 
     /**
@@ -570,7 +550,7 @@ abstract class UserInterface protected constructor(
          * This will set the name of the current menu in order to keep
          * track of what menu is currently open
          */
-        val TAG_CURRENT = "UI_" + SpigotPlugin.Companion.getPluginName()
+        val TAG_CURRENT = "UI_" + SpigotPlugin.pluginName
 
         /**
          * This is an internal metadata tag that the player has.
@@ -579,7 +559,7 @@ abstract class UserInterface protected constructor(
          * This will set the name of the previous menu in order to
          * backtrack for returning menus
          */
-        val TAG_PREVIOUS = "UI_PREVIOUS_" + SpigotPlugin.Companion.getPluginName()
+        val TAG_PREVIOUS = "UI_PREVIOUS_" + SpigotPlugin.pluginName
         //  -------------------------------------------------------------------------
         //  Getting menus
         //  -------------------------------------------------------------------------
@@ -646,6 +626,6 @@ abstract class UserInterface protected constructor(
      */
     init {
         returnButton = parent?.let { ReturnBackButton(it, makeNewInstance) }
-            ?: Button.Companion.makeEmpty()
+            ?: Button.makeEmpty()
     }
 }

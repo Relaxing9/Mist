@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.conversation
 
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
 import org.bukkit.conversations.Conversation
 import org.bukkit.conversations.ConversationCanceller
 import org.bukkit.conversations.ConversationContext

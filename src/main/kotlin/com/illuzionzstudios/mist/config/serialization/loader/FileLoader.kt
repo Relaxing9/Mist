@@ -14,19 +14,13 @@ abstract class FileLoader<T>(
     /**
      * File location for template on disk
      */
-    @field:Getter protected val file: File, extension: String
+    protected val file: File,
+    var extension: String
 ) {
     /**
      * Name of the file without extensions
      */
-    @Getter
     protected val name: String
-
-    /**
-     * Extension for this file
-     */
-    @Getter
-    protected val extension: String
 
     /**
      * Our data object to get properties from
@@ -41,7 +35,7 @@ abstract class FileLoader<T>(
      */
     constructor(directory: String, fileName: String, extension: String) : this(
         File(
-            SpigotPlugin.Companion.getInstance().getDataFolder().toString() + "/" + directory, "$fileName.$extension"
+            SpigotPlugin.instance?.dataFolder.toString() + "/" + directory, "$fileName.$extension"
         ), extension
     )
 
@@ -58,7 +52,9 @@ abstract class FileLoader<T>(
      * @param object [to serialize][T]
      */
     fun serialize(`object`: T?): Boolean {
-        this.`object` = `object`
+        if (`object` != null) {
+            this.`object` = `object`
+        }
         return save()
     }
 
@@ -84,6 +80,5 @@ abstract class FileLoader<T>(
 
         // Get name without extension
         name = file.name.split("\\.".toRegex()).toTypedArray()[0]
-        this.extension = extension
     }
 }

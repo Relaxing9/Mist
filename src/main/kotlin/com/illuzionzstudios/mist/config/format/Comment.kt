@@ -2,41 +2,29 @@ package com.illuzionzstudios.mist.config.format
 
 import java.io.IOException
 import java.io.Writer
-import java.util.*
-import java.util.function.Consumer
 import java.util.stream.Collectors
 
 /**
  * This represents a comment in a [com.illuzionzstudios.mist.config.YamlConfig]
  * Usually declared by the "#" char
  */
-class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
+class Comment(
+    var styling: CommentStyle?,
+    val lines: List<String?>?
+) {
 
-    /**
-     * A list of strings to display for the comment
-     */
-    private val lines: MutableList<String> = ArrayList()
-
-    /**
-     * [CommentStyle] to use for this comment instance
-     */
-    private var styling: CommentStyle? = null
-
-    //  -------------------------------------------------------------------------
-    //  Construct our comment
-    //  -------------------------------------------------------------------------
-    constructor(vararg lines: String) : this(null, listOf<String>(*lines))
-    constructor(lines: List<String>?) : this(null, lines)
-    constructor(commentStyle: CommentStyle?, vararg lines: String) : this(
+    constructor(vararg lines: String?) : this(null, listOf<String?>(*lines))
+    constructor(lines: List<String?>?) : this(null, lines)
+    constructor(commentStyle: CommentStyle?, vararg lines: String?) : this(
         commentStyle,
-        listOf<String>(*lines)
+        listOf<String?>(*lines)
     )
 
     /**
      * @return Convert comment to lines separated by <char>"\n"</char>
      */
     override fun toString(): String {
-        return if (lines.isEmpty()) "" else java.lang.String.join("\n", lines)
+        return if (lines!!.isEmpty()) "" else java.lang.String.join("\n", lines)
     }
 
     /**
@@ -55,7 +43,7 @@ class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
         // first draw the top of the comment
         if (style.drawBorder) {
             // grab the longest line in the list of lines
-            minSpacing = lines.stream().max { s1: String, s2: String -> s1.length - s2.length }.get().length
+            minSpacing = lines!!.stream().max { s1: String?, s2: String? -> s1!!.length - s2!!.length }.get().length
             borderSpacing = minSpacing + style.commentPrefix.length + style.commentSuffix.length
             // draw the first line
             output.write(
@@ -91,11 +79,11 @@ class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
             )
         }
         // then the actual comment lines
-        for (line in lines) {
+        for (line in lines!!) {
             // todo? should we auto-wrap comment lines that are longer than 80 characters?
             output.write(
                 String(CharArray(offset)).replace('\u0000', ' ') + "#" + style.commentPrefix
-                        + (if (minSpacing == 0) line else line + String(CharArray(minSpacing - line.length)).replace(
+                        + (if (minSpacing == 0) line else line + String(CharArray(minSpacing - line!!.length)).replace(
                     '\u0000',
                     ' '
                 )) + style.commentSuffix + if (style.drawBorder) "#\n" else "\n"
@@ -156,16 +144,5 @@ class Comment(commentStyle: CommentStyle?, lines: List<String>?) {
                     .map { s: String -> s.substring(prefix, s.length - suffix).trim { it <= ' ' } }
                     .collect(Collectors.toList()))
         }
-    }
-
-    init {
-        styling = commentStyle
-        lines?.forEach(Consumer { s: String ->
-            this.lines.addAll(
-                listOf(
-                    *s.split("\n".toRegex()).toTypedArray()
-                )
-            )
-        })
     }
 }

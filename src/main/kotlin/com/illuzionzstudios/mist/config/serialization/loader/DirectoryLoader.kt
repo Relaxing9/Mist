@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config.serialization.loader
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import lombok.*
@@ -15,7 +16,7 @@ class DirectoryLoader<T : FileLoader<*>?>(
     /**
      * The directory that is being loaded
      */
-    @field:Getter val directory: String
+    protected val directory: String
 ) {
     /**
      * All file loaders for files in directory. From these we can then create the objects
@@ -29,7 +30,7 @@ class DirectoryLoader<T : FileLoader<*>?>(
     private val clazz: Class<T>
     fun load() {
         // Reward directory
-        val dir = File(SpigotPlugin.Companion.getInstance().getDataFolder().getPath() + File.separator + directory)
+        val dir = File(SpigotPlugin.instance!!.dataFolder.path + File.separator + directory)
 
         // If doesn't exist and has to create no point loading
         if (dir.listFiles() == null || !dir.exists()) {
@@ -47,11 +48,11 @@ class DirectoryLoader<T : FileLoader<*>?>(
 
                 // Make sure the file extension matches the loader
                 if (file.name.split("\\.".toRegex()).toTypedArray()[1].equals(
-                        loader.getExtension(),
-                        ignoreCase = true
-                    )
-                ) // Add to cache
-                    loaders.add(loader)
+                            loader!!.extension,
+                            ignoreCase = true
+                        )
+                    ) // Add to cache
+                        loaders.add(loader)
             } catch (e: Exception) {
                 Logger.displayError(e, "Could not not load file " + file.name)
             }

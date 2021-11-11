@@ -7,18 +7,13 @@ import com.illuzionzstudios.mist.compatibility.ServerVersion.V
 import com.illuzionzstudios.mist.compatibility.XItemFlag
 import com.illuzionzstudios.mist.compatibility.XProperty
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
-import lombok.*
 import org.bukkit.ChatColor
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.ItemMeta
-import java.util.*
 import java.util.function.Consumer
 
 /**
@@ -26,74 +21,67 @@ import java.util.function.Consumer
  * names and lore, and enchantments. Provides a way to
  * just easily construct an item
  */
-@Builder
-class ItemCreator {
+class ItemCreator(
     /**
      * The actual item stack this represents
      */
-    private val item: ItemStack? = null
+    val item: ItemStack? = null,
 
     /**
      * The [XMaterial] of the item
      */
-    private val material: XMaterial? = null
+    val material: XMaterial,
 
     /**
      * The amount of items in the stack
      */
-    @Builder.Default
-    private val amount = 1
+    val amount: Int = 1,
 
     /**
      * Damage to the item for setting custom metadata
      */
-    @Builder.Default
-    private val damage = -1
+    val damage: Int = -1,
 
     /**
      * Custom model data
      */
-    @Builder.Default
-    private val customModelData = 0
+    val customModelData: Int = 0,
 
     /**
      * The display name of the item
      */
-    private val name: String? = null
+    val name: String? = null,
 
     /**
      * The lore strings to display
      */
-    @Singular
-    private val lores: List<String>? = null
+
+    val lores: List<String?>? = null,
 
     /**
      * The enchants applied for the item mapped by level
      */
-    @Singular
-    private val enchants: Map<XEnchantment, Int>? = null
+    val enchants: Map<XEnchantment, Int>? = null,
 
     /**
      * The item flags
      */
-    @Singular
-    private val flags: MutableList<XItemFlag> = ArrayList()
+    val flags: MutableList<XItemFlag> = ArrayList(),
 
     /**
      * The actual metadata of the item stack
      */
-    private val meta: ItemMeta? = null
+    val meta: ItemMeta? = null,
 
     /**
      * If the [ItemStack] has the unbreakable flag
      */
-    private var unbreakable = false
+    var unbreakable: Boolean = false,
 
     /**
      * Should we hide all tags from the item (enchants, etc.)?
      */
-    @Builder.Default
-    private var hideTags = false
+    var hideTags: Boolean = false,
 
     /**
      * Should we add glow to the item? (adds a fake enchant and uses
@@ -102,8 +90,8 @@ class ItemCreator {
      *
      * The enchant is visible on older MC versions.
      */
-    @Builder.Default
-    private val glow = false
+    val glow: Boolean = false
+) {
 
     /**
      * @return This item suitable for a [com.illuzionzstudios.mist.ui.UserInterface]
@@ -122,24 +110,22 @@ class ItemCreator {
     fun make(): ItemStack {
         // Make sure base item and material are set
         Valid.checkBoolean(
-            material != null && material.parseMaterial() != null || item != null,
+            material.parseMaterial() != null || item != null,
             "Material or item must be set!"
         )
 
         // Actual item we're building on
-        val stack = item?.clone() ?: ItemStack(
-            material!!.parseMaterial()!!, amount
-        )
-        val stackMeta = meta?.clone() ?: stack.itemMeta!!
+        val stack = item?.clone()
+        val stackMeta = meta?.clone() ?: stack?.itemMeta!!
         Valid.checkNotNull(stackMeta, "Item metadata was somehow null")
 
         // Skip if trying to build on air
-        if (material == XMaterial.AIR) return stack
+        if (material == XMaterial.AIR) return stack!!
 
         // Set damage
         if (damage != -1) {
             try {
-                stack.durability = damage.toShort()
+                stack?.durability = damage.toShort()
             } catch (ignored: Throwable) {
             }
             try {
@@ -170,13 +156,13 @@ class ItemCreator {
         if (name != null) {
             stackMeta.setDisplayName(TextUtil.formatText("&r$name"))
         }
-        if (lores != null && !lores.isEmpty()) {
+        if (lores != null && lores.isNotEmpty()) {
             val coloredLores: MutableList<String> = ArrayList()
-            lores.forEach(Consumer { line: String ->
+            lores.forEach(Consumer { line: String? ->
                 // Colour and split by \n
-                val lines = Arrays.asList(*line.split("\\r?\\n".toRegex()).toTypedArray())
+                val lines: Array<String>? = line?.split("\\r?\\n".toRegex())?.toTypedArray()
                 // Append '&7' before every line instead of ugly purple italics
-                lines.forEach(Consumer { line2: String -> coloredLores.add(TextUtil.formatText(ChatColor.GRAY.toString() + line2)) })
+                lines?.forEach { line2: String? -> coloredLores.add(TextUtil.formatText(ChatColor.GRAY.toString() + line2)) }
             })
             stackMeta.lore = coloredLores
         }
@@ -213,42 +199,7 @@ class ItemCreator {
         }
 
         // Finally apply metadata
-        stack.itemMeta = stackMeta
-        return stack
-    }
-
-    companion object {
-        //  -------------------------------------------------------------------------
-        //  Constructing
-        //  -------------------------------------------------------------------------
-        /**
-         * Convenience method to get a new item creator with material, name and lore set
-         *
-         * @param material The [XMaterial] to set
-         * @param name     The name of the item
-         * @param lore     Collection of lore strings
-         * @return THe builder with these properties
-         */
-        fun of(material: XMaterial?, name: String?, lore: Collection<String>): ItemCreator.ItemCreatorBuilder {
-            return of(material, name, *lore.toTypedArray())
-        }
-
-        /**
-         * See [.of]
-         */
-        fun of(material: XMaterial?, name: String?, vararg lore: String?): ItemCreator.ItemCreatorBuilder {
-            return ItemCreator.builder().material(material).name(name).lores(Arrays.asList(*lore)).hideTags(true)
-        }
-
-        /**
-         * Get a new item creator from material
-         *
-         * @param mat existing material
-         * @return the new item creator
-         */
-        fun of(mat: XMaterial?): ItemCreator.ItemCreatorBuilder {
-            Valid.checkNotNull(mat, "Material cannot be null!")
-            return ItemCreator.builder().material(mat)
-        }
+        stack?.itemMeta = stackMeta
+        return stack!!
     }
 }

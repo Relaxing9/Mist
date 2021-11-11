@@ -4,10 +4,7 @@ import com.illuzionzstudios.mist.Mist.Companion.tellConversing
 import com.illuzionzstudios.mist.Mist.Companion.tellLaterConversing
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
 import lombok.SneakyThrows
 import org.bukkit.conversations.*
 import org.bukkit.entity.Player
@@ -16,6 +13,7 @@ import org.bukkit.entity.Player
  * Represents one question for the player during a server conversation
  */
 abstract class SimplePrompt : ValidatingPrompt, Cloneable {
+
     /**
      * Open the players menu back if any?
      */
@@ -137,24 +135,19 @@ abstract class SimplePrompt : ValidatingPrompt, Cloneable {
         this.player = player
         val conversation: SimpleConversation = object : SimpleConversation() {
             override val firstPrompt: Prompt
-                protected get() = this@SimplePrompt
+                get() = this@SimplePrompt
             override val prefix: ConversationPrefix
-                protected get() {
+                get() {
                     val prefix = customPrefix
-                    return prefix?.let { SimplePrefix(it) } ?: super.getPrefix()
+                    return prefix?.let { SimplePrefix(it) } ?: super.prefix
                 }
         }
         if (openMenu) {
-            val menu: UserInterface = UserInterface.Companion.getInterface(player)
-            if (menu != null) conversation.setMenuToReturnTo(menu)
+            val menu: UserInterface = UserInterface.getInterface(player)
+            conversation.setMenuToReturnTo(menu)
         }
         conversation.start(player)
         return conversation
-    }
-
-    @SneakyThrows
-    public override fun clone(): SimplePrompt {
-        return super.clone()
     }
 
     companion object {

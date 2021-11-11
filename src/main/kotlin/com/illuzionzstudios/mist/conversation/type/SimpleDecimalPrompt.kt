@@ -2,10 +2,7 @@ package com.illuzionzstudios.mist.conversation.type
 
 import com.illuzionzstudios.mist.conversation.SimplePrompt
 import com.illuzionzstudios.mist.util.Valid
-import com.illuzionzstudios.mist.util.Valid.checkNotNull
-import com.illuzionzstudios.mist.util.Valid.isDecimal
-import com.illuzionzstudios.mist.util.Valid.isInteger
-import lombok.*
+import lombok.NoArgsConstructor
 import org.bukkit.conversations.ConversationContext
 import org.bukkit.conversations.Prompt
 import org.bukkit.entity.Player
@@ -16,21 +13,10 @@ import java.util.function.Consumer
  */
 @NoArgsConstructor
 class SimpleDecimalPrompt @JvmOverloads constructor(
-    question: String?,
-    successAction: Consumer<Double>,
+    private val question: String?,
+    private val successAction: Consumer<Double>,
     openMenu: Boolean = true
 ) : SimplePrompt(openMenu) {
-    /**
-     * The question you can set in the constructor already
-     */
-    @Setter(value = AccessLevel.PROTECTED)
-    private val question: String? = null
-
-    /**
-     * What happens when the number is entered
-     */
-    @Setter(value = AccessLevel.PROTECTED)
-    private val successAction: Consumer<Double>
 
     /**
      * The menu question
@@ -81,10 +67,5 @@ class SimpleDecimalPrompt @JvmOverloads constructor(
         fun show(player: Player?, question: String?, successAction: Consumer<Double>) {
             SimpleDecimalPrompt(question, successAction).show(player!!)
         }
-    }
-
-    init {
-        this.question = question
-        this.successAction = successAction
     }
 }

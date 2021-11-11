@@ -12,6 +12,7 @@ import java.util.function.Predicate
 import java.util.function.Supplier
 import java.util.regex.Pattern
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 /**
  * A section of memory that relates to a configuration. This configuration
@@ -21,28 +22,23 @@ import java.util.stream.Collectors
  * See [MemoryConfiguration]
  */
 open class ConfigSection : MemoryConfiguration {
-    //  -------------------------------------------------------------------------
-    //  Final variables
-    //  -------------------------------------------------------------------------
+
     /**
      * This is the main [ConfigSection] for the file
      * All sections come under it
      */
-    @Getter
     protected val root: ConfigSection?
 
     /**
      * This is the [ConfigSection] that this section
      * is under
      */
-    @Getter
     protected val parent: ConfigSection?
 
     /**
      * These are the current [Comment] loaded for this section
      * Each comment is mapped to the absolute path to the value
      */
-    @Getter
     val configComments: HashMap<String?, Comment?>?
 
     /**
@@ -50,27 +46,24 @@ open class ConfigSection : MemoryConfiguration {
      * loaded when default values are set. Again each comment
      * is mapped to the absolute path to the value
      */
-    @Getter
     val defaultComments: HashMap<String?, Comment?>?
 
     /**
      * These are the loaded key value pairs for this [ConfigSection]
-     */
-    @Getter
+     */       
     val values: MutableMap<String?, Any?>?
 
     /**
      * These are the default key value pairs for this [ConfigSection]
      * They're what are automatically loaded if no values are found
      */
-    val defaults: MutableMap<String?, Any?>
+    lateinit var defaultValues: MutableMap<String?, Any?>
 
     /**
      * Flag if this section is a default [ConfigSection]
      * Meaning it gets loaded into the file if not found
      */
-    @Getter
-    protected val isDefault: Boolean
+    protected val default: Boolean
 
     /**
      * This object here is invoked on by the `synchronized` tag
@@ -91,7 +84,6 @@ open class ConfigSection : MemoryConfiguration {
      * For instance if this section is for a player, the
      * full path may be "data.player.<player_name>"
     </player_name> */
-    @Getter
     private val fullPath: String
 
     /**
@@ -99,7 +91,6 @@ open class ConfigSection : MemoryConfiguration {
      * also be called the name. For instance take the above
      * example for [.fullPath], this would be "<player_name>"
     </player_name> */
-    @Getter
     private val nodeKey: String?
     //  -------------------------------------------------------------------------
     //  Values we may want to change
@@ -108,8 +99,6 @@ open class ConfigSection : MemoryConfiguration {
      * The amount of SPACE chars to use as indentation.
      * This means space of each key from the parent section
      */
-    @Getter
-    @Setter
     protected var indentation = 2
 
     /**
@@ -123,15 +112,12 @@ open class ConfigSection : MemoryConfiguration {
      * paths may then different with separators and produce a whole
      * bunch of errors and be a pain to debug
      */
-    @Getter
-    @Setter
     protected var pathSeparator = '.'
 
     /**
      * Flag is set to true if changes were made the the section at all
      * Useful for detecting to save
      */
-    @Getter
     protected var changed = false
 
     /**
@@ -140,13 +126,13 @@ open class ConfigSection : MemoryConfiguration {
     constructor() {
         this.root = this
         this.parent = this
-        isDefault = false
+        default = false
         nodeKey = ""
         this.fullPath = ""
         configComments = HashMap()
         defaultComments = HashMap()
         values = LinkedHashMap()
-        this.defaults = LinkedHashMap<String, Any>()
+        this.defaultValues = LinkedHashMap<String, Any>().toMutableMap()
     }
 
     /**
@@ -162,7 +148,7 @@ open class ConfigSection : MemoryConfiguration {
         this.parent = parent
         this.nodeKey = nodeKey
         this.fullPath = if (nodeKey != null) parent!!.fullPath + nodeKey + root!!.pathSeparator else parent!!.fullPath
-        this.isDefault = isDefault
+        this.default = isDefault
         defaultComments = null
         configComments = defaultComments
         defaults = null
@@ -212,8 +198,8 @@ open class ConfigSection : MemoryConfiguration {
             val nodePath = StringBuilder(fullPath)
 
             // If creating default path, write the nodes to defaults
-            val writeTo: MutableMap<String, Any> = if (useDefault) root.defaults else root.values
-            Objects.requireNonNull<Map<String, Any>>(writeTo, "Can't write to invalid value map")
+            val writeTo: MutableMap<String?, Any?>? = if (useDefault) root.defaultValues else root.values
+            Objects.requireNonNull(writeTo, "Can't write to invalid value map")
 
             // Last node that was set
             var travelNode: ConfigSection? = this
@@ -225,9 +211,9 @@ open class ConfigSection : MemoryConfiguration {
                         (if (i != 0) nodePath.append(root.pathSeparator) else nodePath).append(pathParts[i]).toString()
 
                     // If not set as a config section, set it
-                    if (writeTo[node] !is ConfigSection) {
-                        writeTo[node] =
-                            ConfigSection(root, travelNode, pathParts[i], useDefault).also { travelNode = it }
+                    if (writeTo?.get(node) !is ConfigSection) {
+                        writeTo?.set(node,
+                            ConfigSection(root, travelNode, pathParts[i], useDefault).also { travelNode = it })
                     } else {
                         // Else just set our current node the mapped node
                         travelNode = writeTo[node] as ConfigSection?
@@ -255,14 +241,14 @@ open class ConfigSection : MemoryConfiguration {
         val section = ConfigSection(root, this, path, true)
 
         // Assure not null
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         Objects.requireNonNull(
-            root!!.defaultComments, "Root config has invalid default comments map"
+            root.defaultComments, "Root config has invalid default comments map"
         )
 
         // Insert into root maps
         synchronized(root.lock) {
-            root.defaults.put(fullPath + path, section)
+            root.defaults.set(fullPath + path, section)
             root.defaultComments!!.put(fullPath + path, Comment(*comment))
         }
         return section
@@ -280,14 +266,14 @@ open class ConfigSection : MemoryConfiguration {
         val section = ConfigSection(root, this, path, true)
 
         // Assure not null
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         Objects.requireNonNull(
             root!!.defaultComments, "Root config has invalid default comments map"
         )
 
         // Insert into root maps
         synchronized(root.lock) {
-            root.defaults.put(fullPath + path, section)
+            root.defaults.set(fullPath + path, section)
             root.defaultComments!!.put(fullPath + path, Comment(style, *comment))
         }
         return section
@@ -326,7 +312,7 @@ open class ConfigSection : MemoryConfiguration {
             root.configComments, "Root config has invalid config comments map"
         )
         synchronized(root.lock) {
-            if (isDefault) {
+            if (default) {
                 root.defaultComments!!.put(fullPath + path, comment)
             } else {
                 root.configComments!!.put(fullPath + path, comment)
@@ -339,7 +325,7 @@ open class ConfigSection : MemoryConfiguration {
      * See [.setDefaultComment]
      */
     fun setDefaultComment(path: String, vararg lines: String?): ConfigSection {
-        return setDefaultComment(path, if (lines.size == 0) null else Arrays.asList(*lines))
+        return setDefaultComment(path, (if (lines.isEmpty()) null else listOf(*lines)) as List<String>?)
     }
 
     /**
@@ -354,7 +340,9 @@ open class ConfigSection : MemoryConfiguration {
      * See [.setDefaultComment]
      */
     fun setDefaultComment(path: String, commentStyle: CommentStyle?, vararg lines: String?): ConfigSection {
-        return setDefaultComment(path, commentStyle, if (lines.size == 0) null else Arrays.asList(*lines))
+        return setDefaultComment(path, commentStyle,
+            (if (lines.isEmpty()) null else listOf(*lines)) as List<String>?
+        )
     }
 
     /**
@@ -419,9 +407,9 @@ open class ConfigSection : MemoryConfiguration {
      * @param value The value to set for this node
      */
     override fun addDefault(path: String, value: Any?) {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         createNodePath(path, true)
-        synchronized(root!!.lock) { root.defaults.put(fullPath + path, value) }
+        synchronized(root!!.lock) { root.defaults.set(fullPath + path, value) }
     }
 
     /**
@@ -435,13 +423,13 @@ open class ConfigSection : MemoryConfiguration {
      * @param configuration Set the default configuration adapter
      */
     override fun setDefaults(configuration: Configuration) {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         if (fullPath.isEmpty()) {
-            root!!.defaults.clear()
+            root!!.defaultValues.clear()
         } else {
-            root!!.defaults.keys.stream()
-                .filter(Predicate { k: String -> k.startsWith(fullPath) })
-                .forEach(Consumer { key: String? -> root.defaults.remove(key) })
+            root!!.defaultValues.keys.stream()
+                .filter(Predicate { k: String -> k.startsWith(fullPath) } as (String?) -> Boolean)
+                .forEach(Consumer { key: String? -> root.defaultValues.remove(key) })
         }
         addDefaults(configuration)
     }
@@ -462,7 +450,7 @@ open class ConfigSection : MemoryConfiguration {
      * @return A set of path nodes as a [String]
      */
     override fun getKeys(deep: Boolean): Set<String> {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
 
         // Set of keys
@@ -470,15 +458,15 @@ open class ConfigSection : MemoryConfiguration {
         val pathIndex = fullPath.lastIndexOf(root.pathSeparator)
         if (deep) {
             result.addAll(
-                root.defaults.keys.stream()
-                    .filter(Predicate { k: String -> k.startsWith(fullPath) })
+                root.defaultValues.keys.stream()
+                    .filter(Predicate { k: String -> k.startsWith(fullPath) } as (String?) -> Boolean)
                     .map<String>(Function { k: String ->
                         if (!k.endsWith(
                                 root.pathSeparator.toString()
                             )
                         ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
-                    })
-                    .collect<LinkedHashSet<String>, Any>(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
+                    } as (String?) -> String)
+                    .collect(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
             )
             result.addAll(
                 root.values!!.keys.stream()
@@ -496,19 +484,19 @@ open class ConfigSection : MemoryConfiguration {
             )
         } else {
             result.addAll(
-                root.defaults.keys.stream()
+                root.defaultValues.keys.stream()
                     .filter(Predicate { k: String ->
                         k.startsWith(fullPath) && k.lastIndexOf(
                             root.pathSeparator
                         ) == pathIndex
-                    })
+                    } as (String?) -> Boolean)
                     .map<String>(Function { k: String ->
                         if (!k.endsWith(
                                 root.pathSeparator.toString()
                             )
                         ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
-                    })
-                    .collect<LinkedHashSet<String>, Any>(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
+                    } as (String?) -> String)
+                    .collect(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
             )
             result.addAll(
                 root.values!!.keys.stream()
@@ -541,7 +529,7 @@ open class ConfigSection : MemoryConfiguration {
      * @return A map of nodes to their values
      */
     override fun getValues(deep: Boolean): Map<String, Any> {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
         val collectorFunction = Function { pathIndex1: Int ->
             Collectors.toMap<Map.Entry<String?, Any?>, String, Any, LinkedHashMap<String, Any>>(
@@ -550,15 +538,15 @@ open class ConfigSection : MemoryConfiguration {
                             root.pathSeparator.toString()
                         )
                     ) key1.substring(pathIndex1 + 1) else key1.substring(pathIndex1 + 1, key1.length - 1)
-                }, { (key1, value) -> java.util.Map.Entry.value },
+                }, { (key1, value) -> value },
                 { v1: Any?, v2: Any? -> throw IllegalStateException() }) { LinkedHashMap() }
         }
         val result = LinkedHashMap<String, Any>()
         val pathIndex = fullPath.lastIndexOf(root.pathSeparator)
         if (deep) {
             result.putAll(
-                root.defaults.entries.stream()
-                    .filter(Predicate { (key1): Map.Entry<String, Any?> -> key1.startsWith(fullPath) })
+                root.defaultValues.entries.stream()
+                    .filter { key1: MutableMap.MutableEntry<String?, Any?> -> key1.key!!.startsWith(fullPath) }
                     .collect(collectorFunction.apply(pathIndex))
             )
             result.putAll(
@@ -567,12 +555,12 @@ open class ConfigSection : MemoryConfiguration {
                     .collect(collectorFunction.apply(pathIndex)))
         } else {
             result.putAll(
-                root.defaults.entries.stream()
-                    .filter(Predicate { (key1): Map.Entry<String, Any?> ->
-                        key1.startsWith(fullPath) && key1.lastIndexOf(
+                root.defaultValues.entries.stream()
+                    .filter{ key1: MutableMap.MutableEntry<String?, Any?> ->
+                        key1.key!!.startsWith(fullPath) && key1.key!!.lastIndexOf(
                             root.pathSeparator
                         ) == pathIndex
-                    })
+                    }
                     .collect(collectorFunction.apply(pathIndex))
             )
             result.putAll(
@@ -598,7 +586,7 @@ open class ConfigSection : MemoryConfiguration {
      * @return A list of found [ConfigSection]
      */
     fun getSections(path: String): List<ConfigSection?> {
-        val rootSection = getConfigurationSection(path) ?: return Collections.EMPTY_LIST
+        val rootSection = getConfigurationSection(path) ?: return emptyList()
         val result = ArrayList<ConfigSection?>()
         rootSection.getKeys(false).stream()
             .map { path: String -> rootSection[path] }
@@ -614,9 +602,9 @@ open class ConfigSection : MemoryConfiguration {
      * @return Whether their is a value set there
      */
     override fun contains(path: String): Boolean {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
-        return root.defaults.containsKey(fullPath + path) || root.values!!.containsKey(fullPath + path)
+        return root.defaultValues.contains(fullPath + path) || root.values!!.containsKey(fullPath + path)
     }
 
     /**
@@ -625,18 +613,18 @@ open class ConfigSection : MemoryConfiguration {
      * @param ignoreDefault If to not check the defaults as well
      */
     override fun contains(path: String, ignoreDefault: Boolean): Boolean {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
-        return !ignoreDefault && root.defaults.containsKey(fullPath + path) || root.values!!.containsKey(fullPath + path)
+        return !ignoreDefault && root.defaultValues.contains(fullPath + path) || root.values!!.containsKey(fullPath + path)
     }
 
     /**
      * See [.contains] except checks if value set is not null, ie, an actual value set
      */
     override fun isSet(path: String): Boolean {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
-        return root.defaults[fullPath + path] != null || root.values!![fullPath + path] != null
+        return root.defaultValues[fullPath + path] != null || root.values!![fullPath + path] != null
     }
 
     /**
@@ -650,7 +638,7 @@ open class ConfigSection : MemoryConfiguration {
      * @return See [.nodeKey]
      */
     override fun getName(): String {
-        return getNodeKey()
+        return nodeKey!!
     }
     //  -------------------------------------------------------------------------
     //  Getting and setting values in the config
@@ -664,11 +652,11 @@ open class ConfigSection : MemoryConfiguration {
      * @return Found object, could be `null`
      */
     override fun get(path: String): Any? {
-        Objects.requireNonNull<Map<String, Any>>(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
         var result = root.values!![fullPath + path]
         if (result == null) {
-            result = root.defaults[fullPath + path]
+            result = root.defaultValues[fullPath + path]
         }
         return result
     }
@@ -705,8 +693,8 @@ open class ConfigSection : MemoryConfiguration {
      * @param type The class of T for casting
      * @param <T>  The type that the found object must be
      * @return Found value as T
-    </T> */
-    fun <T> getT(path: String, type: Class<T?>): T? {
+     */
+    fun <T> getT(path: String, type: Class<T>): T? {
         return getT(path, type, null)
     }
 
@@ -717,7 +705,7 @@ open class ConfigSection : MemoryConfiguration {
      * Except we are able to return a default instance of T should the value
      * not be found or not be able to cast to T
      */
-    fun <T> getT(path: String, type: Class<T>, def: T): T? {
+    fun <T> getT(path: String, type: Class<T>, def: T?): T? {
         val raw = get(path)
         return if (type.isInstance(raw)) type.cast(raw) else def
     }
@@ -732,7 +720,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun set(path: String, value: Any?) {
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
-        if (isDefault) {
+        if (default) {
             // If it's a default section, set a default value
             addDefault(path, value)
         } else {
@@ -857,7 +845,7 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     fun createSection(path: String, vararg comment: String?): ConfigSection {
-        return createSection(path, null, if (comment.size == 0) null else Arrays.asList(*comment))
+        return createSection(path, null, (if (comment.isEmpty()) null else listOf(*comment)) as List<String>?)
     }
 
     fun createSection(path: String, comment: List<String>?): ConfigSection {
@@ -865,7 +853,9 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     fun createSection(path: String, commentStyle: CommentStyle?, vararg comment: String?): ConfigSection {
-        return createSection(path, commentStyle, if (comment.size == 0) null else Arrays.asList(*comment))
+        return createSection(path, commentStyle,
+            (if (comment.isEmpty()) null else listOf(*comment)) as List<String>?
+        )
     }
 
     /**
@@ -918,7 +908,7 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     override fun getString(path: String, def: String?): String? {
-        return getT<String?>(path, String::class.java, def)
+        return getT(path, String::class.java, def)
     }
 
     fun getChar(path: String): Char {
@@ -949,7 +939,7 @@ open class ConfigSection : MemoryConfiguration {
 
     override fun getDouble(path: String): Double {
         val result = get(path)
-        return if (result is Number) result.toDouble() else 0
+        return if (result is Number) result.toDouble() else 0.toDouble()
     }
 
     override fun getDouble(path: String, def: Double): Double {
@@ -968,11 +958,11 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     override fun getList(path: String): List<*>? {
-        return getT<List<*>>(path, MutableList::class.java)
+        return getT(path, List::class.java)
     }
 
     override fun getList(path: String, def: List<*>?): List<*>? {
-        return getT<List<*>?>(path, MutableList::class.java, def)
+        return getT(path, List::class.java, def)
     }
 
     override fun getConfigurationSection(path: String): ConfigSection? {
@@ -986,6 +976,6 @@ open class ConfigSection : MemoryConfiguration {
      * Except it will create the section if not found
      */
     fun getOrCreateConfigurationSection(path: String): ConfigSection {
-        return Objects.requireNonNull(getT(path, ConfigSection::class.java, createSection(path)))
+        return getT(path, ConfigSection::class.java, createSection(path))!!
     }
 }

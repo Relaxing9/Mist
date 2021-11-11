@@ -14,20 +14,18 @@ import java.util.*
 /**
  * A button that returns to a previous/parent [UserInterface]
  */
-@RequiredArgsConstructor
-@AllArgsConstructor
 class ReturnBackButton : Button() {
     /**
      * The parent [UserInterface]
      */
-    private val parentInterface: UserInterface = null
+    private val parentInterface: UserInterface? = null
 
     /**
      * Make a new instance of the [UserInterface] when showing
      */
     private val makeNewInstance = false
-    override val item: ItemStack?
-        get() = ItemCreator.Companion.of(material).name(title).lores(lore).build()
+    override val item: ItemStack
+        get() = ItemCreator(material = material, name = title, lores = lore.toList())
             .makeUIItem()// When clicking don't move items
 
     /**
@@ -37,7 +35,7 @@ class ReturnBackButton : Button() {
         get() = ButtonListener { player: Player, ui: UserInterface?, type: ClickType?, event: InventoryClickEvent ->
             // When clicking don't move items
             event.isCancelled = true
-            if (makeNewInstance) parentInterface.newInstance().show(player) else parentInterface.show(player)
+            if (makeNewInstance) parentInterface?.newInstance()?.show(player) else parentInterface?.show(player)
         }
 
     companion object {

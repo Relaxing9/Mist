@@ -14,7 +14,7 @@ abstract class ObjectLoader<T, L>(
     /**
      * The section to load and save from
      */
-    @field:Getter protected var loader: L
+    protected var loader: L
 ) {
     /**
      * Our data object to get properties from
