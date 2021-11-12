@@ -1,10 +1,12 @@
 package com.illuzionzstudios.mist.data.controller
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Logger.Companion.info
 import com.illuzionzstudios.mist.data.PlayerData
 import com.illuzionzstudios.mist.data.database.Database
 import com.illuzionzstudios.mist.data.player.AbstractPlayer
 import com.illuzionzstudios.mist.data.player.AbstractPlayerData
+import com.illuzionzstudios.mist.util.ReflectionUtil
 import lombok.*
 import org.apache.commons.lang.reflect.ConstructorUtils
 import java.lang.reflect.InvocationTargetException
@@ -13,6 +15,7 @@ import java.lang.reflect.InvocationTargetException
  * Master class for handling all data between players
  */
 class PlayerDataController<P : AbstractPlayer?, PD : AbstractPlayerData<*>?> {
+
     /**
      * Registered default data
      */
@@ -21,8 +24,7 @@ class PlayerDataController<P : AbstractPlayer?, PD : AbstractPlayerData<*>?> {
     /**
      * The database to use for player data
      */
-    @Getter
-    private var database: Database? = null
+    var database: Database? = null
 
     /**
      * The player class we use for our operations
@@ -91,7 +93,7 @@ class PlayerDataController<P : AbstractPlayer?, PD : AbstractPlayerData<*>?> {
                 }
                 val constructor = ConstructorUtils.getMatchingAccessibleConstructor(pi, arrayOf<Class<*>?>(playerClass))
                     ?: continue
-                player.data.add(constructor.newInstance(player) as PD)
+                player.data.add(ReflectionUtil.instantiate(constructor, player) as AbstractPlayerData<*>)
             } catch (e: Exception) {
                 if (!(e is IllegalArgumentException || e is IllegalAccessException || e is InstantiationException || e is InvocationTargetException)) {
                 }

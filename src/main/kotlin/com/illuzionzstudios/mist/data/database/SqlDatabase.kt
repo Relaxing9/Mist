@@ -1,12 +1,12 @@
 package com.illuzionzstudios.mist.data.database
 
-import com.illuzionzstudios.mist.Logger.Companion.displayError
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
-import com.illuzionzstudios.mist.data.player.*
+import com.illuzionzstudios.mist.data.player.AbstractPlayer
+import com.illuzionzstudios.mist.data.player.OfflinePlayer
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.util.UUIDFetcher.Companion.getName
-import lombok.RequiredArgsConstructor
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
@@ -19,38 +19,38 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * TODO: Make this mess work
  */
-@RequiredArgsConstructor
-@Deprecated("")
-class SqlDatabase : Database {
+class SqlDatabase(
     /**
      * Host server of the database
      */
-    private val host: String? = null
+    private val host: String? = null,
 
     /**
      * Port to connect to
      */
-    private val port = 0
+    private val port: Int = 0,
 
     /**
      * Database to use
      */
-    private val database: String? = null
+    private val database: String? = null,
 
     /**
      * Connection username
      */
-    private val username: String? = null
+    private val username: String? = null,
 
     /**
      * Connection password
      */
-    private val password: String? = null
+    private val password: String? = null,
 
     /**
      * Table to store our player data
      */
-    private val tableName: String = SpigotPlugin.Companion.getPluginName() + "_PlayerData"
+    private val tableName: String = SpigotPlugin.pluginName + "_PlayerData"
+) : Database {
+
 
     /**
      * Our connection to handle SQL operations
@@ -87,7 +87,7 @@ class SqlDatabase : Database {
         return data
     }
 
-    override fun getFieldValue(player: AbstractPlayer, queryingField: String?): Any? {
+    override fun getFieldValue(player: AbstractPlayer, queryingField: String): Any? {
         try {
             val statement = connection!!.prepareStatement("SELECT ? FROM $tableName WHERE uuid = ?")
             statement.setString(1, queryingField)
@@ -101,7 +101,7 @@ class SqlDatabase : Database {
         return null
     }
 
-    override fun setFieldValue(player: AbstractPlayer, queryingField: String?, value: Any?) {
+    override fun setFieldValue(player: AbstractPlayer, queryingField: String, value: Any?) {
         try {
             // Try create column if doesn't exist
             val createColumn = connection!!.prepareStatement(
@@ -168,7 +168,7 @@ class SqlDatabase : Database {
         val status = AtomicBoolean(false)
 
         // Connect async
-        MinecraftScheduler.Companion.get()!!.desynchronize(Runnable {
+        MinecraftScheduler.get()!!.desynchronize({
             try {
                 // Don't connect if already connected
                 if (connection != null && isAlive) {
@@ -182,12 +182,12 @@ class SqlDatabase : Database {
                         // MySQL
                         Class.forName("com.mysql.jdbc.Driver")
                         connection = DriverManager.getConnection(
-                            "jdbc:mysql://" + host + ":" + port + "/" + database, username, password
+                            "jdbc:mysql://$host:$port/$database", username, password
                                     + "?useSSL=false"
                         )
                         status.set(true)
                     } else {
-                        val dataFolder = File(SpigotPlugin.Companion.getInstance().getDataFolder(), database + ".db")
+                        val dataFolder = File(SpigotPlugin.instance!!.dataFolder, database + ".db")
                         if (!dataFolder.exists()) {
                             try {
                                 dataFolder.createNewFile()

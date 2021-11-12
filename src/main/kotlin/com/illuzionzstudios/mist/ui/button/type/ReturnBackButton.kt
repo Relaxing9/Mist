@@ -4,60 +4,45 @@ import com.cryptomorin.xseries.XMaterial
 import com.illuzionzstudios.mist.item.ItemCreator
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.ui.button.Button
-import lombok.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
 /**
  * A button that returns to a previous/parent [UserInterface]
  */
-class ReturnBackButton : Button() {
+class ReturnBackButton(
     /**
-     * The parent [UserInterface]
+     * Instance of [UserInterface] to open
      */
-    private val parentInterface: UserInterface? = null
+    private val parentInterface: UserInterface?,
 
     /**
-     * Make a new instance of the [UserInterface] when showing
+     * The icon to display
      */
-    private val makeNewInstance = false
-    override val item: ItemStack
-        get() = ItemCreator(material = material, name = title, lores = lore.toList())
-            .makeUIItem()// When clicking don't move items
+    override val item: ItemStack = ItemCreator.builder().material(XMaterial.OAK_DOOR).name("&4&lReturn Back").build().makeUIItem(),
+
+    /**
+     * Create a new instanceof using [UserInterface.newInstance] when showing the interface?
+     */
+    private val newInstance: Boolean = false
+) : Button() {
 
     /**
      * Open the parent interface
      */
     override val listener: ButtonListener
-        get() = ButtonListener { player: Player, ui: UserInterface?, type: ClickType?, event: InventoryClickEvent ->
-            // When clicking don't move items
-            event.isCancelled = true
-            if (makeNewInstance) parentInterface?.newInstance()?.show(player) else parentInterface?.show(player)
+        get() = object : ButtonListener {
+            override fun onClickInInterface(
+                player: Player?,
+                ui: UserInterface?,
+                type: ClickType?,
+                event: InventoryClickEvent?
+            ) {
+                // When clicking don't move items
+                event?.isCancelled = true
+                if (newInstance) parentInterface?.newInstance()?.show(player!!) else parentInterface?.show(player!!)
+            }
         }
-
-    companion object {
-        /**
-         * Material for this button
-         */
-        @Getter
-        @Setter
-        private val material = XMaterial.OAK_DOOR
-
-        /**
-         * The title of this button
-         */
-        @Getter
-        @Setter
-        private val title = "&4&lReturn"
-
-        /**
-         * The lore of this button
-         */
-        @Getter
-        @Setter
-        private val lore = Arrays.asList("", "Return back.")
-    }
 }

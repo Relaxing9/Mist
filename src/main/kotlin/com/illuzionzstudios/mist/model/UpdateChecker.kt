@@ -26,14 +26,14 @@ object UpdateChecker {
      * @param callback Callback to call
      */
     fun check(callback: BiConsumer<VersionType, String?>) {
-        MinecraftScheduler.Companion.get()!!.desynchronize(Runnable {
+        MinecraftScheduler.get()!!.desynchronize {
             try {
-                val resourceId: Int = SpigotPlugin.Companion.getInstance().getPluginId()
+                val resourceId: Int = SpigotPlugin.instance!!.pluginId
                 val httpURLConnection: HttpURLConnection =
                     URL(String.format(SPIGOT_URL, resourceId)).openConnection() as HttpsURLConnection
                 httpURLConnection.requestMethod = "GET"
                 httpURLConnection.setRequestProperty(HttpHeaders.USER_AGENT, "Mozilla/5.0")
-                val currentVersion: String = SpigotPlugin.Companion.getPluginVersion()
+                val currentVersion: String = SpigotPlugin.pluginVersion
                 val fetchedVersion = Resources.toString(httpURLConnection.url, Charset.defaultCharset())
                 val devVersion = currentVersion.contains("DEV")
                 val latestVersion = fetchedVersion.equals(currentVersion, ignoreCase = true)
@@ -47,7 +47,7 @@ object UpdateChecker {
                 MinecraftScheduler.Companion.get()!!
                     .synchronize(Runnable { callback.accept(VersionType.UNKNOWN, null) })
             }
-        })
+        }
     }
 
     /**
@@ -56,15 +56,15 @@ object UpdateChecker {
      * @param sender The sender to check
      */
     fun checkVersion(sender: CommandSender) {
-        if (!SpigotPlugin.Companion.getInstance().isCheckUpdates()) return
+        if (!SpigotPlugin.instance!!.isCheckUpdates) return
         check { version: VersionType, name: String? ->
             // Only notify if new version available in console
             if (version == VersionType.OUTDATED) PluginLocale.Companion.UPDATE_AVAILABLE
-                .toString("plugin_name", SpigotPlugin.Companion.getPluginName())
-                .toString("current", SpigotPlugin.Companion.getPluginVersion())
+                .toString("plugin_name", SpigotPlugin.pluginName)
+                .toString("current", SpigotPlugin.pluginVersion)
                 .toString("new", name)
                 .toString("status", version.name.lowercase(Locale.getDefault()))
-                .toString("resource_id", SpigotPlugin.Companion.getInstance().getPluginId())
+                .toString("resource_id", SpigotPlugin.instance!!.pluginId)
                 .sendMessage(sender)
         }
     }

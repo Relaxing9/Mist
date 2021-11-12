@@ -9,7 +9,7 @@ enum class Rate(
     /**
      * The amount of ticks between each tick of the object
      */
-    @field:Getter private val time: Long
+    val time: Long
 ) {
     MIN_64(3840000L), MIN_32(1920000L), MIN_16(960000L), MIN_08(480000L), MIN_04(240000L), MIN_02(120000L), MIN_01(
         60000L
@@ -67,7 +67,7 @@ enum class Rate(
      * Log and reset the time
      */
     fun printAndResetTime() {
-        println(name + " in a second: " + timeSpent)
+        println("$name in a second: $timeSpent")
         timeSpent = 0L
     }
 

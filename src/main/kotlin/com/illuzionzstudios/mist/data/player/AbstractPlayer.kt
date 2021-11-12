@@ -1,6 +1,6 @@
 package com.illuzionzstudios.mist.data.player
 
-import com.illuzionzstudios.mist.Logger.Companion.severe
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.data.PlayerData
 import com.illuzionzstudios.mist.data.controller.PlayerDataController
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
@@ -18,33 +18,33 @@ abstract class AbstractPlayer(
     /**
      * Identifier of the player
      */
-    val UUID: UUID,
+    val uuid: UUID,
     /**
      * Cached name of the player
      */
-    private val name: String?
+    val name: String?
 ) {
 
     /**
      * Keys in the data to always be replaced
      */
-    private val keyMetadata = HashMap<String, String>()
+    val keyMetadata = HashMap<String, String>()
 
     /**
      * Keys in the data that have been modified
      * Used for tracking whether to bother setting data
      */
-    private val modifiedKeys = CopyOnWriteArrayList<String>()
+    val modifiedKeys = CopyOnWriteArrayList<String>()
 
     /**
      * Local data stored before being saved
      */
-    private val cachedData = HashMap<String, Any?>()
+    val cachedData = HashMap<String, Any?>()
 
     /**
      * Player data associated with this player
      */
-    private val data = ArrayList<AbstractPlayerData<*>>()
+    val data = ArrayList<AbstractPlayerData<*>>()
 
     /**
      * If the player data has been loaded into the cache
@@ -96,14 +96,16 @@ abstract class AbstractPlayer(
         MinecraftScheduler.Companion.get()!!.desynchronize(Runnable {
 
             // Async fetch data
-            cachedData.putAll(
-                PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-                    .getFields(this)
-            )
+            PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+                ?.getFields(this)?.let {
+                    cachedData.putAll(
+                        it
+                    )
+                }
 
             // If stored data is empty, try upload cached data first
-            if (PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-                    .getFields(this).isEmpty()
+            if (PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+                    ?.getFields(this)?.isEmpty()!!
             ) {
                 upload()
             }
@@ -158,8 +160,8 @@ abstract class AbstractPlayer(
     fun clearAllData() {
         // Clear loaded/cached data
         cachedData.forEach { (key: String?, data: Any?) ->
-            PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-                .setFieldValue(this, key, null)
+            PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+                ?.setFieldValue(this, key, null)
         }
 
         // Now clear cached data as not to save it
@@ -183,8 +185,8 @@ abstract class AbstractPlayer(
             // Don't save if nothing to save
 
             // Set the field in the database
-            PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-                .setFieldValue(this, key, value)
+            PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+                ?.setFieldValue(this, key, value)
         }
         resetModifiedKeys()
         return true

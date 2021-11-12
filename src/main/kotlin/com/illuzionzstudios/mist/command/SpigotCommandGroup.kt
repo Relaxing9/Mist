@@ -94,7 +94,7 @@ abstract class SpigotCommandGroup {
      *
      * @return If main command is set
      */
-    private val isRegistered: Boolean
+    val isRegistered: Boolean
         get() = mainCommand != null
 
     /**

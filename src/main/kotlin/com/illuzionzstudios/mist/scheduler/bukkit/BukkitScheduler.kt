@@ -73,7 +73,11 @@ class BukkitScheduler(
     }
 
     override fun desynchronize(runnable: Runnable?, time: Long): Int {
-        return plugin!!.server.scheduler.scheduleAsyncDelayedTask(plugin, runnable!!, time)
+        return object : BukkitRunnable() {
+            override fun run() {
+                runnable?.run()
+            }
+        }.runTaskLaterAsynchronously(plugin!!, time).taskId
     }
 
     override fun <T> desynchronize(callable: Callable<T>?, consumer: Consumer<Future<T>>?) {

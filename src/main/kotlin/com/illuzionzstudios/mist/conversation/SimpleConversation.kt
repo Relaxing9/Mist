@@ -158,7 +158,7 @@ abstract class SimpleConversation
                 }
 
                 // Edit 2 - Save last prompt if it is our class
-                if (currentPrompt is SimplePrompt) lastSimplePrompt = (currentPrompt as SimplePrompt).clone()
+                if (currentPrompt is SimplePrompt) lastSimplePrompt = ((currentPrompt as SimplePrompt).clone())
 
                 // Edit end
                 if (!currentPrompt.blocksForInput(context)) {

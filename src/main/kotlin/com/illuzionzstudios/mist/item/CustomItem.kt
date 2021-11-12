@@ -3,7 +3,6 @@ package com.illuzionzstudios.mist.item
 import com.cryptomorin.xseries.XEnchantment
 import com.cryptomorin.xseries.XMaterial
 import com.illuzionzstudios.mist.config.locale.MistString
-import lombok.*
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -24,75 +23,69 @@ import org.bukkit.inventory.ItemStack
  *
  * Contains methods for manipulating item
  */
-@Getter
-@Setter
-@ToString
-class CustomItem {
-    /**
-     * Damage to the item for setting custom metadata
-     */
-    @Builder.Default
-    private val damage = -1
-
-    /**
-     * Actual item stack constructed to perform more operations on
-     */
-    private var item: ItemStack? = null
+open class CustomItem(
 
     /**
      * The identifier of this custom item. Usually so we can
      * include this in a map if need be
      */
-    @Builder.Default
-    private val identifier = "null"
+    var identifier: String = "null",
+
+    /**
+     * Damage to the item for setting custom metadata
+     */
+    var damage: Int = -1,
+
+    /**
+     * Actual item stack constructed to perform more operations on
+     */
+    var item: ItemStack? = null,
 
     /**
      * The material of this item
      */
-    @Builder.Default
-    private val material = XMaterial.AIR
+    var material: XMaterial = XMaterial.AIR,
 
     /**
      * Custom name of the item
      */
-    private val customName: MistString? = null
+    var customName: MistString? = null,
 
     /**
      * Custom lore of the item
      */
-    private val lore: List<MistString>? = null
+    var lore: List<MistString>? = null,
 
     /**
      * Amount of the item
      */
-    @Builder.Default
-    private val amount = 1
+    var amount: Int = 1,
 
     /**
      * Item custom model data
      */
-    @Builder.Default
-    private val customModelData = 0
+    var customModelData: Int = 0,
 
     /**
      * Map of all enchantments
      */
-    private val enchants: Map<XEnchantment, Int>? = null
+    var enchants: Map<XEnchantment, Int>? = null,
 
     /**
      * If the item is glowing
      */
-    private val glowing = false
+    var glowing: Boolean = false,
 
     /**
      * If the item is unbreakable
      */
-    private val unbreakable = false
+    var unbreakable: Boolean = false,
 
     /**
      * If to hide all flags
      */
-    private val hideFlags = false
+    var hideFlags: Boolean = false,
+) {
 
     /**
      * Actually build the item. Must be called before any kind of
@@ -100,13 +93,13 @@ class CustomItem {
      * call this super method
      */
     fun buildItem(): ItemStack {
-        val creator: ItemCreator.ItemCreatorBuilder = ItemCreator.Companion.of(material)
-        if (customName != null && !customName.toString().trim { it <= ' ' }
-                .isEmpty()) creator.name(customName.toString())
-        if (lore != null) creator.lores(MistString.Companion.fromList(lore))
+        val creator: ItemCreator.ItemCreatorBuilder = ItemCreator.builder().material(material)
+        if (customName != null && customName.toString().trim { it <= ' ' }
+                .isNotEmpty()) creator.name(customName.toString())
+        if (lore != null) creator.lores(MistString.fromList(lore!!))
         creator.amount(amount)
         creator.customModelData(customModelData)
-        creator.enchants(enchants)
+        creator.enchants(enchants!!)
         creator.glow(glowing)
         creator.unbreakable(unbreakable)
         creator.hideTags(hideFlags)
@@ -119,7 +112,7 @@ class CustomItem {
      * Do custom things to the item with extra loaded stuff right after [.item] instance
      * is set.
      */
-    protected fun customiseItem() {}
+    open fun customiseItem() {}
 
     /**
      * Makes sure item is set. Run where we need to make sure it isn't null

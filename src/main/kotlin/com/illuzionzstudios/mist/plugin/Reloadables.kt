@@ -44,7 +44,7 @@ class Reloadables(val plugin: SpigotPlugin) {
         }
         commands.forEach { obj -> obj.register() }
         controllers.forEach { controller ->
-            Bukkit.getServer().pluginManager.registerEvents(controller, SpigotPlugin.instance)
+            Bukkit.getServer().pluginManager.registerEvents(controller, SpigotPlugin.instance!!)
             controller.initialize(plugin)
         }
     }

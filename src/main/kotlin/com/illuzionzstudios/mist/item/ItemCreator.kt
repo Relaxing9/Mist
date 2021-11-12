@@ -202,4 +202,96 @@ class ItemCreator(
         stack?.itemMeta = stackMeta
         return stack!!
     }
+
+    companion object {
+        fun builder(): ItemCreatorBuilder = ItemCreatorBuilder()
+    }
+
+    data class ItemCreatorBuilder(
+        /**
+         * The actual item stack this represents
+         */
+        var item: ItemStack? = null,
+
+        /**
+         * The [XMaterial] of the item
+         */
+        var material: XMaterial = XMaterial.STONE,
+
+        /**
+         * The amount of items in the stack
+         */
+        var amount: Int = 1,
+
+        /**
+         * Damage to the item for setting custom metadata
+         */
+        var damage: Int = -1,
+
+        /**
+         * Custom model data
+         */
+        var customModelData: Int = 0,
+
+        /**
+         * The display name of the item
+         */
+        var name: String? = null,
+
+        /**
+         * The lore strings to display
+         */
+
+        var lores: List<String?>? = null,
+
+        /**
+         * The enchants applied for the item mapped by level
+         */
+        var enchants: Map<XEnchantment, Int>? = null,
+
+        /**
+         * The item flags
+         */
+        var flags: MutableList<XItemFlag> = ArrayList(),
+
+        /**
+         * The actual metadata of the item stack
+         */
+        var meta: ItemMeta? = null,
+
+        /**
+         * If the [ItemStack] has the unbreakable flag
+         */
+        var unbreakable: Boolean = false,
+
+        /**
+         * Should we hide all tags from the item (enchants, etc.)?
+         */
+        var hideTags: Boolean = false,
+
+        /**
+         * Should we add glow to the item? (adds a fake enchant and uses
+         * item flags to hide it)
+         *
+         *
+         * The enchant is visible on older MC versions.
+         */
+        var glow: Boolean = false
+    ) {
+        fun item(item: ItemStack) = apply { this.item = item }
+        fun material(item: XMaterial) = apply { this.material = item }
+        fun amount(item: Int) = apply { this.amount = item }
+        fun damage(item: Int) = apply { this.damage = item }
+        fun customModelData(item: Int) = apply { this.customModelData = item }
+        fun name(item: String) = apply { this.name = item }
+        fun lores(item: List<String>) = apply { this.lores = item }
+        fun lore(item: String) = apply { this.lores = listOf(item) }
+        fun enchants(item: Map<XEnchantment, Int>) = apply { this.enchants = item }
+        fun flags(item: MutableList<XItemFlag>) = apply { this.flags = item }
+        fun meta(item: ItemMeta) = apply { this.meta = item }
+        fun unbreakable(item: Boolean) = apply { this.unbreakable = item }
+        fun hideTags(item: Boolean) = apply { this.hideTags = item }
+        fun glow(item: Boolean) = apply { this.glow = item }
+        fun build() = ItemCreator(item, material, amount, damage, customModelData, name, lores, enchants, flags, meta, unbreakable, hideTags, glow)
+    }
 }

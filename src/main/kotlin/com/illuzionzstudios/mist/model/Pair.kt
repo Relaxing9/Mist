@@ -13,9 +13,9 @@ class Pair<K, V>
     /**
      * First value
      */
-    @field:Getter private val key: K,
+    val key: K,
     /**
      * Second value
      */
-    @field:Getter private val value: V
+    val value: V
 )

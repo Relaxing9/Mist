@@ -13,6 +13,11 @@ import java.util.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicLong
 import java.util.function.Consumer
+import kotlin.reflect.KAnnotatedElement
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.findAnnotations
+import kotlin.reflect.full.hasAnnotation
 
 /**
  * An instance of a scheduler that ticks objects. This will handle
@@ -242,7 +247,7 @@ abstract class MinecraftScheduler {
      * @param source This can be any object you want
      */
     fun registerSynchronizationService(source: Any) {
-        SYNC_SERVICE_REGISTRATION!!.add(SynchronizationService(source))
+        SYNC_SERVICE_REGISTRATION!!.add(SynchronizationService(source as AnnotatedElement))
     }
 
     /**
@@ -259,7 +264,7 @@ abstract class MinecraftScheduler {
      * This contains the method/field data that will be used such
      * as the ticking rate, invoked object
      */
-    protected class SynchronizedElement<A : Annotation?>(
+    protected class SynchronizedElement<out A : Annotation?>(
         /**
          * The rate to tick by
          */
@@ -271,7 +276,7 @@ abstract class MinecraftScheduler {
         /**
          * The class of the tick rate type
          */
-        val synchronizationClass: Class<A>
+        val synchronizationClass: Class<out A>
     ) {
         /**
          * Timer to tick object
@@ -279,7 +284,7 @@ abstract class MinecraftScheduler {
         val timer: PresetCooldown
 
         init {
-            timer = PresetCooldown((rate.getTime() / 50).toInt())
+            timer = PresetCooldown((rate?.time?.div(50))!!.toInt())
         }
     }
 
@@ -290,20 +295,20 @@ abstract class MinecraftScheduler {
         /**
          * The object that is being ticked
          */
-        var source: Any
+        var source: AnnotatedElement
     ) {
         /**
          * Elements to be ticked
          */
         var elements: MutableSet<SynchronizedElement<*>> = HashSet()
-        private fun <A : Annotation?> getAnnotations(): Array<Class<A>> {
-            return arrayOf<Class<*>>(Sync::class.java, Async::class.java)
+        private fun getAnnotations(): Array<Class<out Annotation>> {
+            return arrayOf(Sync::class.java, Async::class.java)
         }
 
         @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
         private fun <A : Annotation?> getElements(
-            objects: Array<AccessibleObject>,
-            synchronizationClass: Class<A>,
+            objects: Array<out AccessibleObject>,
+            synchronizationClass: Class<out A>,
             rate: Rate
         ): Set<SynchronizedElement<A>> {
             val elements: MutableSet<SynchronizedElement<A>> = HashSet()
@@ -321,7 +326,7 @@ abstract class MinecraftScheduler {
         }
 
         @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
-        private fun <A : Annotation?> getRate(synchronizationClass: Class<A>, element: AnnotatedElement): Rate? {
+        private fun <A : Annotation> getRate(synchronizationClass: Class<out A>, element: AnnotatedElement): Rate? {
             if (!element.isAnnotationPresent(synchronizationClass)) {
                 return null
             }
@@ -330,8 +335,7 @@ abstract class MinecraftScheduler {
             val annotation = element.getAnnotation(synchronizationClass)
 
             // Get declared rate of refresh value is instant by default //
-            val getRate: Method = annotation.annotationType()
-                .getDeclaredMethod("rate")
+            val getRate: Method = annotation?.javaClass?.getDeclaredMethod("rate")!!
 
 //            if (!getRate.canAccess(getRate)) {
 //                getRate.setAccessible(true);
@@ -344,7 +348,7 @@ abstract class MinecraftScheduler {
                 var aClass = aClass
                 val fields: List<Field> = ArrayList()
                 do {
-                    Collections.addAll(fields, *aClass!!.declaredFields)
+                    Collections.addAll(fields.toMutableList(), *aClass!!.declaredFields)
                     aClass = aClass.superclass
                 } while (aClass != null)
                 return fields.toTypedArray()
@@ -354,7 +358,7 @@ abstract class MinecraftScheduler {
                 var aClass = aClass
                 val methods: List<Method> = ArrayList()
                 do {
-                    Collections.addAll(methods, *aClass!!.declaredMethods)
+                    Collections.addAll(methods.toMutableList(), *aClass!!.declaredMethods)
                     aClass = aClass.superclass
                 } while (aClass != null)
                 return methods.toTypedArray()
@@ -364,12 +368,12 @@ abstract class MinecraftScheduler {
         init {
             try {
                 // LOAD ELEMENTS //
-                for (clazz in getAnnotations<Annotation>()) {
+                for (clazz in getAnnotations()) {
                     if (source.javaClass.isAnnotationPresent(clazz)) {
-                        val rate = getRate(clazz, source.javaClass)
+                        val rate = getRate(clazz, source)
                         elements.add(SynchronizedElement(rate, source, clazz))
                     } else if (source.javaClass.superclass.isAnnotationPresent(clazz)) {
-                        val rate = getRate(clazz, source.javaClass.superclass)
+                        val rate = getRate(clazz, source)
                         elements.add(SynchronizedElement(rate, source, clazz))
                     }
                     for (rate in Rate.values()) {

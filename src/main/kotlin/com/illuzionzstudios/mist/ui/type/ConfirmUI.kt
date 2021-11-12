@@ -49,27 +49,41 @@ class ConfirmUI(confirmAction: Consumer<Boolean>) : UserInterface(null, false) {
         title = "&8Are you sure?"
         size = 27
         this.confirmAction = confirmAction
-        denyButton = Button.Companion.of(ItemCreator.builder()
+        denyButton = Button.of(ItemCreator.builder()
             .material(XMaterial.RED_DYE)
-            .name(PluginLocale.Companion.INTERFACE_CONFIRM_CONFIRM_NAME.toString())
-            .lore(PluginLocale.Companion.INTERFACE_CONFIRM_CONFIRM_LORE.toString())
+            .name(PluginLocale.INTERFACE_CONFIRM_CONFIRM_NAME.toString())
+            .lore(PluginLocale.INTERFACE_CONFIRM_CONFIRM_LORE.toString())
             .glow(true)
             .build(),
-            ButtonListener { player: Player?, ui: UserInterface?, clickType: ClickType?, event: InventoryClickEvent? ->
-                confirmAction.accept(
-                    false
-                )
+            object: ButtonListener {
+                override fun onClickInInterface(
+                    player: Player?,
+                    ui: UserInterface?,
+                    type: ClickType?,
+                    event: InventoryClickEvent?
+                ) {
+                    confirmAction.accept(
+                        false
+                    )
+                }
             })
-        confirmButton = Button.Companion.of(ItemCreator.builder()
+        confirmButton = Button.of(ItemCreator.builder()
             .material(XMaterial.LIME_DYE)
-            .name(PluginLocale.Companion.INTERFACE_CONFIRM_DENY_NAME.toString())
-            .lore(PluginLocale.Companion.INTERFACE_CONFIRM_DENY_LORE.toString())
+            .name(PluginLocale.INTERFACE_CONFIRM_DENY_NAME.toString())
+            .lore(PluginLocale.INTERFACE_CONFIRM_DENY_LORE.toString())
             .glow(true)
             .build(),
-            ButtonListener { player: Player?, ui: UserInterface?, clickType: ClickType?, event: InventoryClickEvent? ->
-                confirmAction.accept(
-                    true
-                )
+            object: ButtonListener {
+                override fun onClickInInterface(
+                    player: Player?,
+                    ui: UserInterface?,
+                    type: ClickType?,
+                    event: InventoryClickEvent?
+                ) {
+                    confirmAction.accept(
+                        true
+                    )
+                }
             })
     }
 }

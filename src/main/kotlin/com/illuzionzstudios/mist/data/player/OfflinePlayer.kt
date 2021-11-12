@@ -17,7 +17,7 @@ class OfflinePlayer(uuid: UUID, name: String?) : AbstractPlayer(uuid, name) {
         if (data != null) {
             return data
         }
-        data = PlayerDataController.Companion.INSTANCE!!.getDefaultData<T>(this, type)
+        data = PlayerDataController.INSTANCE!!.getDefaultData<T>(this, type)
         return data
     }
 }

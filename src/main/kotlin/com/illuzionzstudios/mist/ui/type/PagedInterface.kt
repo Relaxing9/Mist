@@ -8,8 +8,6 @@ import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.ui.button.Button
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer
 import com.illuzionzstudios.mist.util.*
-import com.illuzionzstudios.mist.util.MathUtil.range
-import com.illuzionzstudios.mist.util.Valid.checkBoolean
 import lombok.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -108,23 +106,6 @@ abstract class PagedInterface<T> private constructor(
     ) : this(pageSize, parent, pages, false)
 
     /**
-     * Create a new paged menu
-     *
-     * @param pageSize
-     * @param parent
-     * @param pages
-     * @param returnMakesNewInstance *
-     */
-    @Deprecated(
-        """we recommend you don't set the page size for the menu to
-      autocalculate"""
-    )
-    protected constructor(
-        pageSize: Int, parent: UserInterface?,
-        pages: Iterable<T>, returnMakesNewInstance: Boolean
-    ) : this(pageSize, parent, pages, returnMakesNewInstance)
-
-    /**
      * Dynamically populates the pages
      *
      * @param items all items that will be split
@@ -161,21 +142,27 @@ abstract class PagedInterface<T> private constructor(
         prevButton = if (hasPages) object : Button() {
             val canGo = currentPage > 1
             override val listener: ButtonListener
-                get() = ButtonListener { player: Player?, ui: UserInterface?, type: ClickType?, event: InventoryClickEvent? ->
-                    if (canGo) {
-                        currentPage = MathUtil.range(
-                            currentPage - 1, 1,
-                            pages.size
-                        )
-                        updatePage()
+                get() = object : ButtonListener {
+                    override fun onClickInInterface(
+                        player: Player?,
+                        ui: UserInterface?,
+                        type: ClickType?,
+                        event: InventoryClickEvent?
+                    ) {
+                        if (canGo) {
+                            currentPage = MathUtil.range(
+                                currentPage - 1, 1,
+                                pages.size
+                            )
+                            updatePage()
+                        }
                     }
                 }
             override val item: ItemStack?
                 get() {
                     val str = currentPage - 1
-                    return ItemCreator.Companion.of(
-                        if (canGo) XMaterial.LIME_DYE else XMaterial.GRAY_DYE
-                    )
+                    return ItemCreator.builder()
+                        .material(if (canGo) XMaterial.LIME_DYE else XMaterial.GRAY_DYE)
                         .name(if (str == 0) "&7First Page" else "&8<< &fPage $str")
                         .build().make()
                 }
@@ -185,21 +172,27 @@ abstract class PagedInterface<T> private constructor(
         nextButton = if (hasPages) object : Button() {
             val canGo = currentPage < pages.size
             override val listener: ButtonListener
-                get() = ButtonListener { player: Player?, ui: UserInterface?, type: ClickType?, event: InventoryClickEvent? ->
-                    if (canGo) {
-                        currentPage = MathUtil.range(
-                            currentPage + 1, 1,
-                            pages.size
-                        )
-                        updatePage()
+                get() = object : ButtonListener {
+                    override fun onClickInInterface(
+                        player: Player?,
+                        ui: UserInterface?,
+                        type: ClickType?,
+                        event: InventoryClickEvent?
+                    ) {
+                        if (canGo) {
+                            currentPage = MathUtil.range(
+                                currentPage + 1, 1,
+                                pages.size
+                            )
+                            updatePage()
+                        }
                     }
                 }
             override val item: ItemStack?
                 get() {
                     val last = currentPage == pages.size
-                    return ItemCreator.Companion.of(
-                        if (canGo) XMaterial.LIME_DYE else XMaterial.GRAY_DYE
-                    )
+                    return ItemCreator.builder()
+                        .material(if (canGo) XMaterial.LIME_DYE else XMaterial.GRAY_DYE)
                         .name(if (last) "&7Last Page" else "Page " + (currentPage + 1) + " &8>>")
                         .build().make()
                 }
@@ -291,8 +284,8 @@ abstract class PagedInterface<T> private constructor(
             val `object`: T? = currentPageItems[slot]
             if (`object` != null) return convertToItemStack(`object`)
         }
-        if (slot == size - 6) return prevButton.getItem()
-        return if (slot == size - 4) nextButton.getItem() else null
+        if (slot == size - 6) return prevButton?.item
+        return if (slot == size - 4) nextButton?.item else null
     }
 
     /**

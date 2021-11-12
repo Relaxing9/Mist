@@ -15,7 +15,7 @@ import java.util.function.Consumer
 class YamlDatabase : Database {
     override fun getFields(player: AbstractPlayer): HashMap<String, Any?> {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.Companion.getInstance(), "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
         dataConfig.load()
         val cache = HashMap<String, Any?>()
 
@@ -30,18 +30,18 @@ class YamlDatabase : Database {
         return cache
     }
 
-    override fun getFieldValue(player: AbstractPlayer, queryingField: String?): Any? {
+    override fun getFieldValue(player: AbstractPlayer, queryingField: String): Any? {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.Companion.getInstance(), "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
         dataConfig.load()
-        return dataConfig[queryingField!!]
+        return dataConfig[queryingField]
     }
 
-    override fun setFieldValue(player: AbstractPlayer, queryingField: String?, value: Any?) {
+    override fun setFieldValue(player: AbstractPlayer, queryingField: String, value: Any?) {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.Companion.getInstance(), "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
         dataConfig.load()
-        dataConfig[queryingField!!] = value
+        dataConfig[queryingField] = value
         dataConfig.saveChanges()
     }// Get name without extension
 
@@ -54,7 +54,7 @@ class YamlDatabase : Database {
     override val savedPlayers: List<OfflinePlayer>?
         get() {
             val savedPlayers: MutableList<OfflinePlayer> = ArrayList()
-            val dir = File(SpigotPlugin.Companion.getInstance().getDataFolder().getPath() + File.separator + "data")
+            val dir = File(SpigotPlugin.instance!!.dataFolder.path + File.separator + "data")
             val files: Array<File> = dir.listFiles() ?: return savedPlayers
 
             // Can't find players if can't find directory

@@ -625,7 +625,7 @@ abstract class UserInterface protected constructor(
      * Creates a [UserInterface] with no parent
      */
     init {
-        returnButton = parent?.let { ReturnBackButton(it, makeNewInstance) }
+        returnButton = parent?.let { ReturnBackButton(it, newInstance = makeNewInstance) }
             ?: Button.makeEmpty()
     }
 }

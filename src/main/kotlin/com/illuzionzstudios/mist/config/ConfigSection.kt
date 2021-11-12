@@ -63,7 +63,7 @@ open class ConfigSection : MemoryConfiguration {
      * Flag if this section is a default [ConfigSection]
      * Meaning it gets loaded into the file if not found
      */
-    protected val default: Boolean
+    var default: Boolean
 
     /**
      * This object here is invoked on by the `synchronized` tag
@@ -84,14 +84,14 @@ open class ConfigSection : MemoryConfiguration {
      * For instance if this section is for a player, the
      * full path may be "data.player.<player_name>"
     </player_name> */
-    private val fullPath: String
+    val fullPath: String
 
     /**
      * This is the relevant node for the section, could
      * also be called the name. For instance take the above
      * example for [.fullPath], this would be "<player_name>"
     </player_name> */
-    private val nodeKey: String?
+    val nodeKey: String?
     //  -------------------------------------------------------------------------
     //  Values we may want to change
     //  -------------------------------------------------------------------------
@@ -99,7 +99,7 @@ open class ConfigSection : MemoryConfiguration {
      * The amount of SPACE chars to use as indentation.
      * This means space of each key from the parent section
      */
-    protected var indentation = 2
+    var indentation = 2
 
     /**
      * This is the character to separate the paths with.

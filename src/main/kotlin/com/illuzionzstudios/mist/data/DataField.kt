@@ -14,29 +14,30 @@ class DataField<T>(
     /**
      * Data level this field is apart of
      */
-    @field:Getter private val playerData: AbstractPlayerData<*>,
+    val playerData: AbstractPlayerData<*>,
     /**
      * Point in file where data is stored
      */
-    @field:Getter private val field: String, defaultData: T
+    val field: String,
+
+    val defaultData: T
 ) {
     /**
      * Local instance of our controller
      */
     private val controller: PlayerDataController<*, *>? =
-        PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()
+        PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()
 
     /**
      * Stored data of this field
      */
-    var localValue: T? = null
-
-    /**
-     * Default data for this field if not set
-     */
-    @Getter
-    @Setter
-    private val defaultData: T?// Check value is actually set
+    private var localValue: T? = null
+    get() {
+        if (field == null) {
+            localValue = get()
+        }
+        return field
+    }
 
     /**
      * If the actual field is set
@@ -45,14 +46,14 @@ class DataField<T>(
         get() {
 
             // Check value is actually set
-            return controller.getDatabase().getCachedValue(playerData.player, queryingField) != null
+            return controller?.database?.getCachedValue(playerData.player!!, queryingField) != null
         }
 
     /**
      * Get the actual value stored in data
      */
     fun get(): T? {
-        val fetch: T? = controller.getDatabase().getCachedValue(playerData.player, queryingField)
+        val fetch: T? = controller?.database?.getCachedValue(playerData.player!!, queryingField) as T?
 
         // If not set or null, set default
         if (fetch == null) {
@@ -78,11 +79,11 @@ class DataField<T>(
      */
     fun set(value: T?) {
         // Current set value if any
-        val current: T? = controller.getDatabase().getCachedValue(playerData.player, queryingField)
+        val current: T? = controller?.database?.getCachedValue(playerData.player!!, queryingField) as T?
 
         // Clear any existing modifications queries if new value is null
         if (value == null) {
-            playerData.player.modifiedKeys.removeIf { s: String ->
+            playerData.player?.modifiedKeys?.removeIf { s: String ->
                 s.contains(
                     queryingField
                 )
@@ -91,12 +92,12 @@ class DataField<T>(
 
         // New value is not the current so we can modify it
         if (current == null || current != value) {
-            playerData.player.modifyKey(queryingField)
+            playerData.player?.modifyKey(queryingField)
         }
 
         // Update local value
         localValue = value
-        controller.getDatabase().setCachedValue(playerData.player, queryingField, value)
+        controller?.database?.setCachedValue(playerData.player!!, queryingField, value)
     }
 
     /**
@@ -107,28 +108,21 @@ class DataField<T>(
      */
     fun set() {
         val queryingField = queryingField
-        playerData.player.modifyKey(queryingField)
+        playerData.player?.modifyKey(queryingField)
     }
-
-    fun getLocalValue(): T {
-        if (localValue == null) {
-            localValue = get()
-        }
-        return localValue
-    }// Replace necessary metadata
 
     /**
      * This will grab the final field we use for querying based
      * on local keys to replace
      */
-    private val queryingField: String
-        private get() {
+    private val queryingField: String = ""
+        get() {
             var queryingField = field
 
             // Replace necessary metadata
-            val globalKeyMetadata = playerData.player.keyMetadata
+            val globalKeyMetadata = playerData.player?.keyMetadata
             val localKeyMetadata = playerData.localKeys
-            val localIter: Iterator<Map.Entry<String, String>> = globalKeyMetadata.entries.iterator()
+            val localIter: Iterator<Map.Entry<String, String>> = globalKeyMetadata?.entries?.iterator()!!
             val globalIter: Iterator<Map.Entry<String?, String?>> = localKeyMetadata.entries.iterator()
             while (localIter.hasNext()) {
                 val (key, value) = localIter.next()
@@ -143,16 +137,12 @@ class DataField<T>(
                 }
             }
             if (contains(queryingField, "{")) {
-                throw RuntimeException("Tried to access player metadata before prepared... " + field + " for " + playerData.player.name)
+                throw RuntimeException("Tried to access player metadata before prepared... " + field + " for " + playerData.player?.name)
             }
             return queryingField
         }
 
     private fun contains(queryingField: String, s: String?): Boolean {
         return queryingField.lowercase(Locale.getDefault()).contains(s!!.lowercase(Locale.getDefault()))
-    }
-
-    init {
-        this.defaultData = defaultData
     }
 }

@@ -44,7 +44,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     /**
      * If to check for plugin updates on load
      */
-    protected var isCheckUpdates = false
+    var isCheckUpdates = false
 
     /**
      * The main command for this plugin, can be `null`
@@ -221,7 +221,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         // Stop ticking all tasks
         MinecraftScheduler.get()!!.stopInvocation()
         InterfaceController.INSTANCE.stop(this)
-        if (mainCommand != null && mainCommand?.isRegistered()) mainCommand?.unregister()
+        if (mainCommand != null && mainCommand?.isRegistered!!) mainCommand?.unregister()
         reloadables.shutdown()
     }
     //  -------------------------------------------------------------------------
@@ -253,7 +253,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      * @param database         The type of database to use to save data
      * @param playerController Our custom player controller for operations
      */
-    protected fun <BP : BukkitPlayer?> initializePlayerData(
+    protected fun <BP : BukkitPlayer> initializePlayerData(
         playerClass: Class<out BukkitPlayer?>?, database: Database?,
         playerController: BukkitPlayerController<BP>?
     ) {
@@ -286,14 +286,14 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     /**
      * @param command Register a [SpigotCommand] for this plugin
      */
-    protected fun registerCommand(command: SpigotCommandGroup?, vararg labels: String?) {
+    protected fun registerCommand(command: SpigotCommandGroup?, vararg labels: String) {
         reloadables.registerCommand(command!!, *labels)
     }
 
     /**
      * @param command Register a new [SpigotCommandGroup]
      */
-    protected fun registerMainCommand(command: SpigotCommandGroup?, vararg labels: String?) {
+    protected fun registerMainCommand(command: SpigotCommandGroup?, vararg labels: String) {
         this.mainCommand = command
         mainCommand?.register(*labels)
     }

@@ -1,11 +1,10 @@
 package com.illuzionzstudios.mist.data.controller
 
-import com.illuzionzstudios.mist.Logger.Companion.severe
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.controller.PluginController
 import com.illuzionzstudios.mist.data.player.*
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
-import com.illuzionzstudios.mist.util.UUIDFetcher.Companion.getName
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
@@ -19,7 +18,6 @@ import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
 import java.util.*
-import java.util.function.Consumer
 
 /**
  * Controls all Bukkit players
@@ -49,17 +47,16 @@ abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerContro
         }
 
         // Save offline players
-        getOfflineCache().forEach { (uuid: UUID?, player: OfflinePlayer) -> player.unsafeSave() }
+        offlineCache.forEach { (_: UUID?, player: OfflinePlayer) -> player.unsafeSave() }
 
         // Now disconnect database
-        PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-            .disconnect()
+        PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+            ?.disconnect()
     }
 
     fun getPlayer(name: String?): BP? {
         return getPlayer { wp: BP? ->
-            val player = wp.getBukkitPlayer()
-            player != null && wp.getName().equals(name, ignoreCase = true)
+            wp?.bukkitPlayer?.name.equals(name, ignoreCase = true)
         }.orElse(null)
     }
 
@@ -67,14 +64,13 @@ abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerContro
         return getPlayer(player.uniqueId)
     }
 
-    fun getPlayer(player: CommandSender): BP {
+    fun getPlayer(player: CommandSender): BP? {
         return getPlayer(player.name)
     }
 
-    fun getPlayer(entity: LivingEntity): BP {
-        return getPlayer { bp: BP? ->
-            val player = bp.getBukkitPlayer()
-            player != null && player.entityId == entity.entityId
+    fun getPlayer(entity: LivingEntity): BP? {
+        return getPlayer { wp: BP? ->
+            wp?.bukkitPlayer?.entityId == entity.entityId
         }.orElse(null)
     }
 
@@ -86,13 +82,13 @@ abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerContro
      */
     fun getNearbyPlayers(location: Location, squaredRadius: Int): List<BP> {
         val playersNearby: MutableList<BP> = ArrayList()
-        players.forEach(Consumer { bp: BP ->
-            if (bp.getBukkitPlayer() != null && bp.getLocation().world == location.world && location.distanceSquared(bp.getLocation()) <= squaredRadius * squaredRadius) {
+        players.forEach { bp ->
+            if (bp?.location?.world == location.world && location.distanceSquared(bp?.location!!) <= squaredRadius * squaredRadius) {
                 if (!playersNearby.contains(bp)) {
                     playersNearby.add(bp)
                 }
             }
-        })
+        }
         return playersNearby
     }
 
@@ -101,8 +97,8 @@ abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerContro
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun onLogin(event: AsyncPlayerPreLoginEvent) {
-        if (!PlayerDataController.Companion.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>().getDatabase()
-                .isAlive()
+        if (!PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
+                ?.isAlive!!
         ) {
             // Database down, disable plugin
             Logger.severe("Plugin disabling as could not establish connection to database")

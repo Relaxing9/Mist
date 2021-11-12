@@ -1,8 +1,5 @@
 package com.illuzionzstudios.mist.scheduler.rate
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
@@ -11,9 +8,7 @@ import java.lang.annotation.RetentionPolicy
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.CLASS
 )
-@Retention(
-    RetentionPolicy.RUNTIME
-)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class Async(
     /**
      * @return The rate of refresh

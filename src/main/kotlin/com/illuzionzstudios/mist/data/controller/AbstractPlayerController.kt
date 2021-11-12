@@ -1,10 +1,10 @@
 package com.illuzionzstudios.mist.data.controller
 
-import com.illuzionzstudios.mist.data.player.*
+import com.illuzionzstudios.mist.data.player.AbstractPlayer
+import com.illuzionzstudios.mist.data.player.OfflinePlayer
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.rate.Rate
 import com.illuzionzstudios.mist.scheduler.rate.Sync
-import lombok.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
@@ -49,7 +49,7 @@ abstract class AbstractPlayerController<P : AbstractPlayer?> {
      * @param uuid The UUID of player
      */
     fun getPlayer(uuid: UUID): P? {
-        return getPlayer { player: P? -> player?.UUID == uuid }.orElse(null)
+        return getPlayer { player: P? -> player?.uuid == uuid }.orElse(null)
     }
 
     /**
@@ -142,7 +142,7 @@ abstract class AbstractPlayerController<P : AbstractPlayer?> {
      */
     fun unregister(player: P) {
         try {
-            for (info in player.getData()) {
+            for (info in player?.data!!) {
                 info.unregister()
             }
         } catch (e: Exception) {

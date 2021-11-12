@@ -2,16 +2,13 @@ package com.illuzionzstudios.mist.scheduler.timer
 
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.getFormattedTime
 import lombok.NoArgsConstructor
 import lombok.ToString
 
 /**
  * A set cooldown that checks if a set amount of time has passed
  */
-@ToString
-@NoArgsConstructor
-open class Cooldown(ticks: Int) {
+open class Cooldown(ticks: Int = 0) {
     /**
      * Represents the time (in ticks) when the time will expire
      */
@@ -26,7 +23,7 @@ open class Cooldown(ticks: Int) {
      * @param ticks Set in x ticks after current time, [.isReady]
      */
     open fun setWait(ticks: Int) {
-        expireTicks = MinecraftScheduler.Companion.getCurrentTick() + ticks
+        expireTicks = MinecraftScheduler.currentTick + ticks
         expireTime = System.currentTimeMillis() + ticks * 50L
     }
 
@@ -59,7 +56,7 @@ open class Cooldown(ticks: Int) {
      * @return Get ticks left before expire time
      */
     val tickLeft: Long
-        get() = expireTicks - MinecraftScheduler.Companion.getCurrentTick()
+        get() = expireTicks - MinecraftScheduler.currentTick
 
     /**
      * Formatted version of [.getMillisecondsLeft]

@@ -12,7 +12,6 @@ import java.util.*
  *
  * Generates from lower (inclusive) to upper (inclusive)
  */
-@NoArgsConstructor
 class RandomNumberGenerator
 /**
  * Set lower and upper limits for generation
@@ -20,11 +19,11 @@ class RandomNumberGenerator
     /**
      * The lower bound for a generated number
      */
-    @field:Setter @field:Getter private val lower: Double,
+    private val lower: Double,
     /**
      * The upper bound for a generated number
      */
-    @field:Setter @field:Getter private val upper: Double
+    private val upper: Double
 ) {
     constructor(upper: Double) : this(0.0, upper)
 
@@ -50,7 +49,7 @@ class RandomNumberGenerator
          * @return [RandomNumberGenerator] with those bounds
          */
         fun parse(string: String?): RandomNumberGenerator {
-            var string = string ?: return RandomNumberGenerator(0)
+            var string = string ?: return RandomNumberGenerator(0.0)
 
             // Remove whitespace
             string = string.replace("\\s+".toRegex(), "")

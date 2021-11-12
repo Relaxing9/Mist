@@ -35,10 +35,14 @@ class MistString(
         private var canActionBar = false
 
         /**
-         * Construct a [MistString] from single string
+         * Construct a [MistString] from single string.
+         * Provides a way of making a nullable miststring where
+         * if the string is null the MistString is null to avoid
+         * init errors
          */
-        fun of(string: String): MistString {
+        fun of(string: String?): MistString? {
             // Faster than iterate list of 1 item
+            if (string == null) return null
             return MistString(string)
         }
 
@@ -46,14 +50,14 @@ class MistString(
          * Construct a [MistString] from multi strings
          */
         fun of(vararg strings: String?): MistString {
-            val builder = StringBuilder()
-            for (i in strings.indices) {
-                builder.append(strings[i])
-
-                // Can't compare values have to compare index
-                if (i != strings.size - 1) builder.append("\n")
-            }
-            return MistString(builder.toString())
+//            val builder = StringBuilder()
+//            for (i in strings.indices) {
+//                builder.append(strings[i])
+//
+//                // Can't compare values have to compare index
+//                if (i != strings.size - 1) builder.append("\n")
+//            }
+            return MistString(strings.joinToString("\n"))
         }
 
         /**
@@ -72,9 +76,9 @@ class MistString(
          * @param list The list to convert
          * @return The list of [MistString] with the original list's values
          */
-        fun fromStringList(list: List<String>): List<MistString> {
+        fun fromStringList(list: List<String>?): List<MistString> {
             val strings = ArrayList<MistString>()
-            list.forEach(Consumer { string: String -> strings.add(MistString(string)) })
+            list?.forEach(Consumer { string: String -> strings.add(MistString(string)) })
             return strings
         }
 

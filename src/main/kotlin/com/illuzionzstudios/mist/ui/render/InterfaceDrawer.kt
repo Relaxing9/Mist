@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.ui.render
 
 import com.cryptomorin.xseries.XMaterial
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import lombok.*
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -16,7 +15,7 @@ class InterfaceDrawer private constructor(
     /**
      * Amount of slots in the inventory
      */
-    @field:Getter val size: Int,
+    val size: Int,
     /**
      * The title for the interface
      *
@@ -24,12 +23,12 @@ class InterfaceDrawer private constructor(
      * Updating does not update interface, you have
      * to manually redraw it
      */
-    @field:Setter @field:Getter private val title: String
+    var title: String
 ) {
     /**
      * The items (or content) inside the inventory
      */
-    private val content: Array<ItemStack?>
+    private val content: Array<ItemStack?> = arrayOfNulls(size)
 
     /**
      * Push an item onto the stack. This means we set the next available slot,
@@ -123,13 +122,4 @@ class InterfaceDrawer private constructor(
         }
     }
 
-    /**
-     * Create a new drawer
-     *
-     * @param size  Pre defined size of the inventory
-     * @param title Title to display (supports colour codes)
-     */
-    init {
-        content = arrayOfNulls(size)
-    }
 }

@@ -1,6 +1,6 @@
 package com.illuzionzstudios.mist.ui
 
-import com.illuzionzstudios.mist.Logger.Companion.displayError
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.controller.PluginController
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
@@ -8,7 +8,6 @@ import com.illuzionzstudios.mist.scheduler.rate.Rate
 import com.illuzionzstudios.mist.scheduler.rate.Sync
 import com.illuzionzstudios.mist.ui.render.ClickLocation
 import com.illuzionzstudios.mist.util.TextUtil
-import com.illuzionzstudios.mist.util.TextUtil.formatText
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.*
@@ -33,8 +32,7 @@ enum class InterfaceController : PluginController, Listener {
         // Try close inventories
         try {
             for (online in Bukkit.getServer().onlinePlayers) {
-                val userInterface: UserInterface = UserInterface.Companion.getInterface(online)
-                if (userInterface != null) online.closeInventory()
+                if (UserInterface.getInterface(online) != null) online.closeInventory()
             }
         } catch (t: Throwable) {
             Logger.displayError(t, "Error closing menu inventories for players..")
@@ -48,8 +46,7 @@ enum class InterfaceController : PluginController, Listener {
     @Sync(rate = Rate.TICK)
     fun tick() {
         for (player in Bukkit.getOnlinePlayers()) {
-            val userInterface: UserInterface = UserInterface.Companion.getInterface(player)
-            if (userInterface != null) userInterface.tick()
+            UserInterface.getInterface(player)?.tick()
         }
     }
 
@@ -60,11 +57,8 @@ enum class InterfaceController : PluginController, Listener {
     fun onInterfaceClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val player = event.player as Player
-        val userInterface: UserInterface = UserInterface.Companion.getInterface(player)
-        if (userInterface != null) {
-            userInterface.onInterfaceClose(player, event.inventory)
-            player.removeMetadata(UserInterface.Companion.TAG_CURRENT, SpigotPlugin.Companion.getInstance())
-        }
+        UserInterface.getInterface(player)?.onInterfaceClose(player, event.inventory)
+        player.removeMetadata(UserInterface.Companion.TAG_CURRENT, SpigotPlugin.instance!!)
     }
 
     /**
@@ -74,7 +68,7 @@ enum class InterfaceController : PluginController, Listener {
     fun onMenuClick(event: InventoryClickEvent) {
         if (event.whoClicked !is Player) return
         val player = event.whoClicked as Player
-        val userInterface: UserInterface = UserInterface.Companion.getInterface(player)
+        val userInterface: UserInterface = UserInterface.getInterface(player)!!
         if (userInterface != null) {
             val slotItem = event.currentItem
             val cursor = event.cursor

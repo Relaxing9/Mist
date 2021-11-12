@@ -11,7 +11,7 @@ abstract class AbstractPlayerData<P : AbstractPlayer?>(
     /**
      * The player that owns this data
      */
-    @field:Getter protected override var player: P
+    override var player: P
 ) : PlayerData<P> {
     /**
      * Keys to replace when querying
@@ -29,12 +29,12 @@ abstract class AbstractPlayerData<P : AbstractPlayer?>(
     fun onSave() {}
     open fun unregister() {
         if (schedulerRegistered) {
-            MinecraftScheduler.Companion.get()!!.dismissSynchronizationService(this)
+            MinecraftScheduler.get()!!.dismissSynchronizationService(this)
         }
     }
 
     protected fun registerScheduler() {
-        MinecraftScheduler.Companion.get()!!.registerSynchronizationService(this)
+        MinecraftScheduler.get()!!.registerSynchronizationService(this)
         schedulerRegistered = true
     }
 }

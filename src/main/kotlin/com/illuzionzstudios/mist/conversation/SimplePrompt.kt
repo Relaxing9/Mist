@@ -119,6 +119,10 @@ abstract class SimplePrompt : ValidatingPrompt, Cloneable {
         }
     }
 
+    public override fun clone(): SimplePrompt {
+        return (super<ValidatingPrompt>.clone() as SimplePrompt)
+    }
+
     /**
      * Shows this prompt as a conversation to the player
      *
@@ -143,7 +147,7 @@ abstract class SimplePrompt : ValidatingPrompt, Cloneable {
                 }
         }
         if (openMenu) {
-            val menu: UserInterface = UserInterface.getInterface(player)
+            val menu: UserInterface? = UserInterface.getInterface(player)
             conversation.setMenuToReturnTo(menu)
         }
         conversation.start(player)

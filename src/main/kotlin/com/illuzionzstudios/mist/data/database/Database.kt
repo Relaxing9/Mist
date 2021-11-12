@@ -14,7 +14,7 @@ interface Database {
      * @param queryingField The field we're trying to access
      * @return The value as an [Object] to be cast
      */
-    fun getCachedValue(player: AbstractPlayer, queryingField: String?): Any? {
+    fun getCachedValue(player: AbstractPlayer, queryingField: String): Any? {
         return player.cachedData.getOrDefault(queryingField, null)
     }
 
@@ -25,7 +25,7 @@ interface Database {
      * @param queryingField The field we're trying to access
      * @param value         The value we're setting in the database
      */
-    fun setCachedValue(player: AbstractPlayer, queryingField: String?, value: Any?) {
+    fun setCachedValue(player: AbstractPlayer, queryingField: String, value: Any?) {
         player.cachedData[queryingField] = value
     }
 
@@ -43,7 +43,7 @@ interface Database {
      * @param queryingField The field we're trying to access
      * @return The value as an [Object] to be cast
      */
-    fun getFieldValue(player: AbstractPlayer, queryingField: String?): Any?
+    fun getFieldValue(player: AbstractPlayer, queryingField: String): Any?
 
     /**
      * Set a value in the database
@@ -52,7 +52,7 @@ interface Database {
      * @param queryingField The field we're trying to access
      * @param value         The value we're setting in the database
      */
-    fun setFieldValue(player: AbstractPlayer, queryingField: String?, value: Any?)
+    fun setFieldValue(player: AbstractPlayer, queryingField: String, value: Any?)
 
     /**
      * Return a list of all saved players in the database
