@@ -52,6 +52,7 @@
                             <shadedPattern>com.illuzionzstudios.mist.bstats</shadedPattern>
                         </relocation>
                     </relocations>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
                     <execution>
@@ -107,7 +108,7 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
