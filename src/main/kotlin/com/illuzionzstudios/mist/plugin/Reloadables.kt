@@ -7,7 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 
-class Reloadables(val plugin: SpigotPlugin) {
+class Reloadables() {
 
     /**
      * A list of currently registered listeners for this [com.illuzionzstudios.mist.plugin.SpigotPlugin]
@@ -45,7 +45,7 @@ class Reloadables(val plugin: SpigotPlugin) {
         commands.forEach { obj -> obj.register() }
         controllers.forEach { controller ->
             Bukkit.getServer().pluginManager.registerEvents(controller, SpigotPlugin.instance!!)
-            controller.initialize(plugin)
+            controller.initialize(SpigotPlugin.instance)
         }
     }
 

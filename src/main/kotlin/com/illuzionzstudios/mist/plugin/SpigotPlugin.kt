@@ -39,7 +39,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     /**
      * An easy way to handle listeners for reloading
      */
-    private val reloadables = Reloadables(this)
+    private val reloadables = Reloadables()
 
     /**
      * If to check for plugin updates on load
