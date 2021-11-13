@@ -50,6 +50,7 @@ abstract class PluginSettings(plugin: SpigotPlugin) : YamlConfig(plugin, Mist.SE
          * @param settings The instance of [PluginSettings] to load
          */
         fun loadSettings(settings: PluginSettings) {
+            SETTINGS_FILE = settings
 
             // Load settings file
             settings.load()
@@ -58,8 +59,6 @@ abstract class PluginSettings(plugin: SpigotPlugin) : YamlConfig(plugin, Mist.SE
             // Load our other custom settings
             settings.loadSettings()
             settings.saveChanges()
-
-            SETTINGS_FILE = settings
         }
     }
 }

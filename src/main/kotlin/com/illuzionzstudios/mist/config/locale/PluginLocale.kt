@@ -139,6 +139,9 @@ abstract class PluginLocale(
          * @param settings The instance of [PluginLocale] to load
          */
         fun loadLocale(settings: PluginLocale) {
+            // Set instance
+            LOCALE_FILE = settings
+
             // Load settings loadLocale
             settings.load()
 
@@ -151,9 +154,6 @@ abstract class PluginLocale(
 
             // Load locale groups
             STARTUP_GROUP.load()
-
-            // Set instance
-            LOCALE_FILE = settings
         }
 
         /**
