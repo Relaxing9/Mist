@@ -127,7 +127,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
 
             // Load settings and locale
             // Try save config if found
-            PluginSettings.Companion.loadSettings(pluginSettings)
+            PluginSettings.loadSettings(pluginSettings)
             PluginLocale.Companion.loadLocale(pluginLocale)
 
             // Enable our scheduler

@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Mist
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 
@@ -20,16 +21,42 @@ abstract class PluginSettings(plugin: SpigotPlugin) : YamlConfig(plugin, Mist.SE
      */
     abstract fun loadSettings()
 
+//    /**
+//     * Load these [PluginSettings] into the server, setting values
+//     * if not there, or loading the values into memory
+//     *
+//     *
+//     * Call in the [SpigotPlugin.onPluginEnable] to load plugin settings
+//     *
+//     * @param settings The instance of [PluginSettings] to load
+//     */
+//    fun load() {
+//        Logger.debug("Loading")
+//        SETTINGS_FILE = YamlConfig(this.plugin, Mist.SETTINGS_NAME)
+//        Logger.debug("Config Set")
+//
+//        // Load settings file
+//        GENERAL_GROUP.load()
+//        SETTINGS_FILE!!.load()
+//
+//        // Load our other custom settings
+//        loadSettings()
+//        SETTINGS_FILE!!.saveChanges()
+//    }
+
     companion object {
-        val GENERAL_GROUP = ConfigSettings()
 
         /**
          * The current loaded [PluginSettings] instance
          */
         var SETTINGS_FILE: YamlConfig? = null
+
+        val GENERAL_GROUP = ConfigSettings()
+
         //  -------------------------------------------------------------------------
         //  Main config settings provided by default
         //  -------------------------------------------------------------------------
+
         /**
          * The locale type to use, for instance
          * "en_US"

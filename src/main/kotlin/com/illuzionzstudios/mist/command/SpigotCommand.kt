@@ -27,7 +27,7 @@ abstract class SpigotCommand protected constructor(
      * passed as a command, use this [SpigotCommand] functionality
      * This is updated based on what is sent, which must be on of our aliases
      */
-    commandLabel: String,
+    var commandLabel: String,
 
     /**
      * Command aliases
@@ -298,7 +298,7 @@ abstract class SpigotCommand protected constructor(
      * Updates the label of this command
      */
     override fun setLabel(name: String): Boolean {
-        label = name
+        commandLabel = name
         return super.setLabel(name)
     }
 

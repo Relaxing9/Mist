@@ -60,7 +60,7 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
 
     override fun hashCode(): Int {
         var result = subLabels.contentHashCode()
-        result = 31 * result + subLabel.hashCode()
+        result = 31 * result + showInHelp.hashCode()
         return result
     }
 
@@ -86,7 +86,6 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
      * First label is the main label
      */
     init {
-
         // Set sub labels
         subLabels = aliases as Array<String>
 

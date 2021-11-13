@@ -25,11 +25,11 @@ import org.bukkit.event.inventory.InventoryType
 object InterfaceController : PluginController, Listener {
 
     override fun initialize(plugin: SpigotPlugin?) {
-        MinecraftScheduler.Companion.get()!!.registerSynchronizationService(this)
+        MinecraftScheduler.get()!!.registerSynchronizationService(this)
     }
 
     override fun stop(plugin: SpigotPlugin?) {
-        MinecraftScheduler.Companion.get()!!.dismissSynchronizationService(this)
+        MinecraftScheduler.get()!!.dismissSynchronizationService(this)
 
         // Try close inventories
         try {

@@ -33,9 +33,9 @@ class ConfigSettings {
      * Load all strings into cache and locale
      */
     fun load() {
-        settings.forEach(Consumer { setting: ConfigSetting ->
+        settings.forEach { setting: ConfigSetting ->
             // Set config file then load
             setting.loadSetting(PluginSettings.SETTINGS_FILE!!)
-        })
+        }
     }
 }

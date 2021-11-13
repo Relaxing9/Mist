@@ -536,22 +536,22 @@ open class YamlConfig : ConfigSection {
     protected fun writeComments(data: String?, out: Writer) {
         // line-by-line apply line spacing formatting and comments per-node
         val `in` = BufferedReader(StringReader(data!!))
-        var line: String
+        var line: String?
         var insideScalar = false
         var firstNode = true
         var index = 0
         val currentPath = LinkedList<String>()
         while (`in`.readLine().also { line = it } != null) {
             // ignore comments and empty lines (there shouldn't be any, but just in case)
-            if (line.trim { it <= ' ' }.startsWith("#") || line.isEmpty()) {
+            if (line!!.trim { it <= ' ' }.startsWith("#") || line!!.isEmpty()) {
                 continue
             }
 
             // check to see if this is a line that we can process
-            val lineOffset: Int = TextUtil.getOffset(line)
+            val lineOffset: Int = TextUtil.getOffset(line!!)
             insideScalar = insideScalar and (lineOffset <= index)
             var m: Matcher? = null
-            if (!insideScalar && YAML_REGEX.matcher(line).also { m = it }.find()) {
+            if (!insideScalar && YAML_REGEX.matcher(line!!).also { m = it }.find()) {
                 // we found a config node! ^.^
                 // check to see what the full path is
                 val depth = m!!.group(1).length / indentation
@@ -610,7 +610,7 @@ open class YamlConfig : ConfigSection {
                     insideScalar = true
                 }
             }
-            out.write(line)
+            out.write(line!!)
             out.write("\n")
         }
     }

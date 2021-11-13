@@ -57,7 +57,7 @@ open class ConfigSection : MemoryConfiguration {
      * These are the default key value pairs for this [ConfigSection]
      * They're what are automatically loaded if no values are found
      */
-    lateinit var defaultValues: MutableMap<String?, Any?>
+    var defaultValues: MutableMap<String?, Any?>
 
     /**
      * Flag if this section is a default [ConfigSection]
@@ -151,7 +151,7 @@ open class ConfigSection : MemoryConfiguration {
         this.default = isDefault
         defaultComments = null
         configComments = defaultComments
-        defaults = null
+        defaultValues = LinkedHashMap<String, Any>().toMutableMap()
         values = null
     }
 
@@ -266,9 +266,9 @@ open class ConfigSection : MemoryConfiguration {
         val section = ConfigSection(root, this, path, true)
 
         // Assure not null
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull(
-            root!!.defaultComments, "Root config has invalid default comments map"
+            root.defaultComments, "Root config has invalid default comments map"
         )
 
         // Insert into root maps
@@ -407,9 +407,9 @@ open class ConfigSection : MemoryConfiguration {
      * @param value The value to set for this node
      */
     override fun addDefault(path: String, value: Any?) {
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         createNodePath(path, true)
-        synchronized(root!!.lock) { root.defaults.set(fullPath + path, value) }
+        synchronized(root.lock) { root.defaultValues[fullPath + path] = value }
     }
 
     /**
@@ -423,11 +423,11 @@ open class ConfigSection : MemoryConfiguration {
      * @param configuration Set the default configuration adapter
      */
     override fun setDefaults(configuration: Configuration) {
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         if (fullPath.isEmpty()) {
-            root!!.defaultValues.clear()
+            root.defaultValues.clear()
         } else {
-            root!!.defaultValues.keys.stream()
+            root.defaultValues.keys.stream()
                 .filter(Predicate { k: String -> k.startsWith(fullPath) } as (String?) -> Boolean)
                 .forEach(Consumer { key: String? -> root.defaultValues.remove(key) })
         }
@@ -451,7 +451,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun getKeys(deep: Boolean): Set<String> {
         Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
 
         // Set of keys
         val result = LinkedHashSet<String>()
@@ -529,8 +529,8 @@ open class ConfigSection : MemoryConfiguration {
      * @return A map of nodes to their values
      */
     override fun getValues(deep: Boolean): Map<String, Any> {
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
         val collectorFunction = Function { pathIndex1: Int ->
             Collectors.toMap<Map.Entry<String?, Any?>, String, Any, LinkedHashMap<String, Any>>(
                 { (key1): Map.Entry<String?, Any?> ->

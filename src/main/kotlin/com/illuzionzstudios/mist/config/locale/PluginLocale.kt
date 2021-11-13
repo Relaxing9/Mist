@@ -9,12 +9,12 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
  * Also supports different languages apart from English
  * Implement our own instance in our plugin with the different values
  *
- *
  * We provide some common messages but can implement your own
  */
 abstract class PluginLocale(
-    plugin: SpigotPlugin
+    plugin: SpigotPlugin,
 ) : YamlConfig(plugin, "/locales", PluginSettings.LOCALE.string + ".lang") {
+
     /**
      * Invoked to load all other custom settings that we implement
      * in our own [PluginLocale]

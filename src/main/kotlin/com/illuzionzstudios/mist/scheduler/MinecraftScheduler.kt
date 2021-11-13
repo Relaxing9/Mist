@@ -247,7 +247,7 @@ abstract class MinecraftScheduler {
      * @param source This can be any object you want
      */
     fun registerSynchronizationService(source: Any) {
-        SYNC_SERVICE_REGISTRATION!!.add(SynchronizationService(source as AnnotatedElement))
+        SYNC_SERVICE_REGISTRATION!!.add(SynchronizationService(source))
     }
 
     /**
@@ -295,7 +295,7 @@ abstract class MinecraftScheduler {
         /**
          * The object that is being ticked
          */
-        var source: AnnotatedElement
+        var source: Any
     ) {
         /**
          * Elements to be ticked
@@ -370,10 +370,10 @@ abstract class MinecraftScheduler {
                 // LOAD ELEMENTS //
                 for (clazz in getAnnotations()) {
                     if (source.javaClass.isAnnotationPresent(clazz)) {
-                        val rate = getRate(clazz, source)
+                        val rate = getRate(clazz, source.javaClass.superclass)
                         elements.add(SynchronizedElement(rate, source, clazz))
                     } else if (source.javaClass.superclass.isAnnotationPresent(clazz)) {
-                        val rate = getRate(clazz, source)
+                        val rate = getRate(clazz, source.javaClass.superclass)
                         elements.add(SynchronizedElement(rate, source, clazz))
                     }
                     for (rate in Rate.values()) {
