@@ -10,14 +10,11 @@ import com.illuzionzstudios.mist.scheduler.rate.Sync
 import com.illuzionzstudios.mist.scheduler.timer.PresetCooldown
 import java.lang.reflect.*
 import java.util.*
-import java.util.concurrent.*
+import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicLong
 import java.util.function.Consumer
-import kotlin.reflect.KAnnotatedElement
-import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.findAnnotations
-import kotlin.reflect.full.hasAnnotation
 
 /**
  * An instance of a scheduler that ticks objects. This will handle

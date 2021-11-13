@@ -11,7 +11,6 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
  * Invokes [SpigotPlugin.reload]. Should only be implemented in whole plugin main command not
  * per main command group
  *
- *
  * {@permission {plugin.name}.command.reload}
  */
 class ReloadCommand : SpigotSubCommand("reload", "rl") {
@@ -20,8 +19,7 @@ class ReloadCommand : SpigotSubCommand("reload", "rl") {
         SpigotPlugin.instance!!.reload()
 
         // Inform
-        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.Companion.GENERAL_PLUGIN_RELOAD)
-            .sendMessage(sender)
+        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(sender)
         return ReturnType.SUCCESS
     }
 

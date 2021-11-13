@@ -98,9 +98,11 @@ abstract class SpigotCommand protected constructor(
         CommandUtil.unregisterCommand(label)
         registered = false
     }
+
     // ----------------------------------------------------------------------
     // Execution
-    // ----------------------------------------------------------------------w
+    // ----------------------------------------------------------------------
+
     /**
      * Execute this command, updates the [.sender], [.label] and [.args] variables,
      * checks permission and returns if the sender lacks it,
