@@ -20,7 +20,7 @@ class ReloadCommand : SpigotSubCommand("reload", "rl") {
         SpigotPlugin.instance!!.reload()
 
         // Inform
-        PluginLocale.Companion.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.Companion.GENERAL_PLUGIN_RELOAD)
+        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.Companion.GENERAL_PLUGIN_RELOAD)
             .sendMessage(sender)
         return ReturnType.SUCCESS
     }

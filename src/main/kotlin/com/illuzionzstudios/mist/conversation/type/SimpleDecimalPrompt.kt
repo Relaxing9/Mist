@@ -11,7 +11,6 @@ import java.util.function.Consumer
 /**
  * A prompt that only accepts whole or decimal numbers
  */
-@NoArgsConstructor
 class SimpleDecimalPrompt @JvmOverloads constructor(
     private val question: String?,
     private val successAction: Consumer<Double>,

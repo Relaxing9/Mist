@@ -42,14 +42,12 @@ open class YamlConfig : ConfigSection {
      *
      * If we set this value to "foo", this final dir would be "foo/config.yml"
      */
-    @Getter
     protected val directory: String?
 
     /**
      * This is the name of the file for this [YamlConfig]. Name must include
      * the file extensions, otherwise default "yml" will be appended.
      */
-    @Getter
     protected val fileName: String?
 
     /**
@@ -95,43 +93,31 @@ open class YamlConfig : ConfigSection {
     /**
      * This is the [Charset] to use for saving the file
      */
-    @Getter
-    @Setter
     private val defaultCharset = StandardCharsets.UTF_8
 
     /**
      * This flag indicates if we should remove nodes not included in defaults
      */
-    @Getter
-    @Setter
     private val autoRemove = false
 
     /**
      * This flag indicates if we should load comments to the file
      */
-    @Getter
-    @Setter
     private val loadComments = true
 
     /**
      * Default comment styling applied to nodes that hold a normal value
      */
-    @Getter
-    @Setter
     private val defaultNodeCommentFormat = CommentStyle.SIMPLE
 
     /**
      * Default comment styling applied to nodes that hold a [ConfigSection]
      */
-    @Getter
-    @Setter
     private val defaultSectionCommentFormat = CommentStyle.SPACED
 
     /**
      * Extra lines to put between root nodes, as in a "\n"
      */
-    @Getter
-    @Setter
     private val rootNodeSpacing = 1
 
     /**
@@ -139,8 +125,6 @@ open class YamlConfig : ConfigSection {
      * This is separate from rootNodeSpacing, if applicable.
      * These are " " characters
      */
-    @Getter
-    @Setter
     private val commentSpacing = 0
 
     //  -------------------------------------------------------------------------
@@ -323,6 +307,8 @@ open class YamlConfig : ConfigSection {
                             // Then save in server
                             save(existingFile)
                         }
+
+                        isLoaded = true
                         return true
                     }
                 } catch (ex: Exception) {
@@ -355,8 +341,7 @@ open class YamlConfig : ConfigSection {
     @Throws(InvalidConfigurationException::class)
     fun loadFromString(contents: String) {
         Validate.notNull(contents, "Contents cannot be null")
-        val input: Map<*, *>?
-        input = try {
+        val input: Map<*, *>? = try {
             yaml.load(contents)
         } catch (e2: YAMLException) {
             throw InvalidConfigurationException(e2)
@@ -550,7 +535,7 @@ open class YamlConfig : ConfigSection {
     @Throws(IOException::class)
     protected fun writeComments(data: String?, out: Writer) {
         // line-by-line apply line spacing formatting and comments per-node
-        val `in` = BufferedReader(StringReader(data))
+        val `in` = BufferedReader(StringReader(data!!))
         var line: String
         var insideScalar = false
         var firstNode = true
@@ -599,7 +584,7 @@ open class YamlConfig : ConfigSection {
                     var style = comment.styling
                     if (style == null) {
                         // check to see what type of node this is
-                        style = if (!m!!.group(3).trim { it <= ' ' }.isEmpty()) {
+                        style = if (m!!.group(3).trim { it <= ' ' }.isNotEmpty()) {
                             // setting node
                             defaultNodeCommentFormat
                         } else {

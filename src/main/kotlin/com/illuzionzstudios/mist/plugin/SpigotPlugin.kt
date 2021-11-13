@@ -118,7 +118,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         onPluginPreEnable()
 
         // Return if plugin pre start indicated a fatal problem
-        if (!isEnabled || !isEnabled()) return
+        if (!isEnabled) return
 
         // Main enabled
         try {
@@ -132,7 +132,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
 
             // Enable our scheduler
             BukkitScheduler(this).initialize()
-            reloadables.registerController(InterfaceController.INSTANCE)
+            reloadables.registerController(InterfaceController)
             onRegisterReloadables()
 
             // Check update
@@ -197,7 +197,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
             MinecraftScheduler.get()!!.initialize()
 
             // Reload controllers etc
-            reloadables.registerController(InterfaceController.INSTANCE)
+            reloadables.registerController(InterfaceController)
             onPluginReload()
             onRegisterReloadables()
 
@@ -220,7 +220,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     private fun unregisterReloadables() {
         // Stop ticking all tasks
         MinecraftScheduler.get()!!.stopInvocation()
-        InterfaceController.INSTANCE.stop(this)
+        InterfaceController.stop(this)
         if (mainCommand != null && mainCommand?.isRegistered!!) mainCommand?.unregister()
         reloadables.shutdown()
     }

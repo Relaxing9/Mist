@@ -13,6 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.*
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * This is an instance of a custom command for a [com.illuzionzstudios.mist.plugin.SpigotPlugin]
@@ -46,30 +47,24 @@ abstract class SpigotCommand protected constructor(
      * dynamically every time we execute the command
      */
     protected lateinit var args: Array<String>
-    //  -------------------------------------------------------------------------
-    //  Values that get set upon execution
-    //  -------------------------------------------------------------------------
+
     /**
      * Flag indicating if this [SpigotCommand] has been registered
      */
-    @Getter
-    private var registered = false
+    var registered = false
 
     /**
      * These are the minimum amount of arguments to be passed to the command
      * for it to actually execute
      */
-    @Getter
-    @Setter
-    private val minArguments = 0
+    protected val minArguments = 0
 
     /**
      * Should we automatically send usage message when the first argument
      * equals to "help" or "?" ?
      */
-    @Setter
-    @Getter
-    private val autoHandleHelp = true
+    protected val autoHandleHelp = true
+
     /**
      * Register this command into Bukkit to be used.
      * Can throw [com.illuzionzstudios.mist.exception.PluginException] if [.isRegistered]
@@ -81,11 +76,11 @@ abstract class SpigotCommand protected constructor(
      */
     @JvmOverloads
     fun register(unregisterOldAliases: Boolean = true) {
-        Valid.checkBoolean(!registered, "The command /" + getLabel() + " has already been registered!")
+        Valid.checkBoolean(!registered, "The command /$label has already been registered!")
         val oldCommand = Bukkit.getPluginCommand(getLabel())
         if (oldCommand != null) {
             val owningPlugin = oldCommand.plugin.name
-            if (owningPlugin != SpigotPlugin.pluginName) Logger.info("&eCommand &f/" + getLabel() + " &ealready used by " + owningPlugin + ", we take it over...")
+            if (owningPlugin != SpigotPlugin.pluginName) Logger.info("&eCommand &f/$label &ealready used by $owningPlugin, we take it over...")
             CommandUtil.unregisterCommand(oldCommand.label, unregisterOldAliases)
         }
         registered = true
@@ -99,8 +94,8 @@ abstract class SpigotCommand protected constructor(
      * Throws an error if the command is not [.isRegistered].
      */
     fun unregister() {
-        Valid.checkBoolean(registered, "The command /" + getLabel() + " is not registered!")
-        CommandUtil.unregisterCommand(getLabel())
+        Valid.checkBoolean(registered, "The command /$label is not registered!")
+        CommandUtil.unregisterCommand(label)
         registered = false
     }
     // ----------------------------------------------------------------------
@@ -150,7 +145,7 @@ abstract class SpigotCommand protected constructor(
             if (response == ReturnType.NO_PERMISSION) {
                 tell("&cYou don't have enough permissions to do this...")
             } else if (response == ReturnType.PLAYER_ONLY) {
-                tell(PluginLocale.Companion.COMMAND_PLAYER_ONLY)
+                tell(PluginLocale.COMMAND_PLAYER_ONLY)
             } else if (response == ReturnType.UNKNOWN_ERROR) {
                 tell("&cThis was not supposed to happen...")
             }
@@ -194,9 +189,7 @@ abstract class SpigotCommand protected constructor(
             }
         }
     }
-    // ----------------------------------------------------------------------
-    // Parsers
-    // ----------------------------------------------------------------------
+
     /**
      * Replaces placeholders in the message with arguments. For instance if the message is
      * "set user {0} to {1} rank" it will take the first args and become maybe
@@ -223,7 +216,7 @@ abstract class SpigotCommand protected constructor(
      */
     private fun replaceBasicPlaceholders(message: String?): String? {
         return message
-            ?.replace("{label}", getLabel())
+            ?.replace("{label}", label)
             ?.replace("{sublabel}", if (this is SpigotSubCommand) this.subLabels[0] else super.getLabel())
             ?.replace("{plugin.name}", SpigotPlugin.pluginName.lowercase(Locale.getDefault()))
     }
@@ -269,7 +262,7 @@ abstract class SpigotCommand protected constructor(
     override fun getPermissionMessage(): String? {
         return if (super.getPermissionMessage() != null && super.getPermissionMessage()!!
                 .trim { it <= ' ' } != ""
-        ) super.getPermissionMessage() else PluginLocale.Companion.COMMAND_NO_PERMISSION.toString()
+        ) super.getPermissionMessage() else PluginLocale.COMMAND_NO_PERMISSION.toString()
     }
 
     /**
@@ -321,9 +314,11 @@ abstract class SpigotCommand protected constructor(
         this.sender = sender
         this.label = alias
         this.args = args
+        val names : MutableList<String> = ArrayList()
+        Bukkit.getOnlinePlayers().forEach { names.add(it.name) }
         return if (hasPerm(permission)) {
             tabComplete()!!
-        } else ArrayList()
+        } else names
     }
 
     /**

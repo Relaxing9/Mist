@@ -10,7 +10,6 @@ import java.util.*
  * add extra functionality. For instance, "/maincommand rewards", rewards is the
  * sub label
  *
- *
  * Acts as a normal command that runs based of a [SpigotCommandGroup]
  */
 abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup, vararg aliases: String) :
@@ -42,9 +41,7 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
      *
      * @return If to show in help
      */
-    fun showInHelp(): Boolean {
-        return true
-    }
+    var showInHelp: Boolean = true
 
     /**
      * Replace additional {sublabel} placeholder for this subcommand.
@@ -57,8 +54,8 @@ abstract class SpigotSubCommand protected constructor(parent: SpigotCommandGroup
     /**
      * Compare based on sub labels
      */
-    override fun equals(obj: Any?): Boolean {
-        return obj is SpigotCommand && Arrays.equals((obj as SpigotSubCommand).subLabels, subLabels)
+    override fun equals(other: Any?): Boolean {
+        return other is SpigotCommand && (other as SpigotSubCommand).subLabels.contentEquals(subLabels)
     }
 
     override fun hashCode(): Int {

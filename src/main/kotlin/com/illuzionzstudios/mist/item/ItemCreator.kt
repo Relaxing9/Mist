@@ -273,7 +273,6 @@ class ItemCreator(
          * Should we add glow to the item? (adds a fake enchant and uses
          * item flags to hide it)
          *
-         *
          * The enchant is visible on older MC versions.
          */
         var glow: Boolean = false

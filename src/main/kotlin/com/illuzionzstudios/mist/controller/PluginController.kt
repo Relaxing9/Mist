@@ -10,10 +10,11 @@ import org.bukkit.event.Listener
  *
  *
  * These can usually be an [Enum] object that has a single
- * member, INSTANCE. That way you can simply call Controller.INSTANCE.<method>
+ * member, INSTANCE. That way you can simply call Controller.INSTANCE.<method>.
+ * Can easily be implemented in Kotlin by using an object
  *
  * @param </method><P> The instance of the plugin this controller is for
-</P> */
+ */
 interface PluginController : Listener {
     /**
      * Starts up our controller

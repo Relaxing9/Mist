@@ -179,11 +179,11 @@ abstract class SpigotCommandGroup {
             // Send the header
             tell(*helpHeader)
             for (subcommand in subCommands) {
-                if (subcommand.showInHelp() && hasPerm(subcommand.permission)) {
+                if (subcommand.showInHelp && hasPerm(subcommand.permission)) {
                     val usage = colorizeUsage(subcommand.usage)
                     subcommand.description
                     val desc = subcommand.description
-                    tell("  &7/" + getLabel() + " " + subcommand.subLabels[0] + (if (!usage.startsWith("/")) " $usage" else "") + if (!desc.isEmpty()) "&e- $desc" else "")
+                    tell("  &7/" + label + " " + subcommand.subLabels[0] + (if (!usage.startsWith("/")) " $usage" else "") + if (desc.isNotEmpty()) "&e- $desc" else "")
                 }
             }
 
@@ -239,9 +239,6 @@ abstract class SpigotCommandGroup {
             return tab
         }
 
-        /**
-         * @param label Create the main command with the main label
-         */
         init {
             // Let everyone view info
             permission = null

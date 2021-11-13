@@ -12,17 +12,16 @@ import lombok.Setter
  * the config not for custom configurations. For instance the language to use
  */
 class ConfigSetting {
+
     /**
      * The node path (or key) this value is set at
      */
-    @Getter
-    private val key: String
+    val key: String
 
     /**
      * The [YamlConfig] instance this value is apart of. Can set
      * if we want to dynamically change the config file or reset it.
      */
-    @Setter
     private var config: YamlConfig? = null
 
     /**
@@ -80,6 +79,7 @@ class ConfigSetting {
     //  -------------------------------------------------------------------------
     //  Shorthand to get values from the config
     //  -------------------------------------------------------------------------
+
     val integerList: List<Int>
         get() = config!!.getIntegerList(key)
     val stringList: List<String>

@@ -10,7 +10,10 @@ import com.illuzionzstudios.mist.ui.render.ClickLocation
 import com.illuzionzstudios.mist.util.TextUtil
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.*
+import org.bukkit.event.Event
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -19,8 +22,7 @@ import org.bukkit.event.inventory.InventoryType
 /**
  * This controller handles events for [UserInterface]
  */
-enum class InterfaceController : PluginController, Listener {
-    INSTANCE;
+object InterfaceController : PluginController, Listener {
 
     override fun initialize(plugin: SpigotPlugin?) {
         MinecraftScheduler.Companion.get()!!.registerSynchronizationService(this)
