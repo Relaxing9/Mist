@@ -26,16 +26,15 @@ abstract class PagedInterface<T> private constructor(
     pages: Iterable<T>,
     returnMakesNewInstance: Boolean
 ) : UserInterface(parent, returnMakesNewInstance) {
+
     /**
      * The pages by the page number, containing a list of items
      */
-    @Getter
     private val pages: Map<Int, List<T>>
 
     /**
      * The current page
      */
-    @Getter
     private var currentPage = 1
 
     /**

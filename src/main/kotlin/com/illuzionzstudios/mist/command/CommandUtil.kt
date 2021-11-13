@@ -55,7 +55,7 @@ class CommandUtil {
                 // Delete command + aliases from server's command map.
                 val f = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
                 f.isAccessible = true
-                val cmdMap = f[commandMap] as MutableMap<String, Command>
+                val cmdMap = f[commandMap] as MutableMap<*, *>
                 cmdMap.remove(label)
                 if (command != null && removeAliases) for (alias in command.aliases) cmdMap.remove(alias)
             } catch (ex: ReflectiveOperationException) {
@@ -67,7 +67,7 @@ class CommandUtil {
          * @return Server's command map
          */
         private val commandMap: SimpleCommandMap?
-            private get() {
+            get() {
                 try {
                     return ReflectionUtil.getOBCClass("CraftServer").getDeclaredMethod("getCommandMap")
                         .invoke(Bukkit.getServer()) as SimpleCommandMap?
