@@ -1,8 +1,6 @@
 package com.illuzionzstudios.mist.config
 
 import com.illuzionzstudios.mist.config.format.CommentStyle
-import lombok.Getter
-import java.util.function.Consumer
 
 /**
  * A group of config settings that we load from a config file.

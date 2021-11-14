@@ -13,7 +13,6 @@ import org.bukkit.Bukkit
 import org.bukkit.command.*
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * This is an instance of a custom command for a [com.illuzionzstudios.mist.plugin.SpigotPlugin]
@@ -77,7 +76,7 @@ abstract class SpigotCommand protected constructor(
     @JvmOverloads
     fun register(unregisterOldAliases: Boolean = true) {
         Valid.checkBoolean(!registered, "The command /$label has already been registered!")
-        val oldCommand = Bukkit.getPluginCommand(getLabel())
+        val oldCommand = Bukkit.getPluginCommand(label)
         if (oldCommand != null) {
             val owningPlugin = oldCommand.plugin.name
             if (owningPlugin != SpigotPlugin.pluginName) Logger.info("&eCommand &f/$label &ealready used by $owningPlugin, we take it over...")
@@ -202,11 +201,11 @@ abstract class SpigotCommand protected constructor(
      */
     open fun replacePlaceholders(message: String?): String? {
         // Replace basic labels
-        var message = message
-        message = replaceBasicPlaceholders(message)
+        var msg = message
+        msg = replaceBasicPlaceholders(msg)
 
         // Replace {X} with arguments
-        for (i in args.indices) message = message?.replace("{$i}", args[i])
+        for (i in args.indices) msg = msg?.replace("{$i}", args[i])
         return message
     }
 
@@ -247,7 +246,7 @@ abstract class SpigotCommand protected constructor(
      * If is not an instance of [CommandSender], returns null
      */
     protected val player: Player?
-        protected get() = if (isPlayer()) sender as Player? else null
+        get() = if (isPlayer()) sender as Player? else null
 
     /**
      * See [.getPlayer]
@@ -316,7 +315,7 @@ abstract class SpigotCommand protected constructor(
         this.sender = sender
         this.label = alias
         this.args = args
-        val names : MutableList<String> = ArrayList()
+        val names: MutableList<String> = ArrayList()
         Bukkit.getOnlinePlayers().forEach { names.add(it.name) }
         return if (hasPerm(permission)) {
             tabComplete()!!

@@ -291,6 +291,20 @@ class ItemCreator(
         fun unbreakable(item: Boolean) = apply { this.unbreakable = item }
         fun hideTags(item: Boolean) = apply { this.hideTags = item }
         fun glow(item: Boolean) = apply { this.glow = item }
-        fun build() = ItemCreator(item, material, amount, damage, customModelData, name, lores, enchants, flags, meta, unbreakable, hideTags, glow)
+        fun build() = ItemCreator(
+            item,
+            material,
+            amount,
+            damage,
+            customModelData,
+            name,
+            lores,
+            enchants,
+            flags,
+            meta,
+            unbreakable,
+            hideTags,
+            glow
+        )
     }
 }

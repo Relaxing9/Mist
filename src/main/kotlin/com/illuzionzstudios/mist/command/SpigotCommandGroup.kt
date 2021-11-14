@@ -5,9 +5,7 @@ import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.TextUtil
 import com.illuzionzstudios.mist.util.Valid
-import lombok.*
 import org.bukkit.ChatColor
-import org.bukkit.command.CommandSender
 import java.util.*
 
 /**
@@ -219,7 +217,7 @@ abstract class SpigotCommandGroup {
          * Handle tabcomplete for subcommands and their tabcomplete
          */
         public override fun tabComplete(): MutableList<String>? {
-            if (args.size == 1) return tabCompleteSubcommands(sender!!, args[0]).toMutableList()
+            if (args.size == 1) return tabCompleteSubcommands(args[0]).toMutableList()
             if (args.size > 1) {
                 val cmd = findSubcommand(args[0])
                 if (cmd != null) return cmd.tabComplete(sender!!, label, args.copyOfRange(1, args.size)).toMutableList()
@@ -230,12 +228,10 @@ abstract class SpigotCommandGroup {
         /**
          * Automatically tab-complete subcommands
          */
-        private fun tabCompleteSubcommands(sender: CommandSender, param: String): List<String> {
-            var param = param
-            param = param.lowercase(Locale.getDefault())
+        private fun tabCompleteSubcommands(param: String): List<String> {
             val tab: MutableList<String> = ArrayList()
             for (subcommand in subCommands) if (hasPerm(subcommand.permission)) for (label in subcommand.subLabels) if (label.trim { it <= ' ' }
-                    .isNotEmpty() && label.startsWith(param)) tab.add(label)
+                    .isNotEmpty() && label.startsWith(param.lowercase(Locale.getDefault()))) tab.add(label)
             return tab
         }
 

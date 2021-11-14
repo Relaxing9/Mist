@@ -2,8 +2,6 @@ package com.illuzionzstudios.mist.scheduler.timer
 
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.util.TextUtil
-import lombok.NoArgsConstructor
-import lombok.ToString
 
 /**
  * A set cooldown that checks if a set amount of time has passed
@@ -50,7 +48,7 @@ open class Cooldown(ticks: Int = 0) {
      * @return Get millis left before expire time
      */
     private val millisecondsLeft: Long
-        private get() = expireTime - System.currentTimeMillis()
+        get() = expireTime - System.currentTimeMillis()
 
     /**
      * @return Get ticks left before expire time

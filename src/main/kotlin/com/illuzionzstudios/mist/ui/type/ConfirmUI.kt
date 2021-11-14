@@ -15,22 +15,24 @@ import java.util.function.Consumer
 /**
  * Simple interface to confirm an action
  */
-class ConfirmUI(confirmAction: Consumer<Boolean>) : UserInterface(null, false) {
+class ConfirmUI(
     /**
      * Action to run when after answered.
      * Returns whether was accepted or not
      */
     val confirmAction: Consumer<Boolean>
+) : UserInterface(null, false) {
 
     /**
      * Button to deny
      */
-    val denyButton: Button
+    private val denyButton: Button
 
     /**
      * Button to confirm
      */
-    val confirmButton: Button
+    private val confirmButton: Button
+
     override fun getItemAt(slot: Int): ItemStack? {
         if (slot == 11) {
             return confirmButton.item
@@ -48,14 +50,13 @@ class ConfirmUI(confirmAction: Consumer<Boolean>) : UserInterface(null, false) {
     init {
         title = "&8Are you sure?"
         size = 27
-        this.confirmAction = confirmAction
         denyButton = Button.of(ItemCreator.builder()
             .material(XMaterial.RED_DYE)
             .name(PluginLocale.INTERFACE_CONFIRM_CONFIRM_NAME.toString())
             .lore(PluginLocale.INTERFACE_CONFIRM_CONFIRM_LORE.toString())
             .glow(true)
             .build(),
-            object: ButtonListener {
+            object : ButtonListener {
                 override fun onClickInInterface(
                     player: Player?,
                     ui: UserInterface?,
@@ -73,7 +74,7 @@ class ConfirmUI(confirmAction: Consumer<Boolean>) : UserInterface(null, false) {
             .lore(PluginLocale.INTERFACE_CONFIRM_DENY_LORE.toString())
             .glow(true)
             .build(),
-            object: ButtonListener {
+            object : ButtonListener {
                 override fun onClickInInterface(
                     player: Player?,
                     ui: UserInterface?,

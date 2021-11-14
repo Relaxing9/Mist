@@ -7,7 +7,6 @@ import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.util.*
 import java.util.function.Consumer
 import java.util.regex.Matcher
 
@@ -38,7 +37,10 @@ class MistString(
          * Construct a [MistString] from single string.
          * Provides a way of making a nullable miststring where
          * if the string is null the MistString is null to avoid
-         * init errors
+         * init errors.
+         *
+         * Should only be used where the string might be nullable. Eg
+         * getting from config or something
          */
         fun of(string: String?): MistString? {
             // Faster than iterate list of 1 item
@@ -108,11 +110,6 @@ class MistString(
             }
         }
     }
-
-    /**
-     * Default value of the string
-     */
-    private val def: String = ""
 
     /**
      * If it has been loaded from the locale
@@ -256,5 +253,22 @@ class MistString(
                 TextComponent(toString())
             )
         }
+
+        this + MistString("test")
     }
+}
+
+/**
+ * Convert any string to a mist string by
+ * invoking "mist" on the end of it
+ */
+val String.mist: MistString
+    get() = MistString(this)
+
+/**
+ * Concat too MistStrings by writing the expression
+ * mistString1 + mistString2 (Unit)
+ */
+operator fun MistString.plus(other: MistString) {
+    this.concat(other)
 }

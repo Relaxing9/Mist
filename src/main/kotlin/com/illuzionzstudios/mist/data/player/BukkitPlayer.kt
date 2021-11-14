@@ -1,7 +1,7 @@
 package com.illuzionzstudios.mist.data.player
 
 import com.illuzionzstudios.mist.scheduler.Tickable
-import lombok.*
+import lombok.Getter
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location

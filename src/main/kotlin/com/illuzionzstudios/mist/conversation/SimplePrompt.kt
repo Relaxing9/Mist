@@ -5,7 +5,6 @@ import com.illuzionzstudios.mist.Mist.Companion.tellLaterConversing
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.TextUtil
 import com.illuzionzstudios.mist.util.Valid
-import lombok.SneakyThrows
 import org.bukkit.conversations.*
 import org.bukkit.entity.Player
 
@@ -37,7 +36,7 @@ abstract class SimplePrompt : ValidatingPrompt, Cloneable {
      * Return the prefix before tell messages
      */
     protected val customPrefix: String?
-        protected get() = null
+        get() = null
 
     /**
      * Return the question, implemented in own way using colors

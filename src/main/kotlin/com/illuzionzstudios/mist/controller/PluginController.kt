@@ -21,12 +21,12 @@ interface PluginController : Listener {
      *
      * @param plugin The plugin starting the controller
      */
-    fun initialize(plugin: SpigotPlugin?)
+    fun initialize(plugin: SpigotPlugin)
 
     /**
      * Stops our controller
      *
      * @param plugin The plugin stopping the controller
      */
-    fun stop(plugin: SpigotPlugin?)
+    fun stop(plugin: SpigotPlugin)
 }

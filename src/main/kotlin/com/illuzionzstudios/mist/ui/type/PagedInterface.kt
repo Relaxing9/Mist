@@ -269,7 +269,7 @@ abstract class PagedInterface<T> private constructor(
      * @return
      */
     protected val isEmpty: Boolean
-        protected get() = pages.isEmpty() || pages[0]!!.isEmpty()
+        get() = pages.isEmpty() || pages[0]!!.isEmpty()
 
     /**
      * Automatically get the correct item from the actual page, including
@@ -321,7 +321,7 @@ abstract class PagedInterface<T> private constructor(
 
     // Get all items in a page
     private val currentPageItems: List<T>
-        private get() {
+        get() {
             Valid.checkBoolean(
                 pages.containsKey(currentPage - 1),
                 "The menu has only " + pages.size + " pages, not "

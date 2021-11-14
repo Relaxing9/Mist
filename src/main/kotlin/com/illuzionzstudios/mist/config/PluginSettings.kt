@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.config
 
-import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Mist
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 

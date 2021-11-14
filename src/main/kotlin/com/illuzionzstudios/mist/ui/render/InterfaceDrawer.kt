@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.ui.render
 
 import com.cryptomorin.xseries.XMaterial
 import com.illuzionzstudios.mist.util.TextUtil
-import lombok.*
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -109,7 +108,7 @@ class InterfaceDrawer private constructor(
         inventory.contents = content
 
         // Clear inventories and open
-        if (player.openInventory != null) player.closeInventory()
+        player.closeInventory()
         player.openInventory(inventory)
     }
 

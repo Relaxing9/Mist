@@ -21,7 +21,8 @@ class ReturnBackButton(
     /**
      * The icon to display
      */
-    override val item: ItemStack = ItemCreator.builder().material(XMaterial.OAK_DOOR).name("&4&lReturn Back").build().makeUIItem(),
+    override val item: ItemStack = ItemCreator.builder().material(XMaterial.OAK_DOOR).name("&4&lReturn Back").build()
+        .makeUIItem(),
 
     /**
      * Create a new instanceof using [UserInterface.newInstance] when showing the interface?

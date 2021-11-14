@@ -8,11 +8,9 @@ import org.bukkit.configuration.MemoryConfiguration
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import java.util.function.Predicate
 import java.util.function.Supplier
 import java.util.regex.Pattern
 import java.util.stream.Collectors
-import kotlin.collections.ArrayList
 
 /**
  * A section of memory that relates to a configuration. This configuration
@@ -50,7 +48,7 @@ open class ConfigSection : MemoryConfiguration {
 
     /**
      * These are the loaded key value pairs for this [ConfigSection]
-     */       
+     */
     val values: MutableMap<String?, Any?>?
 
     /**
@@ -288,7 +286,7 @@ open class ConfigSection : MemoryConfiguration {
      * @param lines        The lines to set
      */
     fun setComment(path: String, commentStyle: CommentStyle?, vararg lines: String?): ConfigSection {
-        return setComment(path, if (lines != null) Comment(commentStyle, *lines) else null)
+        return setComment(path, Comment(commentStyle, *lines))
     }
 
     /**
@@ -340,7 +338,8 @@ open class ConfigSection : MemoryConfiguration {
      * See [.setDefaultComment]
      */
     fun setDefaultComment(path: String, commentStyle: CommentStyle?, vararg lines: String?): ConfigSection {
-        return setDefaultComment(path, commentStyle,
+        return setDefaultComment(
+            path, commentStyle,
             (if (lines.isEmpty()) null else listOf(*lines)) as List<String>?
         )
     }
@@ -428,8 +427,8 @@ open class ConfigSection : MemoryConfiguration {
             root.defaultValues.clear()
         } else {
             root.defaultValues.keys.stream()
-                .filter(Predicate { k: String -> k.startsWith(fullPath) } as (String?) -> Boolean)
-                .forEach(Consumer { key: String? -> root.defaultValues.remove(key) })
+                .filter { k: String? -> k?.startsWith(fullPath) ?: false }
+                .forEach { key: String? -> root.defaultValues.remove(key) }
         }
         addDefaults(configuration)
     }
@@ -459,13 +458,11 @@ open class ConfigSection : MemoryConfiguration {
         if (deep) {
             result.addAll(
                 root.defaultValues.keys.stream()
-                    .filter(Predicate { k: String -> k.startsWith(fullPath) } as (String?) -> Boolean)
-                    .map<String>(Function { k: String ->
-                        if (!k.endsWith(
-                                root.pathSeparator.toString()
-                            )
-                        ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
-                    } as (String?) -> String)
+                    .filter { k: String? -> k?.startsWith(fullPath) ?: false }
+                    .map { k: String? ->
+                        if (!k?.endsWith(root.pathSeparator.toString())!!)
+                            k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
+                    }
                     .collect(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
             )
             result.addAll(
@@ -478,25 +475,24 @@ open class ConfigSection : MemoryConfiguration {
                         ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
                     }
                     .collect(
-                        Collectors.toCollection(
-                            Supplier { LinkedHashSet() })
+                        Collectors.toCollection { LinkedHashSet() }
                     )
             )
         } else {
             result.addAll(
                 root.defaultValues.keys.stream()
-                    .filter(Predicate { k: String ->
-                        k.startsWith(fullPath) && k.lastIndexOf(
+                    .filter { k: String? ->
+                        k!!.startsWith(fullPath) && k.lastIndexOf(
                             root.pathSeparator
                         ) == pathIndex
-                    } as (String?) -> Boolean)
-                    .map<String>(Function { k: String ->
-                        if (!k.endsWith(
+                    }
+                    .map { k: String? ->
+                        if (!k!!.endsWith(
                                 root.pathSeparator.toString()
                             )
                         ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
-                    } as (String?) -> String)
-                    .collect(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
+                    }
+                    .collect(Collectors.toCollection { LinkedHashSet() })
             )
             result.addAll(
                 root.values!!.keys.stream()
@@ -538,8 +534,8 @@ open class ConfigSection : MemoryConfiguration {
                             root.pathSeparator.toString()
                         )
                     ) key1.substring(pathIndex1 + 1) else key1.substring(pathIndex1 + 1, key1.length - 1)
-                }, { (key1, value) -> value },
-                { v1: Any?, v2: Any? -> throw IllegalStateException() }) { LinkedHashMap() }
+                }, { (_, value) -> value },
+                { _: Any?, _: Any? -> throw IllegalStateException() }) { LinkedHashMap() }
         }
         val result = LinkedHashMap<String, Any>()
         val pathIndex = fullPath.lastIndexOf(root.pathSeparator)
@@ -556,7 +552,7 @@ open class ConfigSection : MemoryConfiguration {
         } else {
             result.putAll(
                 root.defaultValues.entries.stream()
-                    .filter{ key1: MutableMap.MutableEntry<String?, Any?> ->
+                    .filter { key1: MutableMap.MutableEntry<String?, Any?> ->
                         key1.key!!.startsWith(fullPath) && key1.key!!.lastIndexOf(
                             root.pathSeparator
                         ) == pathIndex
@@ -589,7 +585,7 @@ open class ConfigSection : MemoryConfiguration {
         val rootSection = getConfigurationSection(path) ?: return emptyList()
         val result = ArrayList<ConfigSection?>()
         rootSection.getKeys(false).stream()
-            .map { path: String -> rootSection[path] }
+            .map { p: String -> rootSection[p] }
             .filter { `object`: Any? -> `object` is ConfigSection }
             .forEachOrdered { `object`: Any? -> result.add(`object` as ConfigSection?) }
         return result
@@ -603,7 +599,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun contains(path: String): Boolean {
         Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
         return root.defaultValues.contains(fullPath + path) || root.values!!.containsKey(fullPath + path)
     }
 
@@ -614,7 +610,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun contains(path: String, ignoreDefault: Boolean): Boolean {
         Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
         return !ignoreDefault && root.defaultValues.contains(fullPath + path) || root.values!!.containsKey(fullPath + path)
     }
 
@@ -623,7 +619,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun isSet(path: String): Boolean {
         Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
         return root.defaultValues[fullPath + path] != null || root.values!![fullPath + path] != null
     }
 
@@ -653,7 +649,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun get(path: String): Any? {
         Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
         var result = root.values!![fullPath + path]
         if (result == null) {
             result = root.defaultValues[fullPath + path]
@@ -853,7 +849,8 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     fun createSection(path: String, commentStyle: CommentStyle?, vararg comment: String?): ConfigSection {
-        return createSection(path, commentStyle,
+        return createSection(
+            path, commentStyle,
             (if (comment.isEmpty()) null else listOf(*comment)) as List<String>?
         )
     }

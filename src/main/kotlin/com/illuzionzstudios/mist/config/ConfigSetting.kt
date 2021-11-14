@@ -1,8 +1,6 @@
 package com.illuzionzstudios.mist.config
 
 import com.illuzionzstudios.mist.config.format.CommentStyle
-import lombok.Getter
-import lombok.Setter
 
 /**
  * This represents a set option in a [YamlConfig]

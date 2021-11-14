@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.config.serialization.loader
 
 import com.illuzionzstudios.mist.Logger
-import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import lombok.*
 import java.io.File
@@ -48,11 +47,11 @@ class DirectoryLoader<T : FileLoader<*>?>(
 
                 // Make sure the file extension matches the loader
                 if (file.name.split("\\.".toRegex()).toTypedArray()[1].equals(
-                            loader!!.extension,
-                            ignoreCase = true
-                        )
-                    ) // Add to cache
-                        loaders.add(loader)
+                        loader?.extension,
+                        ignoreCase = true
+                    )
+                ) // Add to cache
+                    loaders.add(loader)
             } catch (e: Exception) {
                 Logger.displayError(e, "Could not not load file " + file.name)
             }

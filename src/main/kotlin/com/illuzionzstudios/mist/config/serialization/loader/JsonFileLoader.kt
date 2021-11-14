@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.illuzionzstudios.mist.Logger
-import com.illuzionzstudios.mist.Logger.Companion.displayError
 import java.io.*
 
 /**

@@ -171,7 +171,7 @@ abstract class UserInterface protected constructor(
      * @return A list of buttons to manually add instead of scanning
      */
     protected val buttonsToRegister: List<Button?>?
-        protected get() = null
+        get() = null
 
     /**
      * Try to get a button with a specific icon from [ItemStack]
@@ -373,7 +373,7 @@ abstract class UserInterface protected constructor(
      * @return the slot which info buttons is located on
      */
     protected val infoButtonPosition: Int
-        protected get() = size - 9
+        get() = size - 9
 
     /**
      * Should we automatically add the return button to the bottom left corner?
@@ -400,7 +400,7 @@ abstract class UserInterface protected constructor(
      * @return the slot which return buttons is located on
      */
     protected val returnButtonPosition: Int
-        protected get() = size - 1
+        get() = size - 1
 
     /**
      * Calculates the center slot of this menu
@@ -413,7 +413,7 @@ abstract class UserInterface protected constructor(
      * @return the estimated center slot
      */
     protected val centerSlot: Int
-        protected get() {
+        get() {
             val pos = size / 2
             return if (size % 2 == 1) pos else pos - 5
         }
@@ -424,7 +424,7 @@ abstract class UserInterface protected constructor(
      * @return The open inventory instance
      */
     protected val inventory: Inventory
-        protected get() {
+        get() {
             Valid.checkNotNull(viewer, "Cannot get inventory when there is no viewer!")
             val topInventory = viewer!!.openInventory.topInventory
             Valid.checkNotNull(topInventory, "Top inventory is null!")
@@ -508,7 +508,7 @@ abstract class UserInterface protected constructor(
      * @param slot   The slot that was clicked
      * @param placed The [ItemStack] that was placed
      */
-    protected fun onItemPlace(player: Player?, slot: Int, placed: ItemStack?, event: InventoryClickEvent) {
+    protected open fun onItemPlace(player: Player?, slot: Int, placed: ItemStack?, event: InventoryClickEvent) {
         // By default cancel moving items
         event.isCancelled = true
     }

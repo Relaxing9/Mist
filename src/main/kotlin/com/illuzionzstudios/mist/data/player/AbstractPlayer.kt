@@ -159,7 +159,7 @@ abstract class AbstractPlayer(
      */
     fun clearAllData() {
         // Clear loaded/cached data
-        cachedData.forEach { (key: String?, data: Any?) ->
+        cachedData.forEach { (key: String?, _: Any?) ->
             PlayerDataController.get<AbstractPlayer, AbstractPlayerData<AbstractPlayer>>()?.database
                 ?.setFieldValue(this, key, null)
         }

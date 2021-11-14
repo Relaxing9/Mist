@@ -2,7 +2,8 @@ package com.illuzionzstudios.mist.data.database
 
 import com.illuzionzstudios.mist.config.YamlConfig
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
-import com.illuzionzstudios.mist.data.player.*
+import com.illuzionzstudios.mist.data.player.AbstractPlayer
+import com.illuzionzstudios.mist.data.player.OfflinePlayer
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.UUIDFetcher.Companion.getName
 import java.io.File

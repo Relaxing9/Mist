@@ -4,7 +4,6 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.rate.Async
 import com.illuzionzstudios.mist.scheduler.rate.Sync
-import lombok.RequiredArgsConstructor
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.concurrent.Callable

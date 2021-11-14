@@ -1,7 +1,5 @@
 package com.illuzionzstudios.mist.scheduler.rate
 
-import lombok.Getter
-
 /**
  * Sets a defined rate or interval between ticking
  */

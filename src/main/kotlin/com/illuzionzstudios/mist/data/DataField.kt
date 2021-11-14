@@ -3,7 +3,6 @@ package com.illuzionzstudios.mist.data
 import com.illuzionzstudios.mist.data.controller.PlayerDataController
 import com.illuzionzstudios.mist.data.player.AbstractPlayer
 import com.illuzionzstudios.mist.data.player.AbstractPlayerData
-import lombok.*
 import org.apache.commons.lang.StringUtils
 import java.util.*
 
@@ -32,12 +31,12 @@ class DataField<T>(
      * Stored data of this field
      */
     private var localValue: T? = null
-    get() {
-        if (field == null) {
-            localValue = get()
+        get() {
+            if (field == null) {
+                localValue = get()
+            }
+            return field
         }
-        return field
-    }
 
     /**
      * If the actual field is set

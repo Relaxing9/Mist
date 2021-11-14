@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.command
 
 import com.illuzionzstudios.mist.Logger
-import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.util.*
 import org.bukkit.Bukkit
 import org.bukkit.command.Command

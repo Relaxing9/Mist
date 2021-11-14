@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.conversation.type
 
 import com.illuzionzstudios.mist.conversation.SimplePrompt
 import com.illuzionzstudios.mist.util.Valid
-import lombok.NoArgsConstructor
 import org.bukkit.conversations.ConversationContext
 import org.bukkit.conversations.Prompt
 import org.bukkit.entity.Player

@@ -2,7 +2,6 @@ package com.illuzionzstudios.mist.data.player
 
 import com.illuzionzstudios.mist.data.PlayerData
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
-import lombok.Getter
 
 /**
  * Registered player data

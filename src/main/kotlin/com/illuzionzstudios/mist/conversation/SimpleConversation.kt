@@ -7,7 +7,6 @@ import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.Valid
-import lombok.*
 import org.bukkit.conversations.*
 import org.bukkit.entity.Player
 
@@ -79,9 +78,7 @@ abstract class SimpleConversation
     /**
      * Get conversation prefix before each message
      *
-     *
      * By default we use the plugins tell prefix
-     *
      *
      * TIP: You can use [SimplePrefix]
      */
@@ -97,7 +94,7 @@ abstract class SimpleConversation
      * by default we use [SimpleCanceller] that listens to quit|cancel|exit
      */
     protected val canceller: ConversationCanceller
-        protected get() = SimpleCanceller("quit", "cancel", "exit")
+        get() = SimpleCanceller("quit", "cancel", "exit")
 
     /**
      * Return true if we should insert a prefix before each message, see [.getPrefix]
@@ -119,7 +116,7 @@ abstract class SimpleConversation
      * Get the timeout in seconds before automatically exiting the convo
      */
     protected val timeout: Int
-        protected get() = 60
+        get() = 60
 
     /**
      * Sets the menu to return to after the end of this conversation

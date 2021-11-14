@@ -24,11 +24,11 @@ import org.bukkit.event.inventory.InventoryType
  */
 object InterfaceController : PluginController, Listener {
 
-    override fun initialize(plugin: SpigotPlugin?) {
+    override fun initialize(plugin: SpigotPlugin) {
         MinecraftScheduler.get()!!.registerSynchronizationService(this)
     }
 
-    override fun stop(plugin: SpigotPlugin?) {
+    override fun stop(plugin: SpigotPlugin) {
         MinecraftScheduler.get()!!.dismissSynchronizationService(this)
 
         // Try close inventories
@@ -70,42 +70,40 @@ object InterfaceController : PluginController, Listener {
     fun onMenuClick(event: InventoryClickEvent) {
         if (event.whoClicked !is Player) return
         val player = event.whoClicked as Player
-        val userInterface: UserInterface = UserInterface.getInterface(player)!!
-        if (userInterface != null) {
-            val slotItem = event.currentItem
-            val cursor = event.cursor
-            val clickedInv = event.clickedInventory
-            val action = event.action
-            val whereClicked =
-                if (clickedInv != null) if (clickedInv.type == InventoryType.CHEST) ClickLocation.INTERFACE else ClickLocation.PLAYER_INVENTORY else ClickLocation.OUTSIDE
-            if (action.toString().contains("PICKUP") || action.toString().contains("PLACE")
-                || action.toString() == "SWAP_WITH_CURSOR" || action == InventoryAction.CLONE_STACK
-            ) {
-                if (whereClicked == ClickLocation.INTERFACE) try {
-                    val button = userInterface.getButton(slotItem)
-                    if (button != null) userInterface.onButtonClick(
-                        player,
-                        event.slot,
-                        action,
-                        event.click,
-                        button,
-                        event
-                    ) else userInterface.onInterfaceClick(
-                        player, event.slot, action, event.click, cursor, slotItem,
-                        false, event
-                    )
-                } catch (t: Throwable) {
-                    // Notify of error
-                    player.sendMessage(TextUtil.formatText("&cOops! There was a problem with this menu! Please contact the administrator to review the console for details."))
-                    player.closeInventory()
-                    Logger.displayError(t, "Error clicking in menu $userInterface")
-                }
-            } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY
-                || whereClicked != ClickLocation.PLAYER_INVENTORY
-            ) {
-                event.result = Event.Result.DENY
-                player.updateInventory()
+        val userInterface: UserInterface? = UserInterface.getInterface(player)
+        val slotItem = event.currentItem
+        val cursor = event.cursor
+        val clickedInv = event.clickedInventory
+        val action = event.action
+        val whereClicked =
+            if (clickedInv != null) if (clickedInv.type == InventoryType.CHEST) ClickLocation.INTERFACE else ClickLocation.PLAYER_INVENTORY else ClickLocation.OUTSIDE
+        if (action.toString().contains("PICKUP") || action.toString().contains("PLACE")
+            || action.toString() == "SWAP_WITH_CURSOR" || action == InventoryAction.CLONE_STACK
+        ) {
+            if (whereClicked == ClickLocation.INTERFACE) try {
+                val button = userInterface?.getButton(slotItem)
+                if (button != null) userInterface.onButtonClick(
+                    player,
+                    event.slot,
+                    action,
+                    event.click,
+                    button,
+                    event
+                ) else userInterface?.onInterfaceClick(
+                    player, event.slot, action, event.click, cursor, slotItem,
+                    false, event
+                )
+            } catch (t: Throwable) {
+                // Notify of error
+                player.sendMessage(TextUtil.formatText("&cOops! There was a problem with this menu! Please contact the administrator to review the console for details."))
+                player.closeInventory()
+                Logger.displayError(t, "Error clicking in menu $userInterface")
             }
+        } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY
+            || whereClicked != ClickLocation.PLAYER_INVENTORY
+        ) {
+            event.result = Event.Result.DENY
+            player.updateInventory()
         }
     }
 }

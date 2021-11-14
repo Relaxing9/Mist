@@ -1,7 +1,6 @@
 package com.illuzionzstudios.mist.model
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion.V
-import lombok.Getter
 
 /**
  * Simple class that contains two values at once

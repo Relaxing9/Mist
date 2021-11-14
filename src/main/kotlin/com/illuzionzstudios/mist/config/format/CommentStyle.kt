@@ -91,8 +91,9 @@ enum class CommentStyle {
             } else if (lines[0].trim { it <= ' ' } == "#" && lines[lines.size - 1].trim { it <= ' ' } == "#") {
                 return SPACED
             }
-            val hasBorders = lines[0].trim { it <= ' ' }.matches(Regex("^##+$")) && lines[lines.size - 1].trim { it <= ' ' }
-                .matches(Regex("^##+$"))
+            val hasBorders =
+                lines[0].trim { it <= ' ' }.matches(Regex("^##+$")) && lines[lines.size - 1].trim { it <= ' ' }
+                    .matches(Regex("^##+$"))
             if (!hasBorders) {
                 // default return
                 return SIMPLE

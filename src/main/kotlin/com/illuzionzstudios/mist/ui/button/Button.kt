@@ -109,7 +109,12 @@ abstract class Button {
             }
 
             return makeIcon(
-                ItemCreator(material = infoButtonMaterial, name = description[0], hideTags = true, lores = lore.toList())
+                ItemCreator(
+                    material = infoButtonMaterial,
+                    name = description[0],
+                    hideTags = true,
+                    lores = lore.toList()
+                )
             )
         }
 

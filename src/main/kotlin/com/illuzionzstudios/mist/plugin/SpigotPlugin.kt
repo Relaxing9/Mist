@@ -19,7 +19,6 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler
 import com.illuzionzstudios.mist.ui.InterfaceController
-import lombok.*
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -39,7 +38,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     /**
      * An easy way to handle listeners for reloading
      */
-    private val reloadables = Reloadables()
+    val reloadables = Reloadables()
 
     /**
      * If to check for plugin updates on load
