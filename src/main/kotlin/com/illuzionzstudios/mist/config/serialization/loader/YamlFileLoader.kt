@@ -2,19 +2,16 @@ package com.illuzionzstudios.mist.config.serialization.loader
 
 import com.google.gson.JsonObject
 import com.illuzionzstudios.mist.config.YamlConfig
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import java.io.File
 
 /**
  * Provides a way to load on object from a YAML file.
  *
  * @param <T> The object to load
-</T> */
-abstract class YamlFileLoader<T>
-/**
- * @param directory The directory from plugin folder
- * @param fileName  The file name without .yml
  */
-    (directory: String, fileName: String) : FileLoader<T>(directory, fileName, "yml") {
+abstract class YamlFileLoader<T>(directory: String, fileName: String) : FileLoader<T>(directory, fileName, "yml") {
+
     /**
      * The YAML file for this loader
      */
@@ -33,13 +30,18 @@ abstract class YamlFileLoader<T>
      */
     override fun save(): Boolean {
         // Load new object before saving
-        saveYaml()
-        return config!!.save()
+        MinecraftScheduler.get()?.desynchronize {
+            saveYaml()
+            config!!.save()
+        }
+        return true
     }
 
     override fun loadObject(file: File): T {
-        config = YamlConfig(file)
-        config!!.load()
+        MinecraftScheduler.get()?.desynchronize {
+            config = YamlConfig(file)
+            config!!.load()
+        }
         return loadYamlObject()
     }
 

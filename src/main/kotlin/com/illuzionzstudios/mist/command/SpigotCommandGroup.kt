@@ -133,7 +133,7 @@ abstract class SpigotCommandGroup {
      * @return Header prefix colours
      */
     protected val headerPrefix: String
-        get() = "" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD
+        get() = "" + SpigotPlugin.instance!!.pluginColor + ChatColor.BOLD
 
     /**
      * Handles our main command to detect sub commands and run functionality

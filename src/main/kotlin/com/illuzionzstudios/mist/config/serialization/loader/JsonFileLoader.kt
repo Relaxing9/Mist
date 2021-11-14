@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.illuzionzstudios.mist.Logger
+import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import java.io.*
 
 /**
@@ -11,12 +12,8 @@ import java.io.*
  *
  * @param <T> The object to load
 </T> */
-abstract class JsonFileLoader<T>
-/**
- * @param directory The directory from plugin folder
- * @param fileName  The file name without .json
- */
-    (directory: String, fileName: String) : FileLoader<T>(directory, fileName, "json") {
+abstract class JsonFileLoader<T>(directory: String, fileName: String) : FileLoader<T>(directory, fileName, "json") {
+
     /**
      * The JSON object to use for loading
      */
@@ -35,30 +32,33 @@ abstract class JsonFileLoader<T>
      */
     override fun save(): Boolean {
         // Load new object before saving
-        saveJson()
-        try {
-            val writer = FileWriter(file)
-            val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-            val jp = JsonParser()
-            val je = jp.parse(json.toString())
-            val prettyJsonString = gson.toJson(je)
-            writer.write(prettyJsonString)
-            writer.flush()
-            writer.close()
-            return true
-        } catch (e: IOException) {
-            Logger.displayError(e, "Could not save file to disk: " + file.name)
+        MinecraftScheduler.get()?.desynchronize {
+            saveJson()
+            try {
+                val writer = FileWriter(file)
+                val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+                val jp = JsonParser()
+                val je = jp.parse(json.toString())
+                val prettyJsonString = gson.toJson(je)
+                writer.write(prettyJsonString)
+                writer.flush()
+                writer.close()
+            } catch (e: IOException) {
+                Logger.displayError(e, "Could not save file to disk: " + file.name)
+            }
         }
-        return false
+        return true
     }
 
     override fun loadObject(file: File): T {
-        // Try assign JSON file
-        json = try {
-            JsonParser().parse(FileReader(file)).asJsonObject
-        } catch (e: FileNotFoundException) {
-            // If couldn't load, it becomes a new object
-            JsonObject()
+        MinecraftScheduler.get()?.desynchronize {
+            // Try assign JSON file
+            json = try {
+                JsonParser().parse(FileReader(file)).asJsonObject
+            } catch (e: FileNotFoundException) {
+                // If couldn't load, it becomes a new object
+                JsonObject()
+            }
         }
         return loadJsonObject()
     }

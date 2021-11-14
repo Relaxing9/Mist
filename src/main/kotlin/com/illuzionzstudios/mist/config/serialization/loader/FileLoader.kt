@@ -25,8 +25,7 @@ abstract class FileLoader<T>(
     /**
      * Our data object to get properties from
      */
-    @Getter
-    protected var `object`: T
+    var `object`: T
 
     /**
      * @param directory The directory from plugin folder

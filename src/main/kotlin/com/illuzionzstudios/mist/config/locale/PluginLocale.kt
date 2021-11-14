@@ -48,38 +48,32 @@ abstract class PluginLocale(
         /**
          * The prefix to use before certain messages
          */
-        var GENERAL_PLUGIN_PREFIX =
-            STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7")
+        var GENERAL_PLUGIN_PREFIX = STARTUP_GROUP.create("general.prefix", "&d&lMist Plugin &8\\u00BB&7")
 
         /**
          * Message sent when reloading the plugin. Used in [com.illuzionzstudios.mist.command.type.ReloadCommand]
          */
-        var GENERAL_PLUGIN_RELOAD =
-            STARTUP_GROUP.create("general.reload", "&7Reloaded the plugin (Configuration files & controllers)")
+        var GENERAL_PLUGIN_RELOAD = STARTUP_GROUP.create("general.reload", "&7Reloaded the plugin (Configuration files & controllers)")
 
         /**
          * If a command sender that isn't a player tries to execute a command
          */
-        var COMMAND_PLAYER_ONLY =
-            STARTUP_GROUP.create("command.player-only", "&cYou must be a player to execute this command.")
+        var COMMAND_PLAYER_ONLY = STARTUP_GROUP.create("command.player-only", "&cYou must be a player to execute this command.")
 
         /**
          * If the player doesn't have a required permission
          */
-        var COMMAND_NO_PERMISSION =
-            STARTUP_GROUP.create("command.no-permission", "&cYou must have the permission {permission} to do this.")
+        var COMMAND_NO_PERMISSION = STARTUP_GROUP.create("command.no-permission", "&cYou must have the permission {permission} to do this.")
 
         /**
          * Sent when the executor provides too little arguments
          */
-        var COMMAND_INVALID_USAGE =
-            STARTUP_GROUP.create("command.invalid-usage", "&cInvalid usage. Try /{label} {args}")
+        var COMMAND_INVALID_USAGE = STARTUP_GROUP.create("command.invalid-usage", "&cInvalid usage. Try /{label} {args}")
 
         /**
          * If they try use a sub command that doesn't exist
          */
-        var COMMAND_INVALID_SUB =
-            STARTUP_GROUP.create("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help")
+        var COMMAND_INVALID_SUB = STARTUP_GROUP.create("command.invalid-sub", "&cThat command doesn't exist. Try /{label} help")
 
         /**
          * The optional arguments label
@@ -92,10 +86,16 @@ abstract class PluginLocale(
         var COMMAND_LABEL_REQUIRED_ARGS = STARTUP_GROUP.create("command.label-required-args", "required arguments")
 
         /**
+         * The keys below are shown as hover tooltip on /command help menu.
+         */
+        var HELP_TOOLTIP_DESCRIPTION = STARTUP_GROUP.create("command.help.description", "&7Description: &f{description}")
+        var HELP_TOOLTIP_PERMISSION = STARTUP_GROUP.create("command.help.permission", "&7Permission: &f{permission}")
+        var HELP_TOOLTIP_USAGE = STARTUP_GROUP.create("command.help.usage", "&7Usage: &f")
+
+        /**
          * Message sent prompting to enter a value
          */
-        var CONFIG_ENTER_VALUE =
-            STARTUP_GROUP.create("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)")
+        var CONFIG_ENTER_VALUE = STARTUP_GROUP.create("config.enter-value", "&7Enter a new value to set (Type 'cancel' to cancel)")
 
         /**
          * Name of the confirm icon in the confirm inventory
@@ -105,8 +105,7 @@ abstract class PluginLocale(
         /**
          * Lore of the confirm icon in the confirm inventory
          */
-        var INTERFACE_CONFIRM_CONFIRM_LORE =
-            STARTUP_GROUP.create("interface.confirm.confirm.lore", "&7&o(Click to confirm)")
+        var INTERFACE_CONFIRM_CONFIRM_LORE = STARTUP_GROUP.create("interface.confirm.confirm.lore", "&7&o(Click to confirm)")
 
         /**
          * Name of the deny icon in the confirm inventory

@@ -157,7 +157,7 @@ abstract class PagedInterface<T> private constructor(
                         }
                     }
                 }
-            override val item: ItemStack?
+            override val item: ItemStack
                 get() {
                     val str = currentPage - 1
                     return ItemCreator.builder()
@@ -165,7 +165,7 @@ abstract class PagedInterface<T> private constructor(
                         .name(if (str == 0) "&7First Page" else "&8<< &fPage $str")
                         .build().make()
                 }
-        } else Button.Companion.makeEmpty()
+        } else Button.makeEmpty()
 
         // Set next page button
         nextButton = if (hasPages) object : Button() {

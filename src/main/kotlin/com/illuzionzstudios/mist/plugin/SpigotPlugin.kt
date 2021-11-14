@@ -6,6 +6,7 @@ import com.illuzionzstudios.mist.Logger.Companion.info
 import com.illuzionzstudios.mist.Logger.Companion.warn
 import com.illuzionzstudios.mist.command.SpigotCommand
 import com.illuzionzstudios.mist.command.SpigotCommandGroup
+import com.illuzionzstudios.mist.command.temporary.TemporaryCommandManager
 import com.illuzionzstudios.mist.config.PluginSettings
 import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
@@ -20,6 +21,7 @@ import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler
 import com.illuzionzstudios.mist.ui.InterfaceController
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -127,11 +129,12 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
             // Load settings and locale
             // Try save config if found
             PluginSettings.loadSettings(pluginSettings)
-            PluginLocale.Companion.loadLocale(pluginLocale)
+            PluginLocale.loadLocale(pluginLocale)
 
             // Enable our scheduler
             BukkitScheduler(this).initialize()
             reloadables.registerController(InterfaceController)
+            reloadables.registerController(TemporaryCommandManager)
             onRegisterReloadables()
 
             // Check update
@@ -197,6 +200,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
 
             // Reload controllers etc
             reloadables.registerController(InterfaceController)
+            reloadables.registerController(TemporaryCommandManager)
             onPluginReload()
             onRegisterReloadables()
 
@@ -219,7 +223,6 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     private fun unregisterReloadables() {
         // Stop ticking all tasks
         MinecraftScheduler.get()!!.stopInvocation()
-        InterfaceController.stop(this)
         if (mainCommand != null && mainCommand?.isRegistered!!) mainCommand?.unregister()
         reloadables.shutdown()
     }
@@ -274,6 +277,11 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      * @return Plugin's id for update checking on spigot
      */
     abstract val pluginId: Int
+
+    /**
+     * The main color for our plugin
+     */
+    abstract val pluginColor: ChatColor
 
     /**
      * @param command Register a [SpigotCommand] for this plugin

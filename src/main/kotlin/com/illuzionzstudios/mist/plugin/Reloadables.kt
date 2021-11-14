@@ -45,7 +45,7 @@ class Reloadables {
         commands.forEach { obj -> obj.register() }
         controllers.forEach { controller ->
             Bukkit.getServer().pluginManager.registerEvents(controller, SpigotPlugin.instance!!)
-            controller.initialize(SpigotPlugin.instance)
+            controller.initialize(SpigotPlugin.instance!!)
         }
     }
 
@@ -57,6 +57,7 @@ class Reloadables {
         listeners.clear()
         for (commandGroup in commandGroups.keys) commandGroup.unregister()
         commandGroups.clear()
+        for (controller in controllers) controller.stop(SpigotPlugin.instance!!)
     }
 
     /**

@@ -12,7 +12,7 @@ class GamePlayerController : BukkitPlayerController<GamePlayer?>() {
         return GamePlayer(uuid, s)
     }
 
-    override fun initialize(plugin: SpigotPlugin?) {
+    override fun initialize(plugin: SpigotPlugin) {
         super.initialize(plugin)
         INSTANCE = this
     }

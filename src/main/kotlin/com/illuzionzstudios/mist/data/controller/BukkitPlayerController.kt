@@ -27,14 +27,14 @@ import java.util.*
  */
 abstract class BukkitPlayerController<BP : BukkitPlayer?> : AbstractPlayerController<BP>(), Listener, PluginController {
 
-    override fun initialize(plugin: SpigotPlugin?) {
+    override fun initialize(plugin: SpigotPlugin) {
         INSTANCE = this
         PLUGIN = plugin
         Bukkit.getServer().pluginManager.registerEvents(this, plugin!!)
         MinecraftScheduler.get()!!.registerSynchronizationService(this)
     }
 
-    override fun stop(plugin: SpigotPlugin?) {
+    override fun stop(plugin: SpigotPlugin) {
         // Save everyone
         for (player in ArrayList(players)) {
             try {
