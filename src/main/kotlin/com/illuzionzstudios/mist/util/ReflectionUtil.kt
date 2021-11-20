@@ -157,7 +157,7 @@ class ReflectionUtil {
         fun getAllFields(clazz: Class<*>): Array<Field> {
             var clazz = clazz
             val list: MutableList<Field> = ArrayList()
-            do list.addAll(Arrays.asList(*clazz.declaredFields)) while (!clazz.superclass.also { clazz = it }
+            do list.addAll(listOf(*clazz.declaredFields)) while (!clazz.superclass.also { clazz = it }
                     .isAssignableFrom(
                         Any::class.java
                     ))
@@ -220,6 +220,19 @@ class ReflectionUtil {
                 return method
             }
             return null
+        }
+
+        /**
+         * Get all fields from the class and its super classes
+         */
+        fun getAllMethods(clazz: Class<*>): Array<Method> {
+            var clazz = clazz
+            val list: MutableList<Method> = ArrayList()
+            do list.addAll(listOf(*clazz.declaredMethods)) while (!clazz.superclass.also { clazz = it }
+                    .isAssignableFrom(
+                        Any::class.java
+                    ))
+            return list.toTypedArray()
         }
 
         /**

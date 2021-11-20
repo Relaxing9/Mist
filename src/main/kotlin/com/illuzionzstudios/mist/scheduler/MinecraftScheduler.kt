@@ -8,6 +8,7 @@ import com.illuzionzstudios.mist.scheduler.rate.Async
 import com.illuzionzstudios.mist.scheduler.rate.Rate
 import com.illuzionzstudios.mist.scheduler.rate.Sync
 import com.illuzionzstudios.mist.scheduler.timer.PresetCooldown
+import com.illuzionzstudios.mist.util.ReflectionUtil
 import java.lang.reflect.*
 import java.util.*
 import java.util.concurrent.Callable
@@ -278,11 +279,8 @@ abstract class MinecraftScheduler {
         /**
          * Timer to tick object
          */
-        val timer: PresetCooldown
+        val timer: PresetCooldown = PresetCooldown((rate?.time?.div(50))!!.toInt())
 
-        init {
-            timer = PresetCooldown((rate?.time?.div(50))!!.toInt())
-        }
     }
 
     /**
@@ -298,14 +296,15 @@ abstract class MinecraftScheduler {
          * Elements to be ticked
          */
         var elements: MutableSet<SynchronizedElement<*>> = HashSet()
-        private fun <A : Annotation?> getAnnotations(): Array<Class<out Annotation>> {
+
+        private fun getAnnotations(): Array<Class<out Annotation>> {
             return arrayOf(Sync::class.java, Async::class.java)
         }
 
         @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
-        private fun <A : Annotation?> getElements(
+        private fun <A : Annotation> getElements(
             objects: Array<out AccessibleObject>,
-            synchronizationClass: Class<out A>,
+            synchronizationClass: Class<A>,
             rate: Rate
         ): Set<SynchronizedElement<A>> {
             val elements: MutableSet<SynchronizedElement<A>> = HashSet()
@@ -319,11 +318,12 @@ abstract class MinecraftScheduler {
                     elements.add(SynchronizedElement(rate, `object`, synchronizationClass))
                 }
             }
+
             return elements
         }
 
         @Throws(NoSuchMethodException::class, InvocationTargetException::class, IllegalAccessException::class)
-        private fun <A : Annotation> getRate(synchronizationClass: Class<out A>, element: AnnotatedElement): Rate? {
+        private fun <A : Annotation> getRate(synchronizationClass: Class<A>, element: AnnotatedElement): Rate? {
             if (!element.isAnnotationPresent(synchronizationClass)) {
                 return null
             }
@@ -340,32 +340,10 @@ abstract class MinecraftScheduler {
             return getRate.invoke(annotation) as Rate
         }
 
-        companion object {
-            fun getAllFields(aClass: Class<*>?): Array<Field> {
-                var aClass = aClass
-                val fields: List<Field> = ArrayList()
-                do {
-                    Collections.addAll(fields.toMutableList(), *aClass!!.declaredFields)
-                    aClass = aClass.superclass
-                } while (aClass != null)
-                return fields.toTypedArray()
-            }
-
-            fun getAllMethods(aClass: Class<*>?): Array<Method> {
-                var aClass = aClass
-                val methods: List<Method> = ArrayList()
-                do {
-                    Collections.addAll(methods.toMutableList(), *aClass!!.declaredMethods)
-                    aClass = aClass.superclass
-                } while (aClass != null)
-                return methods.toTypedArray()
-            }
-        }
-
         init {
             try {
                 // LOAD ELEMENTS //
-                for (clazz in getAnnotations<Annotation>()) {
+                for (clazz in getAnnotations()) {
                     if (source.javaClass.isAnnotationPresent(clazz)) {
                         val rate = getRate(clazz, source.javaClass.superclass)
                         elements.add(SynchronizedElement(rate, source, clazz))
@@ -375,10 +353,10 @@ abstract class MinecraftScheduler {
                     }
                     for (rate in Rate.values()) {
                         // LOAD METHODS //
-                        elements.addAll(getElements(getAllMethods(source.javaClass), clazz, rate))
+                        elements.addAll(getElements(ReflectionUtil.getAllMethods(source.javaClass), clazz, rate))
 
                         // LOAD FIELDS //
-                        elements.addAll(getElements(getAllFields(source.javaClass), clazz, rate))
+                        elements.addAll(getElements(ReflectionUtil.getAllFields(source.javaClass), clazz, rate))
                     }
                 }
             } catch (e: NoSuchMethodException) {
