@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config.locale
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.compatibility.ServerVersion
 import com.illuzionzstudios.mist.compatibility.ServerVersion.V
 import com.illuzionzstudios.mist.util.TextUtil
@@ -160,8 +161,8 @@ class MistString(
         loadString()
         val place = Matcher.quoteReplacement(placeholder)
         value = value.replace(
-            "\\{" + place + "}".toRegex(),
-            if (replacement == null) "" else Matcher.quoteReplacement(replacement.toString())
+            "{" + place + "}".toRegex(),
+            Matcher.quoteReplacement(replacement.toString()) ?: ""
         )
         return this
     }
