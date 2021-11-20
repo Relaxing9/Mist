@@ -5,8 +5,8 @@ import com.illuzionzstudios.mist.Mist
 import com.illuzionzstudios.mist.config.format.Comment
 import com.illuzionzstudios.mist.config.format.CommentStyle
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
-import com.illuzionzstudios.mist.util.*
-import lombok.*
+import com.illuzionzstudios.mist.util.FileUtil
+import com.illuzionzstudios.mist.util.TextUtil
 import org.apache.commons.lang.Validate
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConstructor
@@ -24,6 +24,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.stream.Collectors
 
+
 /**
  * Handles a [ConfigSection] as a YAML file. This means being a file
  * and having a file location along with saving, reading, and writing utils.
@@ -38,7 +39,6 @@ open class YamlConfig : ConfigSection {
      * This is the path to the directory to store the file in. This
      * is taken relative from the [JavaPlugin.getDataFolder], meaning
      * the value "" is the [JavaPlugin.getDataFolder].
-     *
      *
      * If we set this value to "foo", this final dir would be "foo/config.yml"
      */
@@ -75,7 +75,7 @@ open class YamlConfig : ConfigSection {
         get() {
             if (field == null) {
                 field = if (directory != null) {
-                    File(plugin!!.dataFolder.toString() + directory, fileName ?: Mist.SETTINGS_NAME)
+                    File(plugin!!.dataFolder.toString() + File.separator + directory, fileName ?: Mist.SETTINGS_NAME)
                 } else {
                     File(plugin!!.dataFolder, fileName ?: Mist.SETTINGS_NAME)
                 }
@@ -93,7 +93,7 @@ open class YamlConfig : ConfigSection {
     /**
      * This is the [Charset] to use for saving the file
      */
-    private val defaultCharset = StandardCharsets.UTF_8
+    private var defaultCharset = StandardCharsets.UTF_8
 
     /**
      * This flag indicates if we should remove nodes not included in defaults
@@ -249,16 +249,13 @@ open class YamlConfig : ConfigSection {
     protected fun postLoad() {}
 
     /**
-     * See [.load]
      * Loads an internal resource onto the server
      * For instance file in resources/locales/en_US.lang will be loaded
      * onto the server under plugins/MY_PLUGIN/locales/en_US.lang
      *
-     *
      * Main applications are implementing this [YamlConfig] into a custom
      * object, for instance implementing a specific type of config. This way if we have
      * any defaults in the plugin we can load to the server.
-     *
      *
      * If file already exists on disk it just loads that.
      *
@@ -274,45 +271,32 @@ open class YamlConfig : ConfigSection {
         Validate.notNull(file, "File cannot be null")
         val fileName = file.name
 
+        if (file.exists()) {
+            BufferedInputStream(FileInputStream(file)).use { stream ->
+                this.load(InputStreamReader(stream, StandardCharsets.UTF_8))
+            }
+
+            isLoaded = true
+            return true
+        }
+
         // Internal path to locale
-        val internalPath = (if (directory != null && directory.trim { it <= ' ' }
-                .equals("", ignoreCase = true)) "" else "$directory/") + fileName
+        val internalPath = (if (directory != null && directory.trim { it <= ' ' }.equals("", ignoreCase = true)) "" else "$directory/") + fileName
         // Attempt to find resource
         val input: InputStream? = FileUtil.getInternalResource(internalPath)
-
-        // Existing file
-        val existingFile = File(plugin!!.dataFolder, internalPath)
 
         // Load buffers
         // Input stream for internal file and existing file
         try {
             BufferedInputStream(input!!).use { defaultIn ->
-                try {
-                    BufferedReader(InputStreamReader(defaultIn)).use { defaultReader ->
+                BufferedReader(InputStreamReader(defaultIn)).use { defaultReader ->
+                    // Load from default
+                    load(defaultReader)
+                    // Then save in server
+                    save(file)
 
-                        // File exists, load that
-                        if (existingFile.exists()) {
-                            try {
-                                BufferedInputStream(FileInputStream(existingFile)).use { existingIn ->
-                                    BufferedReader(
-                                        InputStreamReader(existingIn)
-                                    ).use { existingReader -> load(existingReader) }
-                                }
-                            } catch (ex: Exception) {
-                                Logger.displayError(ex, "File $fileName exists but couldn't be loaded")
-                            }
-                        } else {
-                            // Load from default
-                            load(defaultReader)
-                            // Then save in server
-                            save(existingFile)
-                        }
-
-                        isLoaded = true
-                        return true
-                    }
-                } catch (ex: Exception) {
-                    // Couldn't find internal resource so just don't even load
+                    isLoaded = true
+                    return true
                 }
             }
         } catch (ex: Exception) {
@@ -324,15 +308,13 @@ open class YamlConfig : ConfigSection {
     @Throws(IOException::class, InvalidConfigurationException::class)
     fun load(reader: Reader) {
         val builder = StringBuilder()
-        if (reader is BufferedReader) reader else BufferedReader(reader).use { input ->
-            var line: String
+        reader.buffered().use { input ->
             var firstLine = true
-            while (input.readLine().also { line = it } != null) {
+            input.forEachLine { line ->
+                builder.append(if (firstLine) line.replace("[\uFEFF\uFFFE\u200B]".toRegex(), "") else line).append('\n')
                 if (firstLine) {
-                    line = line.replace("[\uFEFF\uFFFE\u200B]".toRegex(), "") // clear BOM markers
                     firstLine = false
                 }
-                builder.append(line).append('\n')
             }
         }
         loadFromString(builder.toString())
@@ -378,26 +360,25 @@ open class YamlConfig : ConfigSection {
         // then load all comments and assign to the next valid node loaded
         // (Only load comments that are on their own line)
         val `in` = BufferedReader(StringReader(contents))
-        var line: String
         var insideScalar = false
         var firstNode = true
         var index = 0
         val currentPath = LinkedList<String>()
         val commentBlock = ArrayList<String>()
         try {
-            while (`in`.readLine().also { line = it } != null) {
+            `in`.forEachLine { line ->
                 if (line.isEmpty()) {
                     if (firstNode && !commentBlock.isEmpty()) {
                         // header comment
                         firstNode = false
-                        headerComment = Comment.Companion.loadComment(commentBlock)
+                        headerComment = Comment.loadComment(commentBlock)
                         commentBlock.clear()
                     }
-                    continue
+                    return@forEachLine
                 } else if (line.trim { it <= ' ' }.startsWith("#")) {
                     // only load full-line comments
                     commentBlock.add(line.trim { it <= ' ' })
-                    continue
+                    return@forEachLine
                 }
 
                 // check to see if this is a line that we can process
@@ -429,8 +410,8 @@ open class YamlConfig : ConfigSection {
                     }
                 }
             }
-            if (!commentBlock.isEmpty()) {
-                footerComment = Comment.Companion.loadComment(commentBlock)
+            if (commentBlock.isNotEmpty()) {
+                footerComment = Comment.loadComment(commentBlock)
                 commentBlock.clear()
             }
         } catch (ignored: IOException) {
@@ -633,7 +614,7 @@ open class YamlConfig : ConfigSection {
          * @param fileName  The name of the file
          */
         fun loadInternalYaml(plugin: SpigotPlugin, directory: String, fileName: String) {
-            val toLoad = YamlConfig(plugin, File.separator + directory, fileName)
+            val toLoad = YamlConfig(plugin, directory, fileName)
             toLoad.load()
         }
     }

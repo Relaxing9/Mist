@@ -16,7 +16,7 @@ import java.util.function.Consumer
 class YamlDatabase : Database {
     override fun getFields(player: AbstractPlayer): HashMap<String, Any?> {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "data", player.uuid.toString() + ".yml")
         dataConfig.load()
         val cache = HashMap<String, Any?>()
 
@@ -33,14 +33,14 @@ class YamlDatabase : Database {
 
     override fun getFieldValue(player: AbstractPlayer, queryingField: String): Any? {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "data", player.uuid.toString() + ".yml")
         dataConfig.load()
         return dataConfig[queryingField]
     }
 
     override fun setFieldValue(player: AbstractPlayer, queryingField: String, value: Any?) {
         // Local data file
-        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "/data", player.uuid.toString() + ".yml")
+        val dataConfig = YamlConfig(SpigotPlugin.instance!!, "data", player.uuid.toString() + ".yml")
         dataConfig.load()
         dataConfig[queryingField] = value
         dataConfig.saveChanges()

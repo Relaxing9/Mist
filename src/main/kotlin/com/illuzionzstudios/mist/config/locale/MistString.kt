@@ -201,7 +201,7 @@ class MistString(
      */
     fun loadString() {
         if (!loaded) {
-            value = TextUtil.formatText(PluginLocale.Companion.getMessage(key, value))
+            value = TextUtil.formatText(PluginLocale.getMessage(key, value))
             loaded = true
         }
     }
@@ -267,8 +267,8 @@ val String.mist: MistString
 
 /**
  * Concat too MistStrings by writing the expression
- * mistString1 + mistString2 (Unit)
+ * mistString1 + mistString2 [MistString]
  */
-operator fun MistString.plus(other: MistString) {
-    this.concat(other)
+operator fun MistString.plus(other: MistString): MistString {
+    return this.concat(other)
 }

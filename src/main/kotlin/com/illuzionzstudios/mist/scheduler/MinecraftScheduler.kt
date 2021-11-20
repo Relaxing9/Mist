@@ -298,7 +298,7 @@ abstract class MinecraftScheduler {
          * Elements to be ticked
          */
         var elements: MutableSet<SynchronizedElement<*>> = HashSet()
-        private fun getAnnotations(): Array<Class<out Annotation>> {
+        private fun <A : Annotation?> getAnnotations(): Array<Class<out Annotation>> {
             return arrayOf(Sync::class.java, Async::class.java)
         }
 
@@ -365,7 +365,7 @@ abstract class MinecraftScheduler {
         init {
             try {
                 // LOAD ELEMENTS //
-                for (clazz in getAnnotations()) {
+                for (clazz in getAnnotations<Annotation>()) {
                     if (source.javaClass.isAnnotationPresent(clazz)) {
                         val rate = getRate(clazz, source.javaClass.superclass)
                         elements.add(SynchronizedElement(rate, source, clazz))

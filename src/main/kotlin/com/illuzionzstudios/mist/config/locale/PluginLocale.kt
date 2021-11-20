@@ -13,7 +13,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
  */
 abstract class PluginLocale(
     plugin: SpigotPlugin,
-) : YamlConfig(plugin, "/locales", PluginSettings.LOCALE.string + ".lang") {
+) : YamlConfig(plugin, "locales", PluginSettings.LOCALE.string + ".lang") {
 
     /**
      * Invoked to load all other custom settings that we implement
@@ -25,7 +25,8 @@ abstract class PluginLocale(
         /**
          * Messages loaded on startup
          */
-        private val STARTUP_GROUP = MistStringGroup()
+        @JvmStatic
+        protected val STARTUP_GROUP = MistStringGroup()
 
         /**
          * This is a cache of all loaded translations for a key. If we go to get a value by
@@ -143,6 +144,8 @@ abstract class PluginLocale(
 
             // Load settings loadLocale
             settings.load()
+            // Load locale groups
+            STARTUP_GROUP.load()
 
             // Load our other custom settings
             settings.loadLocale()
@@ -150,9 +153,6 @@ abstract class PluginLocale(
 
             // Reset cache
             invalidateCache()
-
-            // Load locale groups
-            STARTUP_GROUP.load()
         }
 
         /**

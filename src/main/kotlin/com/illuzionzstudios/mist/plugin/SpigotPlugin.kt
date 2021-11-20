@@ -320,6 +320,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
          *
          * @return This instance of the plugin
          */
+        @Volatile
         var instance: SpigotPlugin? = null
             get() {
                 // Assign if null

@@ -715,7 +715,7 @@ open class ConfigSection : MemoryConfiguration {
      * @param value Object to place as a value. Setting to `null` removes value from memory
      */
     override fun set(path: String, value: Any?) {
-        Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
+        Objects.requireNonNull(root!!.values, "Root config has invalid values map")
         if (default) {
             // If it's a default section, set a default value
             addDefault(path, value)
@@ -723,16 +723,16 @@ open class ConfigSection : MemoryConfiguration {
             createNodePath(path, false)
 
             // Attempt to set current value
-            var last: Any
+            var last: Any?
             synchronized(root.lock) {
                 if (value != null) {
-                    root.changed =
-                        root.changed or (root.values!!.put(fullPath + path, value).also { last = it!! } !== value)
+                    root.changed = root.changed or (root.values!!.put(fullPath + path, value).also { last = it } != value)
                 } else {
-                    root.changed = root.changed or (root.values!!.remove(fullPath + path).also { last = it!! } != null)
+                    root.changed = root.changed or (root.values!!.remove(fullPath + path).also { last = it } != null)
                 }
             }
-            if (last !== value && last is ConfigSection) {
+
+            if (last != null && last != value && last is ConfigSection) {
                 // Then try remove nodes that don't have a value set in the config anymore
                 // This is in case we set this value to null
                 val trim = fullPath + path + root.pathSeparator

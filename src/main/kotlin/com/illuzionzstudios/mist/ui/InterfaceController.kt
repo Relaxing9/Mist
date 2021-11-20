@@ -60,7 +60,7 @@ object InterfaceController : PluginController, Listener {
         if (event.player !is Player) return
         val player = event.player as Player
         UserInterface.getInterface(player)?.onInterfaceClose(player, event.inventory)
-        player.removeMetadata(UserInterface.Companion.TAG_CURRENT, SpigotPlugin.instance!!)
+        player.removeMetadata(UserInterface.TAG_CURRENT, SpigotPlugin.instance!!)
     }
 
     /**
