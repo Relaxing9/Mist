@@ -1,3 +1,3 @@
-# Mist (Kotlin Port)
+# Mist v1.0
 
-A branch to port the library to kotlin!!
+First offical release of Mist (Still in development)
