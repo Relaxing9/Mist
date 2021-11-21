@@ -21,7 +21,7 @@ open class DirectoryLoader<T : FileLoader<*>?>(
     /**
      * All file loaders for files in directory. From these we can then create the objects
      */
-    private val loaders: MutableList<T>
+    val loaders: MutableList<T>
 
     /**
      * Class of the loader
