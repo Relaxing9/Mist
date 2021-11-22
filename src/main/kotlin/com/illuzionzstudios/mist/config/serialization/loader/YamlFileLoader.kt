@@ -1,7 +1,9 @@
 package com.illuzionzstudios.mist.config.serialization.loader
 
 import com.google.gson.JsonObject
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.config.YamlConfig
+import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import java.io.File
 
@@ -30,19 +32,15 @@ abstract class YamlFileLoader<T>(directory: String, fileName: String) : FileLoad
      */
     override fun save(): Boolean {
         // Load new object before saving
-        MinecraftScheduler.get()?.desynchronize {
-            saveYaml()
-            config!!.save()
-        }
+        saveYaml()
+        config!!.save()
         return true
     }
 
     override fun loadObject(file: File): T {
-        MinecraftScheduler.get()?.desynchronize {
-            config = YamlConfig(file)
-            config!!.load()
-        }
-        return loadYamlObject()
+        config = YamlConfig(file)
+        config!!.load()
+        return loadYamlObject(config)
     }
 
     /**
@@ -50,5 +48,5 @@ abstract class YamlFileLoader<T>(directory: String, fileName: String) : FileLoad
      *
      * @return The loaded object
      */
-    abstract fun loadYamlObject(): T
+    abstract fun loadYamlObject(file: YamlConfig?): T
 }

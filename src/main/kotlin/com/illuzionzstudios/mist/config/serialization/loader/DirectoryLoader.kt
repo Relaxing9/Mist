@@ -29,34 +29,27 @@ open class DirectoryLoader<T : FileLoader<*>?>(
     private val clazz: Class<T>
 
     fun load() {
-        MinecraftScheduler.get()?.desynchronize {
-            // Reward directory
-            val dir = File(SpigotPlugin.instance!!.dataFolder.path + File.separator + directory)
+        // Reward directory
+        val dir = File(SpigotPlugin.instance!!.dataFolder.path + File.separator + directory)
 
-            // If doesn't exist and has to create no point loading
-            if (dir.listFiles() == null || !dir.exists()) {
-                return@desynchronize
-            }
+        // If doesn't exist and has to create no point loading
+        if (dir.listFiles() == null || !dir.exists()) {
+            return
+        }
 
-            // Go through files
-            for (file in dir.listFiles()) {
-                // Get name without extension
-                val name = file.name.split("\\.".toRegex()).toTypedArray()[0]
-                try {
-                    val loader = clazz.getConstructor(String::class.java, String::class.java).newInstance(
-                        directory, name
-                    )
+        // Go through files
+        for (file in dir.listFiles()) {
+            // Get name without extension
+            val name = file.name.split("\\.".toRegex()).toTypedArray()[0]
+            try {
+                val loader: T = clazz.getConstructor(String::class.java, String::class.java).newInstance(directory, name)
 
-                    // Make sure the file extension matches the loader
-                    if (file.name.split("\\.".toRegex()).toTypedArray()[1].equals(
-                                loader?.extension,
-                                ignoreCase = true
-                            )
-                        ) // Add to cache
-                            loaders.add(loader)
-                } catch (e: Exception) {
-                    Logger.displayError(e, "Could not not load file " + file.name)
-                }
+                // Make sure the file extension matches the loader
+                if (file.name.split("\\.".toRegex()).toTypedArray()[1].equals(loader?.extension, ignoreCase = true))
+                    // Add to cache
+                    loaders.add(loader)
+            } catch (e: Exception) {
+                Logger.displayError(e, "Could not not load file " + file.name)
             }
         }
     }

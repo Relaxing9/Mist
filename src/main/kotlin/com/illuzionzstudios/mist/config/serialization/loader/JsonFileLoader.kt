@@ -32,33 +32,29 @@ abstract class JsonFileLoader<T>(directory: String, fileName: String) : FileLoad
      */
     override fun save(): Boolean {
         // Load new object before saving
-        MinecraftScheduler.get()?.desynchronize {
-            saveJson()
-            try {
-                val writer = FileWriter(file)
-                val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-                val jp = JsonParser()
-                val je = jp.parse(json.toString())
-                val prettyJsonString = gson.toJson(je)
-                writer.write(prettyJsonString)
-                writer.flush()
-                writer.close()
-            } catch (e: IOException) {
-                Logger.displayError(e, "Could not save file to disk: " + file.name)
-            }
+        saveJson()
+        try {
+            val writer = FileWriter(file)
+            val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+            val jp = JsonParser()
+            val je = jp.parse(json.toString())
+            val prettyJsonString = gson.toJson(je)
+            writer.write(prettyJsonString)
+            writer.flush()
+            writer.close()
+        } catch (e: IOException) {
+            Logger.displayError(e, "Could not save file to disk: " + file.name)
         }
         return true
     }
 
     override fun loadObject(file: File): T {
-        MinecraftScheduler.get()?.desynchronize {
-            // Try assign JSON file
-            json = try {
-                JsonParser().parse(FileReader(file)).asJsonObject
-            } catch (e: FileNotFoundException) {
-                // If couldn't load, it becomes a new object
-                JsonObject()
-            }
+        // Try assign JSON file
+        json = try {
+            JsonParser().parse(FileReader(file)).asJsonObject
+        } catch (e: FileNotFoundException) {
+            // If couldn't load, it becomes a new object
+            JsonObject()
         }
         return loadJsonObject()
     }

@@ -139,7 +139,7 @@ open class YamlConfig : ConfigSection {
 
     constructor(file: File) {
         plugin = null
-        this.file = file.absoluteFile
+        this.file = file
         directory = null
         fileName = file.name
     }

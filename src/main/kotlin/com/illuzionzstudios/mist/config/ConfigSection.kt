@@ -239,14 +239,14 @@ open class ConfigSection : MemoryConfiguration {
         val section = ConfigSection(root, this, path, true)
 
         // Assure not null
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull(
             root.defaultComments, "Root config has invalid default comments map"
         )
 
         // Insert into root maps
         synchronized(root.lock) {
-            root.defaults.set(fullPath + path, section)
+            root.defaultValues[fullPath + path] = section
             root.defaultComments!!.put(fullPath + path, Comment(*comment))
         }
         return section
@@ -271,7 +271,7 @@ open class ConfigSection : MemoryConfiguration {
 
         // Insert into root maps
         synchronized(root.lock) {
-            root.defaults.set(fullPath + path, section)
+            root.defaultValues[fullPath + path] = section
             root.defaultComments!!.put(fullPath + path, Comment(style, *comment))
         }
         return section
@@ -449,7 +449,7 @@ open class ConfigSection : MemoryConfiguration {
      * @return A set of path nodes as a [String]
      */
     override fun getKeys(deep: Boolean): Set<String> {
-        Objects.requireNonNull(root!!.defaults, "Root config has invalid default values map")
+        Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
 
         // Set of keys
@@ -463,7 +463,7 @@ open class ConfigSection : MemoryConfiguration {
                         if (!k?.endsWith(root.pathSeparator.toString())!!)
                             k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
                     }
-                    .collect(Collectors.toCollection<String, LinkedHashSet<String>> { LinkedHashSet() })
+                    .collect(Collectors.toCollection { LinkedHashSet() })
             )
             result.addAll(
                 root.values!!.keys.stream()
@@ -508,8 +508,7 @@ open class ConfigSection : MemoryConfiguration {
                         ) k.substring(pathIndex + 1) else k.substring(pathIndex + 1, k.length - 1)
                     }
                     .collect(
-                        Collectors.toCollection(
-                            Supplier { LinkedHashSet() })
+                        Collectors.toCollection { LinkedHashSet() }
                     )
             )
         }

@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.config.serialization.loader
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.config.serialization.DataSerializable
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import lombok.*
@@ -32,11 +33,7 @@ abstract class FileLoader<T>(
      * @param fileName  The file name without extension
      * @param extension File extension to use
      */
-    constructor(directory: String, fileName: String, extension: String) : this(
-        File(
-            SpigotPlugin.instance?.dataFolder.toString() + "/" + directory, "$fileName.$extension"
-        ), extension
-    )
+    constructor(directory: String, fileName: String, extension: String) : this(File(SpigotPlugin.instance!!.dataFolder.toString() + File.separator + directory, "$fileName.$extension"), extension)
 
     /**
      * Serialize a [DataSerializable] object and save to disk
@@ -78,6 +75,6 @@ abstract class FileLoader<T>(
         `object` = loadObject(file)
 
         // Get name without extension
-        name = file.name.split("\\.".toRegex()).toTypedArray()[0]
+        name = file.name.split(".".toRegex()).toTypedArray()[0]
     }
 }
