@@ -1,7 +1,9 @@
 package com.illuzionzstudios.mist.config
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.config.format.Comment
 import com.illuzionzstudios.mist.config.format.CommentStyle
+import com.illuzionzstudios.mist.util.Valid
 import lombok.*
 import org.bukkit.configuration.Configuration
 import org.bukkit.configuration.MemoryConfiguration
@@ -649,11 +651,7 @@ open class ConfigSection : MemoryConfiguration {
     override fun get(path: String): Any? {
         Objects.requireNonNull(root!!.defaultValues, "Root config has invalid default values map")
         Objects.requireNonNull<Map<String?, Any?>?>(root.values, "Root config has invalid values map")
-        var result = root.values!![fullPath + path]
-        if (result == null) {
-            result = root.defaultValues[fullPath + path]
-        }
-        return result
+        return root.values!![fullPath + path] ?: root.defaultValues[fullPath + path]
     }
 
     /**
@@ -670,8 +668,7 @@ open class ConfigSection : MemoryConfiguration {
      */
     override fun get(path: String, def: Any?): Any? {
         Objects.requireNonNull<Map<String?, Any?>?>(root!!.values, "Root config has invalid values map")
-        val result = root.values!![fullPath + path]
-        return result ?: def
+        return root.values!![fullPath + path] ?: def
     }
 
     /**
@@ -926,11 +923,13 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     override fun getBoolean(path: String): Boolean {
-        return getT(path, Boolean::class.java, false)!!
+        val result = get(path)
+        return if (result is Boolean) result else false
     }
 
     override fun getBoolean(path: String, def: Boolean): Boolean {
-        return getT(path, Boolean::class.java, def)!!
+        val result = get(path, def)
+        return if (result is Boolean) result else false
     }
 
     override fun getDouble(path: String): Double {
