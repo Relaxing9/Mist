@@ -60,7 +60,6 @@ class TextUtil {
                     val color: String = text?.substring(matcher.start(), matcher.end())!!
                     val chatColor = ChatColor.of(color.substring(1, color.length))
                     text = text.replace(color, chatColor.toString())
-                    Logger.debug("Message: " + chatColor + "test")
                     matcher = pattern.matcher(text)
                 }
             }

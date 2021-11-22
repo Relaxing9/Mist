@@ -289,7 +289,7 @@ open class YamlConfig : ConfigSection {
         // Input stream for internal file and existing file
         try {
             BufferedInputStream(input!!).use { defaultIn ->
-                BufferedReader(InputStreamReader(defaultIn)).use { defaultReader ->
+                BufferedReader(InputStreamReader(defaultIn, StandardCharsets.UTF_8)).use { defaultReader ->
                     // Load from default
                     load(defaultReader)
                     // Then save in server
