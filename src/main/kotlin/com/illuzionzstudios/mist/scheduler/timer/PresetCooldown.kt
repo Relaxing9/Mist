@@ -12,7 +12,7 @@ class PresetCooldown(
     /**
      * The amount of ticks to wait
      */
-    private val wait: Int
+    val wait: Int
 ) : Cooldown() {
     /**
      * Start the timer

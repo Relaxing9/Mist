@@ -1,9 +1,9 @@
 package com.illuzionzstudios.mist.util
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.compatibility.ServerVersion
+import net.md_5.bungee.api.ChatColor
 import org.apache.commons.lang.StringEscapeUtils
-import org.bukkit.ChatColor
-import org.bukkit.entity.Player
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
@@ -24,10 +24,6 @@ class TextUtil {
         val SMOOTH_LINE =
             ChatColor.STRIKETHROUGH.toString() + "                                                               "
 
-        /**
-         * Hexadecimal pattern
-         */
-        private val hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>")
         fun formatText(text: List<String?>): List<String> {
             val formatted: MutableList<String> = ArrayList()
             text.forEach(Consumer { str: String? -> formatted.add(formatText(str)) })
@@ -55,19 +51,21 @@ class TextUtil {
             // Parse unicode
             text = StringEscapeUtils.unescapeJava(text)
 
-            // Parse hexadecimal as #FAFAFA<message>
+            // Parse hexadecimal as &#FAFAFA<message>
             if (ServerVersion.atLeast(ServerVersion.V.v1_16)) {
-                var matcher = hexPattern.matcher(text)
+                val pattern = Pattern.compile("&#[a-fA-F0-9]{6}")
+                var matcher = pattern.matcher(text)
+
                 while (matcher.find()) {
-                    val hexColor =
-                        net.md_5.bungee.api.ChatColor.of(matcher.group().substring(1, matcher.group().length - 1))
-                    val before = text!!.substring(0, matcher.start())
-                    val after = text.substring(matcher.end())
-                    text = before + hexColor + after
-                    matcher = hexPattern.matcher(text)
+                    val color: String = text?.substring(matcher.start(), matcher.end())!!
+                    val chatColor = ChatColor.of(color.substring(1, color.length))
+                    text = text.replace(color, chatColor.toString())
+                    Logger.debug("Message: " + chatColor + "test")
+                    matcher = pattern.matcher(text)
                 }
             }
-            return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', text)
+            text = ChatColor.translateAlternateColorCodes('&', text)
+            return text
         }
 
         /**
@@ -178,7 +176,7 @@ class TextUtil {
          * Makes the string centered with padding based on the max width. Default is max width for chat
          */
         @JvmOverloads
-        fun getCenteredString(message: String?, maxWidth: Int = 154): String {
+        fun getCenteredString(message: String?, maxWidth: Int = 77): String {
             var message = message
             if (message == null || message == "") return ""
 
