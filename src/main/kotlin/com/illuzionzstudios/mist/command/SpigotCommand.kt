@@ -13,6 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.*
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * This is an instance of a custom command for a [com.illuzionzstudios.mist.plugin.SpigotPlugin]
@@ -316,9 +317,12 @@ abstract class SpigotCommand protected constructor(
         this.label = alias
         this.args = args
         val names: MutableList<String> = ArrayList()
+        Bukkit.getOnlinePlayers().forEach {
+            names.add(it.name)
+        }
         Bukkit.getOnlinePlayers().forEach { names.add(it.name) }
         return if (hasPerm(permission)) {
-            tabComplete()!!
+            tabComplete() ?: ArrayList()
         } else names
     }
 

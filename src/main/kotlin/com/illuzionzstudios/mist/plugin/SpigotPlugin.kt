@@ -135,6 +135,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
             BukkitScheduler(this).initialize()
             reloadables.registerController(InterfaceController)
             reloadables.registerController(TemporaryCommandManager)
+            reloadables.registerController(Hooks)
             onRegisterReloadables()
 
             // Check update
@@ -201,6 +202,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
             // Reload controllers etc
             reloadables.registerController(InterfaceController)
             reloadables.registerController(TemporaryCommandManager)
+            reloadables.registerController(Hooks)
             onPluginReload()
             onRegisterReloadables()
 
