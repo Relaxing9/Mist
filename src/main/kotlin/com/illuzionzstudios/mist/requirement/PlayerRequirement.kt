@@ -3,6 +3,7 @@ package com.illuzionzstudios.mist.requirement
 import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
 import com.illuzionzstudios.mist.data.controller.GamePlayerController
+import com.illuzionzstudios.mist.plugin.Hooks
 import com.illuzionzstudios.mist.util.PlayerUtil
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
@@ -31,7 +32,7 @@ class PlayerRequirement(val type: RequirementType, private val args: List<Any?>)
         // Do check based on types
         return when (type) {
             RequirementType.PERMISSION -> PlayerUtil.hasPerm(player, strArg)
-            RequirementType.REGION -> true // TODO
+            RequirementType.REGION -> Hooks.worldguard?.getRegionsAt(player.location)?.contains(strArg) ?: true
             RequirementType.EXPERIENCE -> player.exp >= args[0] as Int
             RequirementType.NEAR -> {
                 val tokens: List<String> = strArg.split(",")
