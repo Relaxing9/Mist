@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.config.serialization.loader
 
 import com.illuzionzstudios.mist.Logger
+import com.illuzionzstudios.mist.config.YamlConfig
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import lombok.*
@@ -16,7 +17,12 @@ open class DirectoryLoader<T : FileLoader<*>?>(
     /**
      * The directory that is being loaded
      */
-    protected val directory: String
+    protected val directory: String,
+
+    /**
+     * A list of default files to load in this directory if doesn't exist
+     */
+    private val defaults: List<String> = ArrayList()
 ) {
     /**
      * All file loaders for files in directory. From these we can then create the objects
@@ -34,7 +40,14 @@ open class DirectoryLoader<T : FileLoader<*>?>(
 
         // If doesn't exist and has to create no point loading
         if (dir.listFiles() == null || !dir.exists()) {
-            return
+            // Load defaults
+            for (default in defaults) {
+                YamlConfig.loadInternalYaml(SpigotPlugin.instance!!, directory, default)
+            }
+            // Still doesn't exist
+            if (dir.listFiles() == null || !dir.exists()) return
+            // Try load again
+            return load()
         }
 
         // Go through files
