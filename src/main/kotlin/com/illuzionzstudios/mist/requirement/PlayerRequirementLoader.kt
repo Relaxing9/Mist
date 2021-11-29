@@ -12,5 +12,5 @@ class PlayerRequirementLoader(section: ConfigSection): YamlSectionLoader<PlayerR
         TODO("Not yet implemented")
     }
 
-    override fun loadObject(file: ConfigSection?): PlayerRequirement = PlayerRequirement(RequirementType.getFilter(file?.getString("type") ?: "permission"), file?.getString("value"), file?.getString("output"))
+    override fun loadObject(file: ConfigSection?): PlayerRequirement = PlayerRequirement(RequirementType.getFilter(file?.getString("type") ?: "permission"), file?.get("value"), file?.get("input"))
 }

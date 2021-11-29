@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.requirement
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
 import com.illuzionzstudios.mist.data.controller.GamePlayerController
 import com.illuzionzstudios.mist.util.PlayerUtil
@@ -19,40 +20,39 @@ import java.util.regex.Pattern
  * @param type The type of requirement
  * @param args Arguments for the requirement
  */
-class PlayerRequirement(val type: RequirementType, private val args: List<String?>): Predicate<Player> {
+class PlayerRequirement(val type: RequirementType, private val args: List<Any?>): Predicate<Player> {
 
-    constructor(type: RequirementType, vararg arguments: String?): this(type, arguments.toList())
+    constructor(type: RequirementType, vararg arguments: Any?): this(type, arguments.toList())
 
     override fun test(player: Player): Boolean {
         // args[0] is the first value, args[1..2..3] etc are other arguments
-        val strArg: String? = args[0]
-        val intArg: Int = Integer.parseInt(args[0])
-        val intArg2: Int = Integer.parseInt(args[1])
+        val strArg: String = args[0].toString()
 
         // Do check based on types
         return when (type) {
             RequirementType.PERMISSION -> PlayerUtil.hasPerm(player, strArg)
             RequirementType.REGION -> true // TODO
-            RequirementType.EXPERIENCE -> player.exp >= intArg
+            RequirementType.EXPERIENCE -> player.exp >= args[0] as Int
             RequirementType.NEAR -> {
-                val tokens: List<String> = strArg?.split(",") ?: ArrayList()
+                val tokens: List<String> = strArg.split(",")
                 val world: World = Bukkit.getWorld(tokens[0]) ?: Bukkit.getWorlds()[0]
                 val x = Integer.parseInt(tokens[1])
                 val y = Integer.parseInt(tokens[2])
                 val z = Integer.parseInt(tokens[3])
                 val location = Location(world, x.toDouble(), y.toDouble(), z.toDouble())
-                return BukkitPlayerController.INSTANCE?.getNearbyPlayers(location, intArg2)?.contains(GamePlayerController.INSTANCE?.getPlayer(player)) ?: false
+                val distance = (args[1] as Int).toDouble()
+                return player.location.distanceSquared(location) <= (distance * distance)
             }
-            RequirementType.STRING_EQUALS -> strArg.equals(args[1])
-            RequirementType.STRING_EQUALS_IGNORECASE -> strArg.equals(args[1], true)
-            RequirementType.STRING_CONTAINS -> strArg?.contains(args[1] ?: "") ?: false
-            RequirementType.REGEX -> Pattern.compile(args[1] ?: "").matcher(strArg ?: "").find()
-            RequirementType.EQUAL -> intArg == intArg2
-            RequirementType.GREATER_THAN_OR_EQUAL -> intArg >= intArg2
-            RequirementType.LESS_THAN_OR_EQUAL -> intArg <= intArg2
-            RequirementType.NOT_EQUAL -> intArg != intArg2
-            RequirementType.GREATER_THAN -> intArg > intArg2
-            RequirementType.LESS_THAN -> intArg < intArg2
+            RequirementType.STRING_EQUALS -> strArg == args[1].toString()
+            RequirementType.STRING_EQUALS_IGNORECASE -> strArg.equals(args[1].toString(), true)
+            RequirementType.STRING_CONTAINS -> strArg.contains(args[1].toString())
+            RequirementType.REGEX -> Pattern.compile(args[1].toString()).matcher(strArg).find()
+            RequirementType.EQUAL -> args[0] as Int == args[1] as Int
+            RequirementType.GREATER_THAN_OR_EQUAL -> args[0] as Int >= args[1] as Int
+            RequirementType.LESS_THAN_OR_EQUAL -> args[0] as Int <= args[1] as Int
+            RequirementType.NOT_EQUAL -> args[0] as Int != args[1] as Int
+            RequirementType.GREATER_THAN -> args[0] as Int > args[1] as Int
+            RequirementType.LESS_THAN -> (args[0] as Int) < (args[1] as Int)
             // Default to yes
             else -> true
         }
