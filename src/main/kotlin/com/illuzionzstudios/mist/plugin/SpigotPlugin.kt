@@ -4,6 +4,7 @@ import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.Logger.Companion.info
 import com.illuzionzstudios.mist.Logger.Companion.warn
+import com.illuzionzstudios.mist.Mist
 import com.illuzionzstudios.mist.command.SpigotCommand
 import com.illuzionzstudios.mist.command.SpigotCommandGroup
 import com.illuzionzstudios.mist.command.temporary.TemporaryCommandManager
@@ -101,6 +102,11 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     abstract fun onRegisterReloadables()
 
     override fun onLoad() {
+        if (Mist.isBlacklisted()) {
+            Bukkit.getServer().pluginManager.disablePlugin(this)
+            return
+        }
+
         try {
             // Try set instance
             instance

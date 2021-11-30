@@ -20,4 +20,8 @@ class PresetCooldown(
     fun go() {
         super.setWait(wait)
     }
+
+    init {
+        go()
+    }
 }
