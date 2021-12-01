@@ -191,7 +191,6 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      */
     fun reload() {
         info("Reloading plugin $pluginName v$pluginVersion")
-        info(" ")
         isReloading = true
         try {
             unregisterReloadables()

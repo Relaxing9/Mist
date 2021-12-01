@@ -1,12 +1,14 @@
 package com.illuzionzstudios.mist.util
 
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
+import org.apache.commons.lang3.ArrayUtils
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permissible
+import org.bukkit.permissions.Permission
+import org.bukkit.permissions.PermissionDefault
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
 import java.util.*
@@ -27,18 +29,19 @@ class PlayerUtil {
         /**
          * Return if the given sender has a certain permission
          */
-        fun hasPerm(sender: Permissible?, permission: String?): Boolean {
+        fun hasPerm(sender: Permissible?, permission: String?, ignoreOps: Boolean = false): Boolean {
             Valid.checkNotNull(sender, "cannot call hasPerm for null sender!")
-            if (permission == null) {
-                Throwable().printStackTrace()
-                return true
-            }
+
+            if (permission == null) return true
+            if (permission.trim().isEmpty()) return true
+
             Valid.checkBoolean(
                 !permission.contains("{plugin_name}") && !permission.contains("{plugin_name_lower}"),
                 "Found {plugin_name} variable calling hasPerm(" + sender + ", " + permission + ")." + "This is now disallowed, contact plugin authors to put " + SpigotPlugin.pluginName
                     .lowercase(Locale.getDefault()) + " in their permission."
             )
-            return sender?.hasPermission(permission) ?: false
+            val perm = Permission(permission, if (ignoreOps) PermissionDefault.FALSE else null)
+            return sender?.hasPermission(perm) ?: false
         }
         /**
          * Sets pretty much every flag the player can have such as

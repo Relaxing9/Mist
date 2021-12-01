@@ -121,8 +121,8 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
-            <classifier>remapped-mojang</classifier>
+            <version>1.18-R0.1-SNAPSHOT</version>
+<!--            <classifier>remapped-mojang</classifier>-->
             <scope>provided</scope>
         </dependency>
 
@@ -160,12 +160,6 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-js-library</artifactId>
-            <version>1.0.7</version>
         </dependency>
 
         <dependency>

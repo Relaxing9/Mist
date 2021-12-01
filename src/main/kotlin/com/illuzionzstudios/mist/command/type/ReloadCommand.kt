@@ -21,8 +21,6 @@ class ReloadCommand : SpigotSubCommand("reload", "rl") {
         // Just call this method to reload
         SpigotPlugin.instance!!.reload()
 
-        val testString: MistString = "My Message".mist
-
         // Inform
         PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(sender)
         return ReturnType.SUCCESS

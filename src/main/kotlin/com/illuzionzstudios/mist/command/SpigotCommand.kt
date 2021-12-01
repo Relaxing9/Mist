@@ -4,6 +4,7 @@ import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.command.response.ReturnType
 import com.illuzionzstudios.mist.config.locale.MistString
 import com.illuzionzstudios.mist.config.locale.PluginLocale
+import com.illuzionzstudios.mist.config.locale.mist
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.PlayerUtil
 import com.illuzionzstudios.mist.util.TextUtil
@@ -122,19 +123,17 @@ abstract class SpigotCommand protected constructor(
         try {
 
             // Check permissions
-            if (permission != null) {
-                if (!hasPerm(permission)) {
-                    // Inform
-                    tell(Objects.requireNonNull(permissionMessage)?.replace("permission", permission!!))
-                    return true
-                }
+            if (!hasPerm(permission)) {
+                // Inform
+                tell(permissionMessage?.mist?.toString("permission", permission))
+                return true
             }
 
             // Too little arguments and inform help
             if (args.size < minArguments || autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0])) {
                 if (!usage.trim { it <= ' ' }.equals("", ignoreCase = true)) // Inform usage message
                     tell(
-                        PluginLocale.Companion.COMMAND_INVALID_USAGE.toString("{label}", label)
+                        PluginLocale.COMMAND_INVALID_USAGE.toString("{label}", label)
                             .toString("{args}", java.lang.String.join(" ", *args))
                     )
                 return true
@@ -281,7 +280,7 @@ abstract class SpigotCommand protected constructor(
      * @return The formatted permission
      */
     override fun getPermission(): String? {
-        return if (super.getPermission() == null) "" else replaceBasicPlaceholders(super.getPermission())
+        return replaceBasicPlaceholders(super.getPermission()) ?: ""
     }
 
     /**
