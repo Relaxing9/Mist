@@ -99,9 +99,7 @@ object InterfaceController : PluginController, Listener {
                 player.closeInventory()
                 Logger.displayError(t, "Error clicking in menu $userInterface")
             }
-        } else if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY
-            || whereClicked != ClickLocation.PLAYER_INVENTORY
-        ) {
+        } else if (whereClicked != ClickLocation.PLAYER_INVENTORY) {
             event.result = Event.Result.DENY
             player.updateInventory()
         }
