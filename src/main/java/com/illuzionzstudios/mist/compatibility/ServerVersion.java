@@ -4,7 +4,6 @@ import com.illuzionzstudios.mist.Logger;
 import com.illuzionzstudios.mist.exception.PluginException;
 import com.illuzionzstudios.mist.util.Valid;
 import lombok.Getter;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 
 /**
@@ -27,6 +26,7 @@ public final class ServerVersion {
      * The version wrapper
      */
     public enum V {
+        v1_18(18),
         v1_17(17),
         v1_16(16),
         v1_15(15),
