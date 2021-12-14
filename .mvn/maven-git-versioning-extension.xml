@@ -2,17 +2,14 @@
                xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-6.4.0.xsd">
     <branch>
         <pattern>master</pattern>
-<!--        Mist-VERSION-->
-        <versionFormat>${version}</versionFormat>
+        <versionFormat>${version}-SNAPSHOT</versionFormat>
     </branch>
     <branch>
         <pattern>development</pattern>
-<!--        Mist-VERSION-DEV-->
         <versionFormat>${version}-DEV</versionFormat>
     </branch>
     <branch>
         <pattern>(.+)</pattern>
-<!--        Mist-BRANCH-SNAPSHOT-->
-        <versionFormat>${1}-SNAPSHOT</versionFormat>
+        <versionFormat>${version}-${1}-SNAPSHOT</versionFormat>
     </branch>
 </configuration>
