@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.ui
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.exception.PluginException
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
@@ -472,10 +473,10 @@ abstract class UserInterface protected constructor(
         cursor: ItemStack?, clicked: ItemStack?, cancelled: Boolean, event: InventoryClickEvent
     ) {
         val openedInventory = player.openInventory
-        onInterfaceClick(player, slot, clicked, event)
+        onInterfaceClick(player, slot, clicked, event, cancelled)
 
         // Delay by 1 tick to get the accurate item in slot
-        MinecraftScheduler.Companion.get()!!.synchronize(Runnable {
+        MinecraftScheduler.get()!!.synchronize({
             // Make sure inventory is still open 1 tick later
             if (openedInventory == player.openInventory) {
                 val topInventory = openedInventory.topInventory
@@ -496,9 +497,9 @@ abstract class UserInterface protected constructor(
      * @param slot    The slot that was clicked
      * @param clicked The clicked [ItemStack]
      */
-    protected open fun onInterfaceClick(player: Player?, slot: Int, clicked: ItemStack?, event: InventoryClickEvent) {
+    protected open fun onInterfaceClick(player: Player?, slot: Int, clicked: ItemStack?, event: InventoryClickEvent, cancelled: Boolean = true) {
         // By default cancel moving items
-        event.isCancelled = true
+        event.isCancelled = cancelled
     }
 
     /**

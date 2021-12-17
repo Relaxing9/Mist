@@ -75,11 +75,8 @@ object InterfaceController : PluginController, Listener {
         val cursor = event.cursor
         val clickedInv = event.clickedInventory
         val action = event.action
-        val whereClicked =
-            if (clickedInv != null) if (clickedInv.type == InventoryType.CHEST) ClickLocation.INTERFACE else ClickLocation.PLAYER_INVENTORY else ClickLocation.OUTSIDE
-        if (action.toString().contains("PICKUP") || action.toString().contains("PLACE")
-            || action.toString() == "SWAP_WITH_CURSOR" || action == InventoryAction.CLONE_STACK
-        ) {
+        val whereClicked = if (clickedInv != null) if (clickedInv.type == InventoryType.CHEST) ClickLocation.INTERFACE else ClickLocation.PLAYER_INVENTORY else ClickLocation.OUTSIDE
+        if (action.toString().contains("PICKUP") || action.toString().contains("PLACE") || action.toString() == "SWAP_WITH_CURSOR" || action == InventoryAction.CLONE_STACK) {
             if (whereClicked == ClickLocation.INTERFACE) try {
                 val button = userInterface?.getButton(slotItem)
                 if (button != null) userInterface.onButtonClick(
@@ -90,8 +87,14 @@ object InterfaceController : PluginController, Listener {
                     button,
                     event
                 ) else userInterface?.onInterfaceClick(
-                    player, event.slot, action, event.click, cursor, slotItem,
-                    false, event
+                    player,
+                    event.slot,
+                    action,
+                    event.click,
+                    cursor,
+                    slotItem,
+                    false,
+                    event
                 )
             } catch (t: Throwable) {
                 // Notify of error
@@ -99,9 +102,6 @@ object InterfaceController : PluginController, Listener {
                 player.closeInventory()
                 Logger.displayError(t, "Error clicking in menu $userInterface")
             }
-        } else if (whereClicked != ClickLocation.PLAYER_INVENTORY) {
-            event.result = Event.Result.DENY
-            player.updateInventory()
         }
     }
 }

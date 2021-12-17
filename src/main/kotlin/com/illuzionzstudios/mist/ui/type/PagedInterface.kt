@@ -314,7 +314,7 @@ abstract class PagedInterface<T> private constructor(
     // Do not allow override
     public override fun onInterfaceClick(
         player: Player?, slot: Int,
-        clicked: ItemStack?, event: InventoryClickEvent
+        clicked: ItemStack?, event: InventoryClickEvent, cancelled: Boolean
     ) {
         throw PluginException("Simplest click unsupported")
     }
