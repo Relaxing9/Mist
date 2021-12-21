@@ -173,8 +173,8 @@ class MistString(
      * @param replacements The map of replacements
      * @return the modified Message
      */
-    fun toString(replacements: Map<String?, Any?>): MistString {
-        replacements.forEach { (placeholder: String?, replacement: Any?) -> this.toString(placeholder, replacement) }
+    fun toString(replacements: MutableMap<String, Any>): MistString {
+        replacements.forEach { (placeholder: String, replacement: Any) -> this.toString(placeholder, replacement) }
         return this
     }
 
@@ -185,8 +185,7 @@ class MistString(
     override fun toString(): String {
         val toSend = value
         // Reload value
-        loaded = false
-        loadString()
+        resetPlaceholders()
         return TextUtil.formatText(toSend)
     }
 
@@ -226,7 +225,7 @@ class MistString(
      * @param subtitle Subtitle to send
      */
     @JvmOverloads
-    fun sendTitle(sender: CommandSender?, subtitle: MistString = MistString("")) {
+    fun sendTitle(sender: CommandSender?, subtitle: MistString? = MistString("")) {
         if (sender is Player) {
             if (ServerVersion.atLeast(V.v1_11)) {
                 sender.sendTitle(toString(), subtitle.toString(), 10, 20, 10)
@@ -254,8 +253,15 @@ class MistString(
                 TextComponent(toString())
             )
         }
+    }
 
-        this + MistString("test")
+    /**
+     * Reset internal placeholders
+     */
+    fun resetPlaceholders(): MistString {
+        loaded = false
+        loadString()
+        return this
     }
 }
 

@@ -29,9 +29,13 @@ object Hooks: PluginController {
      * PlaceholderAPI Enabled
      */
     var papiEnabled: Boolean = false
-    private set
+        private set
 
+    /**
+     * Worldguard hook
+     */
     var worldguard: WorldGuardHook? = null
+        private set
 
     override fun initialize(plugin: SpigotPlugin) {
         // Check if plugins loaded

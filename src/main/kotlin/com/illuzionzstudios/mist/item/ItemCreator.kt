@@ -115,8 +115,8 @@ class ItemCreator(
         )
 
         // Actual item we're building on
-        val stack = item?.clone()
-        val stackMeta = meta?.clone() ?: stack?.itemMeta!!
+        val stack = item?.clone() ?: ItemStack(material.parseMaterial()!!)
+        val stackMeta = meta?.clone() ?: stack.itemMeta
         Valid.checkNotNull(stackMeta, "Item metadata was somehow null")
 
         // Skip if trying to build on air
@@ -137,24 +137,24 @@ class ItemCreator(
         }
 
         // Custom model data only in 1.14+
-        if (ServerVersion.atLeast(V.v1_14) && customModelData != 0) stackMeta.setCustomModelData(customModelData)
+        if (ServerVersion.atLeast(V.v1_14) && customModelData != 0) stackMeta?.setCustomModelData(customModelData)
 
         // Glow
         if (glow) {
-            stackMeta.addEnchant(Enchantment.DURABILITY, 1, true)
+            stackMeta?.addEnchant(Enchantment.DURABILITY, 1, true)
             flags.add(XItemFlag.HIDE_ENCHANTS)
         }
 
         // Enchantments
         if (enchants != null) {
             for (ench in enchants.keys) {
-                stackMeta.addEnchant(ench.parseEnchantment()!!, enchants[ench]!!, true)
+                stackMeta?.addEnchant(ench.parseEnchantment()!!, enchants[ench]!!, true)
             }
         }
 
         // Name and lore
         if (name != null) {
-            stackMeta.setDisplayName(TextUtil.formatText("&r$name"))
+            stackMeta?.setDisplayName(TextUtil.formatText("&r$name"))
         }
         if (lores != null && lores.isNotEmpty()) {
             val coloredLores: MutableList<String> = ArrayList()
@@ -164,20 +164,20 @@ class ItemCreator(
                 // Append '&7' before every line instead of ugly purple italics
                 lines?.forEach { line2: String? -> coloredLores.add(TextUtil.formatText(ChatColor.GRAY.toString() + line2)) }
             })
-            stackMeta.lore = coloredLores
+            stackMeta?.lore = coloredLores
         }
 
         // Unbreakable
         if (unbreakable) {
             if (ServerVersion.olderThan(V.v1_12)) {
                 try {
-                    val spigot = stackMeta.javaClass.getMethod("spigot").invoke(stackMeta)
-                    spigot.javaClass.getMethod("setUnbreakable", Boolean::class.javaPrimitiveType).invoke(spigot, true)
+                    val spigot = stackMeta?.javaClass?.getMethod("spigot")?.invoke(stackMeta)
+                    spigot?.javaClass?.getMethod("setUnbreakable", Boolean::class.javaPrimitiveType)?.invoke(spigot, true)
                 } catch (ignored: Throwable) {
                     // Probably 1.7.10, tough luck
                 }
             } else {
-                XProperty.UNBREAKABLE.apply(stackMeta, true)
+                XProperty.UNBREAKABLE.apply(stackMeta!!, true)
             }
         }
 
@@ -193,7 +193,7 @@ class ItemCreator(
         // Apply flags
         for (flag in flags) {
             try {
-                stackMeta.addItemFlags(ItemFlag.valueOf(flag.toString()))
+                stackMeta?.addItemFlags(ItemFlag.valueOf(flag.toString()))
             } catch (ignored: Throwable) {
             }
         }

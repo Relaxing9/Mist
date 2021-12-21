@@ -44,6 +44,7 @@ class PlayerRequirement(val type: RequirementType, private val args: List<Any?>)
                 val distance = (args[1] as Int).toDouble()
                 return player.location.distanceSquared(location) <= (distance * distance)
             }
+            RequirementType.WORLD -> player.location.world?.name.equals(strArg, true)
             RequirementType.STRING_EQUALS -> strArg == args[1].toString()
             RequirementType.STRING_EQUALS_IGNORECASE -> strArg.equals(args[1].toString(), true)
             RequirementType.STRING_CONTAINS -> strArg.contains(args[1].toString())

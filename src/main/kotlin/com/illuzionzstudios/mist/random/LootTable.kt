@@ -31,7 +31,9 @@ class LootTable<T> {
     /**
      * Pick random item from loot table based on weight
      */
-    fun pick(): T {
+    fun pick(): T? {
+        if (lootTable.isEmpty()) return null
+
         var currentItemUpperBound = 0.0
         val random = Random()
         val nextValue = (totalWeight - 0) * random.nextDouble()

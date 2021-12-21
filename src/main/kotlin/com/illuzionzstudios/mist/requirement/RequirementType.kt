@@ -28,6 +28,11 @@ enum class RequirementType(private val matcher: String, val inverted: Boolean = 
     NEAR("near"),
 
     /**
+     * In a certain world
+     */
+    WORLD("world"),
+
+    /**
      * Check if a string is equal to a value
      */
     STRING_EQUALS("string equals"),

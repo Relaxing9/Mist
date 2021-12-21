@@ -130,7 +130,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         // Main enabled
         try {
             // Startup logo
-            if (startupLogo != null) Arrays.stream(startupLogo).sequential().forEach { Logger.info(it) }
+            if (startupLogo != null) Arrays.stream(startupLogo).sequential().forEach { info(it) }
 
             // Load settings and locale
             // Try save config if found
