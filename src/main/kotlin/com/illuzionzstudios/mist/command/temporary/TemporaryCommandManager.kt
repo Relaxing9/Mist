@@ -21,7 +21,7 @@ object TemporaryCommandManager: PluginController {
 
     override fun initialize(plugin: SpigotPlugin) {
         MinecraftScheduler.get()?.registerSynchronizationService(this)
-        TemporaryPlayerCommand().register()
+        plugin.reloadables.registerCommand(TemporaryPlayerCommand())
     }
 
     override fun stop(plugin: SpigotPlugin) {
@@ -37,14 +37,15 @@ object TemporaryCommandManager: PluginController {
     }
 
     class TemporaryPlayerCommand : SpigotCommand("misttemp") {
-
         override fun onCommand(): ReturnType {
-            val command: TemporaryCommand? = registeredTemp[args[0]]
+            try {
+                val command: TemporaryCommand? = registeredTemp[args[0]]
 
-            if (command != null && player != null) {
-                command.run(player!!)
-                MinecraftScheduler.get()!!.synchronize { registeredTemp.remove(command.label) }
-            }
+                if (command != null && player != null) {
+                    command.run(player!!)
+                    MinecraftScheduler.get()!!.synchronize { registeredTemp.remove(command.label) }
+                }
+            } catch (error: Exception) {}
 
             return ReturnType.SUCCESS
         }

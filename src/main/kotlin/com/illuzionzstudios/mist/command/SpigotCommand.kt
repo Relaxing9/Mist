@@ -130,7 +130,7 @@ abstract class SpigotCommand protected constructor(
             }
 
             // Too little arguments and inform help
-            if (args.size < minArguments || autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0])) {
+            if (args.size < minArguments || (autoHandleHelp && args.size == 1 && ("help" == args[0] || "?" == args[0]))) {
                 if (!usage.trim { it <= ' ' }.equals("", ignoreCase = true)) // Inform usage message
                     tell(
                         PluginLocale.COMMAND_INVALID_USAGE.toString("{label}", label)
