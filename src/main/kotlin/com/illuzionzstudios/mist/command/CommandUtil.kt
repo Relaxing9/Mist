@@ -35,11 +35,6 @@ class CommandUtil {
          * @param label         the label
          * @param removeAliases also remove aliases?
          */
-        /**
-         * Removes a command by its label from command map, includes all aliases
-         *
-         * @param label the label
-         */
         @JvmOverloads
         fun unregisterCommand(label: String, removeAliases: Boolean = true) {
             try {

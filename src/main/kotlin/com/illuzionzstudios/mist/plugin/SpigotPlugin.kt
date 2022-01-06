@@ -230,7 +230,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
     private fun unregisterReloadables() {
         // Stop ticking all tasks
         MinecraftScheduler.get()!!.stopInvocation()
-        if (mainCommand != null && mainCommand?.isRegistered!!) mainCommand?.unregister()
+        mainCommand = null
         reloadables.shutdown()
     }
     //  -------------------------------------------------------------------------
@@ -253,7 +253,6 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
 
     /**
      * Opt in to using custom player data.
-     *
      *
      * This is optional because we don't to load and save
      * data if we don't need it
@@ -309,7 +308,7 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
      */
     protected fun registerMainCommand(command: SpigotCommandGroup?, vararg labels: String) {
         this.mainCommand = command
-        mainCommand?.register(*labels)
+        reloadables.registerCommand(command!!, *labels)
     }
 
     companion object {

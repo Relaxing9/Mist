@@ -1,5 +1,6 @@
 package com.illuzionzstudios.mist.command
 
+import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.command.response.ReturnType
 import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
