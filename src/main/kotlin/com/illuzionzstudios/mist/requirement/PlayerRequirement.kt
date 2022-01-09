@@ -21,11 +21,17 @@ import java.util.regex.Pattern
  * @param type The type of requirement
  * @param args Arguments for the requirement
  */
-class PlayerRequirement(val type: RequirementType, private val args: List<Any?>): Predicate<Player> {
+class PlayerRequirement(val type: RequirementType, private val arguments: List<Any?>): Predicate<Player> {
 
     constructor(type: RequirementType, vararg arguments: Any?): this(type, arguments.toList())
 
     override fun test(player: Player): Boolean {
+        // Process PAPI placeholders
+        val args: MutableList<Any?> = ArrayList();
+        for (arg in arguments) {
+            args.add(Hooks.papiPlaceholders(arg.toString(), player))
+        }
+
         // args[0] is the first value, args[1..2..3] etc are other arguments
         val strArg: String = args[0].toString()
 
