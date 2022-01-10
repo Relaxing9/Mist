@@ -4,6 +4,8 @@
 *.iws
 dependency-reduced-pom.xml
 settings.properties
+.git-versioned-pom.xml
+pom.xml.versionsBackup
 
 # Eclipse
 .classpath
@@ -60,6 +62,3 @@ dist/
 manifest.mf
 Thumbs.db
 *.sh
-
-# Generated
-.git-versioned-pom.xml
