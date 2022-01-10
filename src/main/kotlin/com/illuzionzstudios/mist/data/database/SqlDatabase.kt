@@ -238,7 +238,7 @@ class SqlDatabase(
             val status = AtomicBoolean(false)
 
             // Check async
-            MinecraftScheduler.Companion.get()!!.desynchronize(Runnable {
+            MinecraftScheduler.get()!!.desynchronize({
                 try {
                     status.set(!connection!!.isClosed)
                 } catch (ex: Exception) {

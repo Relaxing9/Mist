@@ -21,6 +21,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler
 import com.illuzionzstudios.mist.ui.InterfaceController
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.event.Listener
@@ -36,7 +37,7 @@ import java.util.*
  * The plugin is only designed to work on versions
  * {@version 1.8.8} to {@version 1.17.1}
  */
-abstract class SpigotPlugin : JavaPlugin(), Listener {
+abstract class SpigotPlugin(val metricsId: Int = 0) : JavaPlugin(), Listener {
 
     /**
      * An easy way to handle listeners for reloading
@@ -131,6 +132,10 @@ abstract class SpigotPlugin : JavaPlugin(), Listener {
         try {
             // Startup logo
             if (startupLogo != null) Arrays.stream(startupLogo).sequential().forEach { info(it) }
+
+            // Track metrics
+            if (this.metricsId != 0)
+                Metrics(this, metricsId)
 
             // Load settings and locale
             // Try save config if found
