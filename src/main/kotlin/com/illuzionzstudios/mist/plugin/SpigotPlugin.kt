@@ -1,6 +1,5 @@
 package com.illuzionzstudios.mist.plugin
 
-import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.Logger.Companion.displayError
 import com.illuzionzstudios.mist.Logger.Companion.info
 import com.illuzionzstudios.mist.Logger.Companion.warn
@@ -17,7 +16,6 @@ import com.illuzionzstudios.mist.data.player.AbstractPlayer
 import com.illuzionzstudios.mist.data.player.AbstractPlayerData
 import com.illuzionzstudios.mist.data.player.BukkitPlayer
 import com.illuzionzstudios.mist.model.UpdateChecker
-import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler
 import com.illuzionzstudios.mist.ui.InterfaceController
@@ -33,11 +31,10 @@ import java.util.*
  * Represents an instance of a custom spigot plugin with our
  * "Mist" functionality
  *
- *
  * The plugin is only designed to work on versions
- * {@version 1.8.8} to {@version 1.17.1}
+ * {@version 1.8.8} to {@version 1.18.1}
  */
-abstract class SpigotPlugin(val metricsId: Int = 0) : JavaPlugin(), Listener {
+abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
 
     /**
      * An easy way to handle listeners for reloading
