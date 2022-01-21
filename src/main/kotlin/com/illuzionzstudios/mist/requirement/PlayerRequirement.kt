@@ -19,11 +19,12 @@ import java.util.regex.Pattern
  * as a requirement as the player needs to require things
  *
  * @param type The type of requirement
+ * @param invert If to invert the check
  * @param args Arguments for the requirement
  */
-class PlayerRequirement(val type: RequirementType, private val arguments: List<Any?>): Predicate<Player> {
+class PlayerRequirement(val type: RequirementType, private val invert: Boolean, private val arguments: List<Any?>): Predicate<Player> {
 
-    constructor(type: RequirementType, vararg arguments: Any?): this(type, arguments.toList())
+    constructor(type: RequirementType, invert: Boolean, vararg arguments: Any?): this(type, invert, arguments.toList())
 
     override fun test(player: Player): Boolean {
         // Process PAPI placeholders
@@ -36,7 +37,7 @@ class PlayerRequirement(val type: RequirementType, private val arguments: List<A
         val strArg: String = args[0].toString()
 
         // Do check based on types
-        return when (type) {
+        var check = when (type) {
             RequirementType.PERMISSION -> PlayerUtil.hasPerm(player, strArg)
             RequirementType.REGION -> Hooks.worldguard?.getRegionsAt(player.location)?.contains(strArg) ?: true
             RequirementType.EXPERIENCE -> player.exp >= args[0] as Int
@@ -64,6 +65,9 @@ class PlayerRequirement(val type: RequirementType, private val arguments: List<A
             // Default to yes
             else -> true
         }
+
+        if (invert) check = !check
+        return check
     }
 
 }

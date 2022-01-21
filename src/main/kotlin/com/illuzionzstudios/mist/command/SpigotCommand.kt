@@ -58,13 +58,13 @@ abstract class SpigotCommand protected constructor(
      * These are the minimum amount of arguments to be passed to the command
      * for it to actually execute
      */
-    protected val minArguments = 0
+    protected var minArguments = 0
 
     /**
      * Should we automatically send usage message when the first argument
      * equals to "help" or "?" ?
      */
-    protected val autoHandleHelp = true
+    protected var autoHandleHelp = true
 
     /**
      * Register this command into Bukkit to be used.
