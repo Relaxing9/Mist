@@ -2,10 +2,8 @@ package com.illuzionzstudios.mist.command.type
 
 import com.illuzionzstudios.mist.command.SpigotSubCommand
 import com.illuzionzstudios.mist.command.response.ReturnType
-import com.illuzionzstudios.mist.config.locale.MistString
 import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.config.locale.mist
-import com.illuzionzstudios.mist.config.locale.plus
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 
 /**
@@ -22,7 +20,7 @@ class ReloadCommand : SpigotSubCommand("reload", "rl") {
         SpigotPlugin.instance!!.reload()
 
         // Inform
-        PluginLocale.GENERAL_PLUGIN_PREFIX.concat(" " + PluginLocale.GENERAL_PLUGIN_RELOAD).sendMessage(sender)
+        (PluginLocale.GENERAL_PLUGIN_PREFIX.toString() + PluginLocale.GENERAL_PLUGIN_RELOAD.toString()).mist.sendMessage(sender)
         return ReturnType.SUCCESS
     }
 

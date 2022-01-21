@@ -291,7 +291,6 @@ abstract class UserInterface protected constructor(
      * Called automatically before the menu is displayed but after all items have
      * been drawn
      *
-     *
      * Override for custom last-minute modifications
      *
      * @param drawer The drawer for the interface

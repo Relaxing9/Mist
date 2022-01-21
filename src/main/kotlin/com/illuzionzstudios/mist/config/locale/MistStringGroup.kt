@@ -10,7 +10,6 @@ import java.util.function.Consumer
  * errors. Only one loader is needed for all strings. Only group if they need to be loaded in
  * different stages
  *
- *
  * Should be loaded in [SpigotPlugin.onReloadablesStart]
  */
 class MistStringGroup {
@@ -26,8 +25,8 @@ class MistStringGroup {
      * @param def Default value
      * @return Created [MistString]
      */
-    fun create(key: String, def: String): MistString {
-        val string = MistString(key, def)
+    fun create(key: String, vararg def: String): MistString {
+        val string = MistString(key, *def)
         strings.add(string)
         return string
     }
@@ -36,6 +35,6 @@ class MistStringGroup {
      * Load all strings into cache and locale
      */
     fun load() {
-        strings.forEach(Consumer { obj: MistString -> obj.loadString() })
+        strings.forEach(Consumer { obj: MistString -> obj.toString() })
     }
 }

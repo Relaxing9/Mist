@@ -19,6 +19,7 @@ import com.illuzionzstudios.mist.model.UpdateChecker
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.bukkit.BukkitScheduler
 import com.illuzionzstudios.mist.ui.InterfaceController
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -40,6 +41,9 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
      * An easy way to handle listeners for reloading
      */
     val reloadables = Reloadables()
+
+    var audiences: BukkitAudiences? = null
+    private set
 
     /**
      * If to check for plugin updates on load
@@ -134,6 +138,9 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
             if (this.metricsId != 0)
                 Metrics(this, metricsId)
 
+            // Audiences
+            this.audiences = BukkitAudiences.create(this)
+
             // Load settings and locale
             // Try save config if found
             PluginSettings.loadSettings(pluginSettings)
@@ -178,7 +185,9 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
             warn("Plugin might not shut down property. Got " + t.javaClass.simpleName + ": " + t.message)
             t.printStackTrace()
         }
+
         unregisterReloadables()
+        this.audiences?.close()
 
         // Try save all player data
         if (playerController != null) {
