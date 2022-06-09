@@ -98,6 +98,7 @@ open class CustomItem(
                 .isNotEmpty()) creator.name(customName.toString())
         if (lore != null) creator.lores(MistString.fromList(lore!!))
         creator.amount(amount)
+        creator.damage(damage)
         creator.customModelData(customModelData)
         creator.enchants(enchants!!)
         creator.glow(glowing)

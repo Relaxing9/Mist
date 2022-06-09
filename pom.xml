@@ -12,11 +12,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.6.0</kotlin.version>
+        <kotlin.version>1.6.21</kotlin.version>
     </properties>
 
     <packaging>jar</packaging>
     <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -25,43 +26,15 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>process-sources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <source>src/main/kotlin</source>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>com.illuzionzstudios.mist.bstats</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <minimizeJar>true</minimizeJar>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -81,6 +54,11 @@
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+
+        <repository> <!-- for development builds -->
+            <id>sonatype-oss-snapshots1</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -88,7 +66,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -96,28 +74,28 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>22.0.0</version>
+            <version>23.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>8.4.0</version>
+            <version>8.7.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -138,14 +116,14 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
-            <version>4.9.3</version>
+            <version>4.11.0</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
             <scope>compile</scope>
         </dependency>
 

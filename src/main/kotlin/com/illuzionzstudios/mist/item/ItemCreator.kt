@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.ItemMeta
+import java.util.*
 import java.util.function.Consumer
 
 /**
@@ -38,7 +39,7 @@ class ItemCreator(
     val amount: Int = 1,
 
     /**
-     * Damage to the item for setting custom metadata
+     * Damage to the item for setting durability
      */
     val damage: Int = -1,
 
@@ -148,7 +149,7 @@ class ItemCreator(
         // Enchantments
         if (enchants != null) {
             for (ench in enchants.keys) {
-                stackMeta?.addEnchant(ench.parseEnchantment()!!, enchants[ench]!!, true)
+                stackMeta?.addEnchant(ench.enchant!!, enchants[ench]!!, true)
             }
         }
 

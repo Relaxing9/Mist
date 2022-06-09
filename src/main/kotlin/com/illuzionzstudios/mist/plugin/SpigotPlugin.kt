@@ -244,9 +244,11 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
         mainCommand = null
         reloadables.shutdown()
     }
+
     //  -------------------------------------------------------------------------
     //  Additional features of our main plugin
     //  -------------------------------------------------------------------------
+
     /**
      * @param listener Register a listener for this plugin
      */
@@ -265,7 +267,7 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
     /**
      * Opt in to using custom player data.
      *
-     * This is optional because we don't to load and save
+     * This is optional because we don't want to load and save
      * data if we don't need it
      *
      * @param playerClass      The class for our custom player data

@@ -43,7 +43,6 @@ object Hooks: PluginController {
         if (Bukkit.getServer().pluginManager.getPlugin("WorldGuard") != null) {
             this.worldguard = WorldGuardHook()
         }
-
     }
 
     override fun stop(plugin: SpigotPlugin) {
