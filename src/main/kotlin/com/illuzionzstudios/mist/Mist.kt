@@ -12,7 +12,6 @@ import java.nio.charset.Charset
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
 
-
 class Mist {
 
     companion object {

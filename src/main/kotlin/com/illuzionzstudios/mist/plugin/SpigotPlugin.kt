@@ -33,7 +33,7 @@ import java.util.*
  * "Mist" functionality
  *
  * The plugin is only designed to work on versions
- * {@version 1.8.8} to {@version 1.18.1}
+ * {@version 1.8.8} to {@version 1.18.2}
  */
 abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
 
