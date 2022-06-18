@@ -121,12 +121,16 @@ class ItemCreator(
         Valid.checkNotNull(stackMeta, "Item metadata was somehow null")
 
         // Skip if trying to build on air
-        if (material == XMaterial.AIR) return stack!!
+        if (material == XMaterial.AIR) return stack
+
+        // Set item amount
+        stack.amount = this.amount
 
         // Set damage
         if (damage != -1) {
             try {
-                stack?.durability = damage.toShort()
+                // Old versions
+                stack.durability = damage.toShort()
             } catch (ignored: Throwable) {
             }
             try {
@@ -200,8 +204,8 @@ class ItemCreator(
         }
 
         // Finally apply metadata
-        stack?.itemMeta = stackMeta
-        return stack!!
+        stack.itemMeta = stackMeta
+        return stack
     }
 
     companion object {

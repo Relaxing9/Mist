@@ -28,7 +28,7 @@ abstract class BaseCustomItemLoader<T : CustomItem?>(section: ConfigSection) : Y
         // Set base options
         item?.identifier = loader?.nodeKey!!
         item?.customName = MistString.of(loader?.getString("item-name"))
-        item?.lore = MistString.fromStringList(loader?.getStringList("lore")?.toMutableList()!!)
+        item?.lore = MistString.fromStringList(loader?.getStringList("lore")?.toMutableList())
         item?.amount = loader?.getInt("amount") ?: 1
         item?.material = XMaterial.matchXMaterial(loader?.getString("material") ?: "AIR").get()
         item?.customModelData = loader?.getInt("model-data") ?: 0
