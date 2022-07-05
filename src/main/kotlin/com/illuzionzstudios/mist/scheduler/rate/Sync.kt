@@ -8,7 +8,7 @@ package com.illuzionzstudios.mist.scheduler.rate
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.CLASS
 )
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class Sync(
     /**
      * @return The rate of refresh

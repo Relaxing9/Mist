@@ -9,13 +9,26 @@ enum class Rate(
      */
     val time: Long
 ) {
-    MIN_64(3840000L), MIN_32(1920000L), MIN_16(960000L), MIN_08(480000L), MIN_04(240000L), MIN_02(120000L), MIN_01(
-        60000L
-    ),
-    SLOWEST(32000L), SLOWER(16000L), SEC_10(10000L), SEC_8(8000L), SEC_6(6000L), SEC_4(4000L), SEC_2(2000L), SEC(1000L), FAST(
-        500L
-    ),
-    FASTER(250L), FASTEST(125L), TICK(50L), INSTANT(0L);
+    MIN_64(3840000L),
+    MIN_32(1920000L),
+    MIN_16(960000L),
+    MIN_08(480000L),
+    MIN_04(240000L),
+    MIN_02(120000L),
+    MIN_01(60000L),
+    SLOWEST(32000L),
+    SLOWER(16000L),
+    SEC_10(10000L),
+    SEC_8(8000L),
+    SEC_6(6000L),
+    SEC_4(4000L),
+    SEC_2(2000L),
+    SEC(1000L),
+    FAST(500L),
+    FASTER(250L),
+    FASTEST(125L),
+    TICK(50L),
+    INSTANT(0L);
 
     /**
      * The last amount of ticks passed

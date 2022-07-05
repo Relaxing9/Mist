@@ -53,35 +53,5 @@ class Mist {
             return StreamSupport.stream(iterable.spliterator(), false)
                 .collect(Collectors.toList())
         }
-
-        var uid = "%%__USER__%%"
-
-        /**
-         * Is this plugin blacklisted by running because of the spigot user who downloaded it`
-         */
-        fun isBlacklisted(): Boolean {
-            try {
-                val localURLConnection: URLConnection = URL("https://cdn.illuzionzstudios.com/spigot/blacklist.txt").openConnection()
-                localURLConnection.setRequestProperty(
-                    "User-Agent",
-                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11"
-                )
-                localURLConnection.connect()
-                val localBufferedReader = BufferedReader(InputStreamReader(localURLConnection.getInputStream(), Charset.forName("UTF-8")))
-                val localStringBuilder = StringBuilder()
-                var str1: String?
-                while (localBufferedReader.readLine().also { str1 = it } != null) {
-                    localStringBuilder.append(str1)
-                }
-                val str2 = localStringBuilder.toString()
-                if (str2.contains(java.lang.String.valueOf(uid))) {
-                    return true
-                }
-            } catch (localIOException: IOException) {
-                return false
-            }
-
-            return false
-        }
     }
 }

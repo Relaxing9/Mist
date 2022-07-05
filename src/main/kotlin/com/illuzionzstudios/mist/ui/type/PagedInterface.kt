@@ -7,8 +7,8 @@ import com.illuzionzstudios.mist.item.ItemCreator
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.ui.button.Button
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer
-import com.illuzionzstudios.mist.util.*
-import lombok.*
+import com.illuzionzstudios.mist.util.MathUtil
+import com.illuzionzstudios.mist.util.Valid
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
@@ -18,8 +18,13 @@ import org.bukkit.inventory.ItemStack
 /**
  * An interface that displays elements and can switch between pages
  *
+ * @param pageSize               size of the menu, a multiple of 9 (keep in mind we already add
+ * 1 row there)
+ * @param parent                 the parent menu
+ * @param pages                  the pages the pages
+ * @param returnMakesNewInstance should we re-instatiate the parent menu when returning to it?
  * @param <T> The type of [Object] displayed in the interface
-</T> */
+ */
 abstract class PagedInterface<T> private constructor(
     pageSize: Int?,
     parent: UserInterface?,
@@ -81,10 +86,7 @@ abstract class PagedInterface<T> private constructor(
      * 1 row there)
      * @param pages    the pages
      */
-    @Deprecated(
-        """we recommend you don't set the page size for the menu to
-      autocalculate"""
-    )
+    @Deprecated("we recommend you don't set the page size for the menu to autocalculate")
     protected constructor(pageSize: Int, pages: Iterable<T>) : this(pageSize, null, pages)
 
     /**
@@ -95,10 +97,7 @@ abstract class PagedInterface<T> private constructor(
      * @param parent   the parent menu
      * @param pages    the pages the pages
      */
-    @Deprecated(
-        """we recommend you don't set the page size for the menu to
-      autocalculate"""
-    )
+    @Deprecated("we recommend you don't set the page size for the menu to autocalculate")
     protected constructor(
         pageSize: Int, parent: UserInterface?,
         pages: Iterable<T>
@@ -187,7 +186,7 @@ abstract class PagedInterface<T> private constructor(
                         }
                     }
                 }
-            override val item: ItemStack?
+            override val item: ItemStack
                 get() {
                     val last = currentPage == pages.size
                     return ItemCreator.builder()
@@ -195,7 +194,7 @@ abstract class PagedInterface<T> private constructor(
                         .name(if (last) "&7Last Page" else "Page " + (currentPage + 1) + " &8>>")
                         .build().make()
                 }
-        } else Button.Companion.makeEmpty()
+        } else Button.makeEmpty()
     }
 
     // Reinits the menu and plays the anvil sound
@@ -287,9 +286,6 @@ abstract class PagedInterface<T> private constructor(
         return if (slot == size - 4) nextButton?.item else null
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun onInterfaceClick(
         player: Player, slot: Int,
         action: InventoryAction, click: ClickType?,
@@ -311,15 +307,16 @@ abstract class PagedInterface<T> private constructor(
         }
     }
 
-    // Do not allow override
-    public override fun onInterfaceClick(
+    public final override fun onInterfaceClick(
         player: Player?, slot: Int,
         clicked: ItemStack?, event: InventoryClickEvent, cancelled: Boolean
     ) {
         throw PluginException("Simplest click unsupported")
     }
 
-    // Get all items in a page
+    /**
+     * Get current items displayed on the page
+     */
     private val currentPageItems: List<T>
         get() {
             Valid.checkBoolean(
@@ -330,15 +327,6 @@ abstract class PagedInterface<T> private constructor(
             return pages[currentPage - 1]!!
         }
 
-    /**
-     * Create a new paged menu
-     *
-     * @param pageSize               size of the menu, a multiple of 9 (keep in mind we already add
-     * 1 row there)
-     * @param parent                 the parent menu
-     * @param pages                  the pages the pages
-     * @param returnMakesNewInstance should we re-instatiate the parent menu when returning to it?
-     */
     init {
         val items = getItemAmount(pages)
         val autoPageSize = pageSize

@@ -85,7 +85,6 @@ class InterfaceDrawer private constructor(
     /**
      * Set the full content of this inventory
      *
-     *
      * If the given content is shorter, all additional inventory slots are replaced with air
      *
      * @param newContent the new content

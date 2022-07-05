@@ -1,17 +1,12 @@
 package com.illuzionzstudios.mist.requirement
 
-import com.illuzionzstudios.mist.Logger
-import com.illuzionzstudios.mist.data.controller.BukkitPlayerController
-import com.illuzionzstudios.mist.data.controller.GamePlayerController
 import com.illuzionzstudios.mist.plugin.Hooks
 import com.illuzionzstudios.mist.util.PlayerUtil
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.entity.Player
 import java.util.function.Predicate
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
@@ -22,13 +17,13 @@ import java.util.regex.Pattern
  * @param invert If to invert the check
  * @param args Arguments for the requirement
  */
-class PlayerRequirement(val type: RequirementType, private val invert: Boolean, private val arguments: List<Any?>): Predicate<Player> {
+class PlayerRequirement(val type: RequirementType, private val invert: Boolean, private val arguments: List<Any?>) : Predicate<Player> {
 
-    constructor(type: RequirementType, invert: Boolean, vararg arguments: Any?): this(type, invert, arguments.toList())
+    constructor(type: RequirementType, invert: Boolean, vararg arguments: Any?) : this(type, invert, arguments.toList())
 
     override fun test(player: Player): Boolean {
         // Process PAPI placeholders
-        val args: MutableList<Any?> = ArrayList();
+        val args: MutableList<Any?> = ArrayList()
         for (arg in arguments) {
             args.add(Hooks.papiPlaceholders(arg.toString(), player))
         }

@@ -7,6 +7,7 @@ import com.illuzionzstudios.mist.data.player.OfflinePlayer
  * A database where data can be stored
  */
 interface Database {
+
     /**
      * Get a cached value
      *

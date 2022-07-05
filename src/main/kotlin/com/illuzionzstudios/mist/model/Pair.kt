@@ -1,7 +1,5 @@
 package com.illuzionzstudios.mist.model
 
-import com.illuzionzstudios.mist.compatibility.ServerVersion.V
-
 /**
  * Simple class that contains two values at once
  */

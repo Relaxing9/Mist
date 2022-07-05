@@ -22,15 +22,10 @@ nbproject/
 log/
 target/
 
-# JRebel
-.rebel.xml
-.rebel-remote.xml
-rebel.xml
-rebel-remote.xml
-
 build.xml
 
 # Visual Studio
+.vscode/
 *.obj
 *.exe
 *.pdb
@@ -56,9 +51,6 @@ build.xml
 *.class
 
 # Other
-minecraft/1.8.8
 bin/
 dist/
-manifest.mf
-Thumbs.db
 *.sh

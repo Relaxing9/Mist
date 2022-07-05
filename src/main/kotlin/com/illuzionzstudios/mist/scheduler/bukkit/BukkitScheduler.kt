@@ -26,7 +26,6 @@ class BukkitScheduler(
      * Ids of the schedulers
      */
     private var SYNC_SCHEDULER = -1
-
     private var ASYNC_SCHEDULER = -1
 
     public override fun start() {

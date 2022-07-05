@@ -104,11 +104,6 @@ abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
     abstract fun onRegisterReloadables()
 
     override fun onLoad() {
-        if (Mist.isBlacklisted()) {
-            Bukkit.getServer().pluginManager.disablePlugin(this)
-            return
-        }
-
         try {
             // Try set instance
             instance

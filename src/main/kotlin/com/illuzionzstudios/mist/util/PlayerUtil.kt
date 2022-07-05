@@ -43,36 +43,18 @@ class PlayerUtil {
             val perm = Permission(permission, if (ignoreOps) PermissionDefault.FALSE else null)
             return sender?.hasPermission(perm) ?: false
         }
+
         /**
          * Sets pretty much every flag the player can have such as
          * flying etc, back to normal
          *
-         *
          * Also sets gamemode to survival
          *
-         *
          * Typical usage: Minigame plugins - call this before joining the player to an arena
-         *
          *
          * Even disables Essentials god mode.
          *
          * @param removeVanish should we remove vanish from players? most vanish plugins are supported
-         */
-        // ------------------------------------------------------------------------------------------------------------
-        // Inventory
-        // ------------------------------------------------------------------------------------------------------------
-        /**
-         * Sets pretty much every flag the player can have such as
-         * flying etc, back to normal
-         *
-         *
-         * Also sets gamemode to survival
-         *
-         *
-         * Typical usage: Minigame plugins - call this before joining the player to an arena
-         *
-         *
-         * Even disables Essentials god mode and removes vanish (most vanish plugins are supported).
          */
         @JvmOverloads
         fun normalize(player: Player, cleanInventory: Boolean, removeVanish: Boolean = true) {
@@ -128,9 +110,9 @@ class PlayerUtil {
             }
         }
 
-        /*
-     * Cleans players inventory and restores food levels
-     */
+        /**
+         * Cleans players inventory and restores food levels
+         */
         private fun cleanInventoryAndFood(player: Player) {
             player.inventory.setArmorContents(null)
             player.inventory.contents = arrayOfNulls(player.inventory.contents.size)
@@ -156,9 +138,7 @@ class PlayerUtil {
             for (i in everything) if (i != null && i.type != Material.AIR) return false
             return true
         }
-        // ------------------------------------------------------------------------------------------------------------
-        // Vanish
-        // ------------------------------------------------------------------------------------------------------------
+
         /**
          * Return if the player is vanished, see [.isVanished] or if the other player can see him
          */

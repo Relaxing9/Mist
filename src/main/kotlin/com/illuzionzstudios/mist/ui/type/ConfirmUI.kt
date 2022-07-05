@@ -44,9 +44,6 @@ class ConfirmUI(
         return ItemCreator.builder().name(" ").material(XMaterial.BLACK_STAINED_GLASS_PANE).build().makeUIItem()
     }
 
-    /**
-     * @param confirmAction Action to run after confirmed/answered
-     */
     init {
         title = "&8Are you sure?"
         size = 27
@@ -68,6 +65,7 @@ class ConfirmUI(
                     )
                 }
             })
+
         confirmButton = Button.of(ItemCreator.builder()
             .material(XMaterial.LIME_DYE)
             .name(PluginLocale.INTERFACE_CONFIRM_DENY_NAME.toString())

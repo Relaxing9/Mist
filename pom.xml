@@ -94,21 +94,13 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Lombok -->
+        <!-- Dev Dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -116,6 +108,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Misc Libs -->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
@@ -123,13 +122,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Kotlin Lib -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
@@ -137,13 +136,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Adventure API -->
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
             <version>4.11.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
@@ -151,6 +150,7 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Integrations -->
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>

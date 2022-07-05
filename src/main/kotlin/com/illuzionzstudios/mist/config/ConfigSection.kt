@@ -436,7 +436,7 @@ open class ConfigSection : MemoryConfiguration {
     }
 
     /**
-     * @return See [.getDefaults]
+     * @return See [getDefaults]
      */
     override fun getDefaultSection(): ConfigSection? {
         return getDefaults()
@@ -575,7 +575,6 @@ open class ConfigSection : MemoryConfiguration {
     /**
      * See [.getKeys]
      *
-     *
      * This will perform a shallow search for all keys and
      * add all found [ConfigSection] for that node path
      *
@@ -637,9 +636,11 @@ open class ConfigSection : MemoryConfiguration {
     override fun getName(): String {
         return nodeKey!!
     }
+
     //  -------------------------------------------------------------------------
     //  Getting and setting values in the config
     //  -------------------------------------------------------------------------
+
     /**
      * Simplest way to get a value from the [ConfigSection]
      * If value was found at path, simply returns as [Object],
@@ -657,7 +658,6 @@ open class ConfigSection : MemoryConfiguration {
     /**
      * See [.get]
      *
-     *
      * Able to provide a default value that get returns should nothing be
      * found at the path. Also doesn't search in defaults if not found, instead
      * returns our def.
@@ -674,10 +674,8 @@ open class ConfigSection : MemoryConfiguration {
     /**
      * See [.get]
      *
-     *
      * In this instance we provide a type and ensure our found object
      * get's returned as this type. Can still produce `null`
-     *
      *
      * If object isn't instance of T, simply return null
      *
@@ -692,7 +690,6 @@ open class ConfigSection : MemoryConfiguration {
 
     /**
      * See [.getT]
-     *
      *
      * Except we are able to return a default instance of T should the value
      * not be found or not be able to cast to T
@@ -817,7 +814,6 @@ open class ConfigSection : MemoryConfiguration {
     /**
      * See [.set]
      *
-     *
      * This does the same thing except we are setting a new [ConfigSection]
      * This may be if we want to construct things under it and bulk update
      *
@@ -854,7 +850,6 @@ open class ConfigSection : MemoryConfiguration {
     /**
      * See [.createSection] and [.set]
      *
-     *
      * Except we are doing this on a new [ConfigSection]
      */
     fun createSection(path: String, commentStyle: CommentStyle?, comment: List<String>?): ConfigSection {
@@ -870,7 +865,6 @@ open class ConfigSection : MemoryConfiguration {
 
     /**
      * See [.createSection]
-     *
      *
      * Except we are able to map node value pairs to this section already
      */
@@ -896,6 +890,7 @@ open class ConfigSection : MemoryConfiguration {
     //  -------------------------------------------------------------------------
     //  Type safe getters
     //  -------------------------------------------------------------------------
+
     override fun getString(path: String): String? {
         return getT(path, String::class.java, "")
     }
@@ -966,7 +961,6 @@ open class ConfigSection : MemoryConfiguration {
 
     /**
      * See [.getConfigurationSection]
-     *
      *
      * Except it will create the section if not found
      */

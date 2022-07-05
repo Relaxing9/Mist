@@ -4,7 +4,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import java.util.logging.Level
 
 /**
- * {@link com.illuzionzstudios.mist.plugin.SpigotPlugin} plugin logger to handle logging
+ * [SpigotPlugin] logger to handle logging
  */
 class Logger {
 
@@ -89,6 +89,7 @@ class Logger {
         //  -------------------------------------------------------------------------
         //  Error handling
         //  -------------------------------------------------------------------------
+
         /**
          * Nicely display an error to console
          *

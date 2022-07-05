@@ -1,11 +1,9 @@
 package com.illuzionzstudios.mist.ui
 
-import com.illuzionzstudios.mist.Logger
 import com.illuzionzstudios.mist.exception.PluginException
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.Tickable
-import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.ui.button.Button
 import com.illuzionzstudios.mist.ui.button.type.ReturnBackButton
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer
@@ -33,20 +31,29 @@ abstract class UserInterface protected constructor(
      * The parent interface we entered from. This allows us to return to a previous menu
      * Can be `null` if no parent
      */
-    val parent: UserInterface? = null, makeNewInstance: Boolean = false
+    val parent: UserInterface? = null,
+
+    /**
+     * If when returning to parent will create a new instance
+     * of the inventory
+     */
+    val makeNewInstance: Boolean = false
 ) : Tickable {
+
     /**
      * Registered buttons to this menu (via reflection) to add in rendering
      */
     private val registeredButtons: MutableList<Button?> = ArrayList()
+
+    /**
+     * @return A list of buttons to manually add instead of scanning
+     */
+    protected val buttonsToRegister: List<Button?>?
+        get() = null
+
     //  -------------------------------------------------------------------------
     //  Properties of an interface
     //  -------------------------------------------------------------------------
-    /**
-     * Return the parent menu or null
-     *
-     * @return
-     */
 
     /**
      * The return button to display if applicable
@@ -58,33 +65,13 @@ abstract class UserInterface protected constructor(
      * See [.registerButtonViaReflection]
      */
     private var buttonsRegisteredViaReflection = false
-    /**
-     * Get the size of this menu
-     *
-     * @return
-     */
-    /**
-     * Sets the size of this menu (without updating the player container - if you
-     * want to update it call [.restart] ()})
-     *
-     * @param size
-     */
+
     /**
      * Amount of slots in the inventory
      */
     var size = 9 * 3
         protected set
-    /**
-     * The title of this menu
-     *
-     * @return the menu title
-     */
-    /**
-     * Sets the title of this inventory, this change is not reflected in client, you
-     * must call [.restart] ()} to take change
-     *
-     * @param title the new title
-     */
+
     /**
      * This is the title to display at the top of the interface
      */
@@ -96,25 +83,17 @@ abstract class UserInterface protected constructor(
      * at a certain slot
      */
     private var info: Array<String>? = null
-    /**
-     * Get the viewer that this instance of this menu is associated with
-     *
-     * @return the viewer of this instance, or null
-     */
-    /**
-     * Sets the viewer for this instance of this menu
-     *
-     * @param viewer The new viewer of the menu. Only sets the player
-     * doesn't perform any magic
-     */
+
     /**
      * This is the player currently viewing the menu.
      * Isn't set till displayed to a player
      */
     protected var viewer: Player? = null
+
     //  -------------------------------------------------------------------------
     //  Button utils
     //  -------------------------------------------------------------------------
+
     /**
      * Scans the class for every [Button] instance and registers it
      */
@@ -169,12 +148,6 @@ abstract class UserInterface protected constructor(
     }
 
     /**
-     * @return A list of buttons to manually add instead of scanning
-     */
-    protected val buttonsToRegister: List<Button?>?
-        get() = null
-
-    /**
      * Try to get a button with a specific icon from [ItemStack]
      *
      * @param icon [ItemStack] to find by
@@ -195,6 +168,9 @@ abstract class UserInterface protected constructor(
         return null
     }
 
+    /**
+     * Internal check if [ItemStack] are equal
+     */
     private fun equals(stack1: ItemStack, stack2: ItemStack?): Boolean {
         val meta1 = stack1.itemMeta
         val meta2 = stack2!!.itemMeta
@@ -204,7 +180,6 @@ abstract class UserInterface protected constructor(
 
     /**
      * Return a new instance of this interface
-     *
      *
      * You must override this in certain cases
      *
@@ -224,13 +199,13 @@ abstract class UserInterface protected constructor(
             t.printStackTrace()
         }
         throw PluginException(
-            "Could not instatiate menu of " + javaClass
-                    + ", override 'newInstance' and ensure constructor is public!"
+            "Could not instantiate menu of $javaClass, override 'newInstance' and ensure constructor is public!"
         )
     }
     //  -------------------------------------------------------------------------
     //  Rendering
     //  -------------------------------------------------------------------------
+
     /**
      * Build, render, and show our [UserInterface] to a player
      * Only used to firstly show it to a player, shouldn't be used to re-render
@@ -283,7 +258,7 @@ abstract class UserInterface protected constructor(
 
     /**
      * Run any last minute registering before the interface is displayed.
-     * Good if you want a dynamic interface
+     * Good if you want a dynamic interface. Ensures viewer is set
      */
     protected fun preDisplay() {}
 
@@ -351,9 +326,7 @@ abstract class UserInterface protected constructor(
         if (addReturnButton() && returnButton !is Button.IconButton) items[returnButtonPosition] = returnButton.item
         return items
     }
-    //  -------------------------------------------------------------------------
-    //  Final getters and setters
-    //  -------------------------------------------------------------------------
+
     /**
      * Returns the item at a certain slot
      *
@@ -405,8 +378,6 @@ abstract class UserInterface protected constructor(
     /**
      * Calculates the center slot of this menu
      *
-     *
-     *
      * Credits to Gober at
      * https://www.spigotmc.org/threads/get-the-center-slot-of-a-menu.379586/
      *
@@ -448,13 +419,14 @@ abstract class UserInterface protected constructor(
         }
         return Arrays.copyOfRange(copy, from, to)
     }
+
     //  -------------------------------------------------------------------------
     //  Interface events
     //  -------------------------------------------------------------------------
+
     /**
      * Master method called when the interface is clicked on. Calls methods to be implemented
      * and handles click logic.
-     *
      *
      * It passes down to [.onInterfaceClick]
      *
@@ -496,7 +468,13 @@ abstract class UserInterface protected constructor(
      * @param slot    The slot that was clicked
      * @param clicked The clicked [ItemStack]
      */
-    protected open fun onInterfaceClick(player: Player?, slot: Int, clicked: ItemStack?, event: InventoryClickEvent, cancelled: Boolean = true) {
+    protected open fun onInterfaceClick(
+        player: Player?,
+        slot: Int,
+        clicked: ItemStack?,
+        event: InventoryClickEvent,
+        cancelled: Boolean = true
+    ) {
         // By default cancel moving items
         event.isCancelled = cancelled
     }
@@ -540,12 +518,8 @@ abstract class UserInterface protected constructor(
     fun onInterfaceClose(player: Player?, inventory: Inventory?) {}
 
     companion object {
-        //  -------------------------------------------------------------------------
-        //  Static variables
-        //  -------------------------------------------------------------------------
         /**
          * This is an internal metadata tag that the player has.
-         *
          *
          * This will set the name of the current menu in order to keep
          * track of what menu is currently open
@@ -555,14 +529,11 @@ abstract class UserInterface protected constructor(
         /**
          * This is an internal metadata tag that the player has.
          *
-         *
          * This will set the name of the previous menu in order to
          * backtrack for returning menus
          */
         val TAG_PREVIOUS = "UI_PREVIOUS_" + SpigotPlugin.pluginName
-        //  -------------------------------------------------------------------------
-        //  Getting menus
-        //  -------------------------------------------------------------------------
+
         /**
          * Get the currently active menu for the player
          *
@@ -603,28 +574,9 @@ abstract class UserInterface protected constructor(
             return null
         }
     }
-    /**
-     * Base constructor to create a [UserInterface] with the size 9 * 3
-     * with a parent menu.
-     *
-     *
-     * You should set the size and title of the [UserInterface] in
-     * the constructor.
-     *
-     *
-     * Note: The viewer is still null here
-     *
-     * @param parent          The parent [UserInterface]
-     * @param makeNewInstance If the [ReturnBackButton] makes a new instance
-     * of the parent menu
-     */
-    /**
-     * See [.UserInterface]
-     *
-     *
-     * Creates a [UserInterface] with no parent
-     */
+
     init {
+        // Auto set return button to set parent menu
         returnButton = parent?.let { ReturnBackButton(it, newInstance = makeNewInstance) }
             ?: Button.makeEmpty()
     }

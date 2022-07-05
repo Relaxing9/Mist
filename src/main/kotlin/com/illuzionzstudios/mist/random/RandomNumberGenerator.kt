@@ -6,7 +6,6 @@ import java.util.*
  * A util class for randomly generating numbers with an upper and lower limit
  * Provides additional functionality on top of [java.util.Random]
  *
- *
  * Generates from lower (inclusive) to upper (inclusive)
  */
 class RandomNumberGenerator

@@ -4,7 +4,7 @@ import lombok.Getter
 import lombok.Setter
 
 /**
- * A pre set cooldown that can be started when we wish
+ * A pre-set cool down that can be started when we wish
  */
 @Getter
 @Setter

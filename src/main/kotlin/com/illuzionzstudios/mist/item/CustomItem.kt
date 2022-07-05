@@ -12,14 +12,11 @@ import org.bukkit.inventory.ItemStack
  * and turn it into an item. Can be implemented to have custom items that are configured
  * by the config extending on the base functionality.
  *
- *
  * This differs from [ItemCreator] as that is strictly for creating an item
  * stack where this is to create an item stack with a bit more functionality and
  * have our own sort of data attached to it.
  *
- *
  * Is not a builder as we should set everything manually.
- *
  *
  * Contains methods for manipulating item
  */

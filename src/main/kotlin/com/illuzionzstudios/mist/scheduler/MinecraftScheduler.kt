@@ -23,15 +23,12 @@ import java.util.function.Consumer
  * we can directly call methods to delay tasks or run tasks on certain threads,
  * or we can make use of the [Sync] and [Async] annotations.
  *
- *
  * These [Annotation] can annotate either [Class] [Field] or [Method]
  * Below is explained what each does
- *
  *
  * [Class] If is an instance of [Tickable], invokes with a set rate
  * [Field] If this is an instance of [Tickable], will be invoked with set rate
  * [Method] The method will be invoked with a set rate
- *
  *
  * When invoking a [Tickable] object, if the field is an instance of [Iterable]
  * or [Map], will check the elements for [Tickable] and invoke those
@@ -73,7 +70,7 @@ abstract class MinecraftScheduler {
      *
      * @param type Either [Sync] or [Async] to tick
      * @param <A>  An [Annotation] to tick
-    </A> */
+    */
     protected fun <A : Annotation?> heartbeat(type: Class<A>) {
         for (service in SYNC_SERVICE_REGISTRATION!!) {
             for (element in service.elements) {
@@ -229,7 +226,7 @@ abstract class MinecraftScheduler {
      * @param callable The future task
      * @param consumer The task callback
      * @param <T>      The type returned
-    </T> */
+    */
     abstract fun <T> desynchronize(callable: Callable<T>?, consumer: Consumer<Future<T>>?)
 
     /**
@@ -280,7 +277,6 @@ abstract class MinecraftScheduler {
          * Timer to tick object
          */
         val timer: PresetCooldown = PresetCooldown((rate?.time?.div(50))!!.toInt())
-
     }
 
     /**
@@ -310,9 +306,9 @@ abstract class MinecraftScheduler {
             val elements: MutableSet<SynchronizedElement<A>> = HashSet()
             for (`object` in objects) {
                 // Set them to public if they are private for obvious reasons
-//                if (!object.canAccess(object)) {
-//                    object.setAccessible(true);
-//                }
+                if (!`object`.canAccess(`object`)) {
+                    `object`.isAccessible = true;
+                }
                 val declaredRate = getRate(synchronizationClass, `object`)
                 if (declaredRate != null && declaredRate == rate) {
                     elements.add(SynchronizedElement(rate, `object`, synchronizationClass))
@@ -334,9 +330,9 @@ abstract class MinecraftScheduler {
             // Get declared rate of refresh value is instant by default //
             val getRate: Method = annotation?.javaClass?.getDeclaredMethod("rate")!!
 
-//            if (!getRate.canAccess(getRate)) {
-//                getRate.setAccessible(true);
-//            }
+            if (!getRate.canAccess(getRate)) {
+                getRate.isAccessible = true;
+            }
             return getRate.invoke(annotation) as Rate
         }
 

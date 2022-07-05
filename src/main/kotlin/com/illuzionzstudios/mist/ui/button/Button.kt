@@ -128,8 +128,8 @@ abstract class Button {
             return IconButton(creator.makeUIItem())
         }
 
-        fun makeIcon(stack: ItemStack?): IconButton {
-            return IconButton(stack!!)
+        fun makeIcon(stack: ItemStack): IconButton {
+            return IconButton(stack)
         }
 
         /**

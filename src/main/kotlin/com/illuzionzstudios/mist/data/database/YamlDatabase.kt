@@ -14,6 +14,7 @@ import java.util.function.Consumer
  * Database stored in flat files
  */
 class YamlDatabase : Database {
+
     override fun getFields(player: AbstractPlayer): HashMap<String, Any?> {
         // Local data file
         val dataConfig = YamlConfig(SpigotPlugin.instance!!, "data", player.uuid.toString() + ".yml")
@@ -44,15 +45,9 @@ class YamlDatabase : Database {
         dataConfig.load()
         dataConfig[queryingField] = value
         dataConfig.saveChanges()
-    }// Get name without extension
+    }
 
-    // Get offline player
-
-    // Add to cache
-    // Can't find players if can't find directory
-
-    // Go through files
-    override val savedPlayers: List<OfflinePlayer>?
+    override val savedPlayers: List<OfflinePlayer>
         get() {
             val savedPlayers: MutableList<OfflinePlayer> = ArrayList()
             val dir = File(SpigotPlugin.instance!!.dataFolder.path + File.separator + "data")
@@ -77,11 +72,11 @@ class YamlDatabase : Database {
         }
 
     override fun connect(): Boolean {
-        return false
+        return true
     }
 
     override fun disconnect(): Boolean {
-        return false
+        return true
     }
 
     override val isAlive: Boolean
