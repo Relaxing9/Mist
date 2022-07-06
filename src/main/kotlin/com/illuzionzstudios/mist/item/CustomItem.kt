@@ -29,6 +29,11 @@ open class CustomItem(
     var identifier: String = "null",
 
     /**
+     * Data for older versions
+     */
+    var data: Short = 0,
+
+    /**
      * Damage to the item for setting custom metadata
      */
     var damage: Int = -1,
@@ -95,6 +100,7 @@ open class CustomItem(
                 .isNotEmpty()) creator.name(customName.toString())
         if (lore != null) creator.lores(MistString.fromList(lore!!))
         creator.amount(amount)
+        creator.data(data)
         creator.damage(damage)
         creator.customModelData(customModelData)
         creator.enchants(enchants!!)

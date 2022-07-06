@@ -31,6 +31,8 @@ abstract class BaseCustomItemLoader<T : CustomItem?>(section: ConfigSection) : Y
         item?.lore = MistString.fromStringList(loader?.getStringList("lore")?.toMutableList())
         item?.amount = loader?.getInt("amount") ?: 1
         item?.material = XMaterial.matchXMaterial(loader?.getString("material") ?: "AIR").get()
+        item?.damage = loader?.getInt("damage") ?: 0
+        item?.data = (loader?.getInt("data") ?: 0).toShort()
         item?.customModelData = loader?.getInt("model-data") ?: 0
 
         val enchants: MutableMap<XEnchantment, Int> = EnumMap(XEnchantment::class.java)

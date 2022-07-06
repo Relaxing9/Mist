@@ -39,6 +39,11 @@ class ItemCreator(
     val amount: Int = 1,
 
     /**
+     * Data for older versions
+     */
+    val data: Short = 0,
+
+    /**
      * Damage to the item for setting durability
      */
     val damage: Int = -1,
@@ -116,7 +121,7 @@ class ItemCreator(
         )
 
         // Actual item we're building on
-        val stack = item?.clone() ?: ItemStack(material.parseMaterial()!!)
+        val stack = item?.clone() ?: material.parseItem()!!
         val stackMeta = meta?.clone() ?: stack.itemMeta
         Valid.checkNotNull(stackMeta, "Item metadata was somehow null")
 
@@ -229,6 +234,11 @@ class ItemCreator(
         var amount: Int = 1,
 
         /**
+         * Data for older versions
+         */
+        var data: Short = 0,
+
+        /**
          * Damage to the item for setting custom metadata
          */
         var damage: Int = -1,
@@ -286,6 +296,7 @@ class ItemCreator(
         fun material(item: XMaterial) = apply { this.material = item }
         fun amount(item: Int) = apply { this.amount = item }
         fun damage(item: Int) = apply { this.damage = item }
+        fun data(item: Short) = apply { this.data = item }
         fun customModelData(item: Int) = apply { this.customModelData = item }
         fun name(item: String) = apply { this.name = item }
         fun lores(item: List<String>) = apply { this.lores = item }
@@ -300,6 +311,7 @@ class ItemCreator(
             item,
             material,
             amount,
+            data,
             damage,
             customModelData,
             name,
