@@ -5,13 +5,14 @@
         <!-- Master Branches -->
         <!-- Format: <version> -->
         <!-- Must manually increase version number -->
+        <!-- SNAPSHOT version as library is constantly updated -->
         <ref type="branch">
             <pattern>main</pattern>
-            <version>${version.release}</version>
+            <version>${version.release}-SNAPSHOT</version>
         </ref>
         <ref type="branch">
             <pattern>master</pattern>
-            <version>${version.release}</version>
+            <version>${version.release}-SNAPSHOT</version>
         </ref>
 
         <!-- Development Branches -->
