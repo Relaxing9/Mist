@@ -306,9 +306,9 @@ abstract class MinecraftScheduler {
             val elements: MutableSet<SynchronizedElement<A>> = HashSet()
             for (`object` in objects) {
                 // Set them to public if they are private for obvious reasons
-                if (!`object`.canAccess(`object`)) {
-                    `object`.isAccessible = true;
-                }
+//                if (!`object`.canAccess(`object`)) {
+//                    `object`.isAccessible = true;
+//                }
                 val declaredRate = getRate(synchronizationClass, `object`)
                 if (declaredRate != null && declaredRate == rate) {
                     elements.add(SynchronizedElement(rate, `object`, synchronizationClass))
@@ -330,9 +330,9 @@ abstract class MinecraftScheduler {
             // Get declared rate of refresh value is instant by default //
             val getRate: Method = annotation?.javaClass?.getDeclaredMethod("rate")!!
 
-            if (!getRate.canAccess(getRate)) {
-                getRate.isAccessible = true;
-            }
+//            if (!getRate.canAccess(getRate)) {
+//                getRate.isAccessible = true;
+//            }
             return getRate.invoke(annotation) as Rate
         }
 
