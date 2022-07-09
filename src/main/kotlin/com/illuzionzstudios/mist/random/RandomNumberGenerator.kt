@@ -53,12 +53,12 @@ class RandomNumberGenerator
             val tokens: Array<String?> = string.split("to".toRegex()).toTypedArray()
 
             // Else use first element as upper
-            return if (tokens[1] != null) RandomNumberGenerator(
+            return if (tokens[0] != null && tokens[1] != null) RandomNumberGenerator(
                 tokens[0]!!.toDouble(),
                 tokens[1]!!.toDouble()
-            ) else RandomNumberGenerator(
+            ) else if (tokens[0] != null) RandomNumberGenerator(
                 tokens[0]!!.toDouble(), tokens[0]!!.toDouble()
-            )
+            ) else RandomNumberGenerator(0.0)
         }
     }
 }
