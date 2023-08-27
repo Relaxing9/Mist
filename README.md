@@ -18,7 +18,7 @@ Mist is built using Kotlin meaning the size of the plugin is bloated by about 80
 To use this project simply add the following dependency from jitpack, replacing VERSION with the current version
 ```xml
 <dependency>
-    <groupId>com.github.IlluzionzDev</groupId>
+    <groupId>com.github.Relaxing9</groupId>
 	<artifactId>Mist</artifactId>
 	<version>VERSION</version>
 </dependency>
