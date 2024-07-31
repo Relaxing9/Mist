@@ -11,8 +11,8 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.Charset
-import java.util.*
 import java.util.function.BiConsumer
+import java.util.Locale
 import javax.net.ssl.HttpsURLConnection
 
 /**

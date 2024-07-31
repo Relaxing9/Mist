@@ -5,7 +5,8 @@ import com.illuzionzstudios.mist.data.player.OfflinePlayer
 import com.illuzionzstudios.mist.scheduler.MinecraftScheduler
 import com.illuzionzstudios.mist.scheduler.rate.Rate
 import com.illuzionzstudios.mist.scheduler.rate.Sync
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
 import java.util.function.Predicate

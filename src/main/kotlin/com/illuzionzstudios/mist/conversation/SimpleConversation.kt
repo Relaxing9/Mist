@@ -7,7 +7,14 @@ import com.illuzionzstudios.mist.config.locale.PluginLocale
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.Valid
-import org.bukkit.conversations.*
+import org.bukkit.conversations.Conversation
+import org.bukkit.conversations.ConversationAbandonedEvent
+import org.bukkit.conversations.ConversationAbandonedListener
+import org.bukkit.conversations.ConversationCanceller
+import org.bukkit.conversations.ConversationPrefix
+import org.bukkit.conversations.Conversable
+import org.bukkit.conversations.InactivityConversationCanceller
+import org.bukkit.conversations.Prompt
 import org.bukkit.entity.Player
 
 /**

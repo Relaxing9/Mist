@@ -9,13 +9,17 @@ import com.illuzionzstudios.mist.scheduler.rate.Rate
 import com.illuzionzstudios.mist.scheduler.rate.Sync
 import com.illuzionzstudios.mist.scheduler.timer.PresetCooldown
 import com.illuzionzstudios.mist.util.ReflectionUtil
-import java.lang.reflect.*
-import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicLong
 import java.util.function.Consumer
+import java.util.Collections
+import java.lang.reflect.Method
+import java.lang.reflect.Field
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.AccessibleObject
+import java.lang.reflect.AnnotatedElement
 
 /**
  * An instance of a scheduler that ticks objects. This will handle

@@ -6,7 +6,7 @@ import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.TextUtil
 import com.illuzionzstudios.mist.util.Valid
 import org.bukkit.ChatColor
-import java.util.*
+import java.util.Locale
 
 /**
  * Contains a group of commands for execution. Contains the main command,

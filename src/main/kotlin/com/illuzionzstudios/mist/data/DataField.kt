@@ -4,7 +4,7 @@ import com.illuzionzstudios.mist.data.controller.PlayerDataController
 import com.illuzionzstudios.mist.data.player.AbstractPlayer
 import com.illuzionzstudios.mist.data.player.AbstractPlayerData
 import org.apache.commons.lang.StringUtils
-import java.util.*
+import java.util.Locale
 
 /**
  * A field in a players data

@@ -10,8 +10,8 @@ import com.illuzionzstudios.mist.util.UUIDFetcher.Companion.getName
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
-import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.UUID
 
 /**
  * Use MySql or any Sql database for our data

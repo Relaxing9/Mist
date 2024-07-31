@@ -26,7 +26,8 @@ import org.bukkit.ChatColor
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.*
+import java.util.Arrays
+import java.util.Objects
 
 /**
  * Represents an instance of a custom spigot plugin with our

@@ -20,7 +20,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.Plugin
-import java.util.*
+import java.util.UUID
 
 /**
  * Controls all Bukkit players

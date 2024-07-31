@@ -1,6 +1,6 @@
 package com.illuzionzstudios.mist.random
 
-import java.util.*
+import java.util.Random
 
 /**
  * A util class for randomly generating numbers with an upper and lower limit

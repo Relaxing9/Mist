@@ -3,10 +3,10 @@ package com.illuzionzstudios.mist.util
 import com.illuzionzstudios.mist.compatibility.ServerVersion
 import net.md_5.bungee.api.ChatColor
 import org.apache.commons.lang.StringEscapeUtils
-import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 import java.util.regex.Pattern
+import java.util.Locale
 
 /**
  * Util methods to help parsing text

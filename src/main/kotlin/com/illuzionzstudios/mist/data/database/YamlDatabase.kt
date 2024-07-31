@@ -7,8 +7,8 @@ import com.illuzionzstudios.mist.data.player.OfflinePlayer
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
 import com.illuzionzstudios.mist.util.UUIDFetcher.Companion.getName
 import java.io.File
-import java.util.*
 import java.util.function.Consumer
+import java.util.UUID
 
 /**
  * Database stored in flat files

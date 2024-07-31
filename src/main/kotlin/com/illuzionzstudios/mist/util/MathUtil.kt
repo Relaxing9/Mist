@@ -1,7 +1,10 @@
 package com.illuzionzstudios.mist.util
 
 import java.text.DecimalFormat
-import java.util.*
+import java.util.NavigableMap
+import java.util.TreeMap
+import java.util.Arrays
+import java.util.Random
 
 /**
  * Utility class for mathematical operations.

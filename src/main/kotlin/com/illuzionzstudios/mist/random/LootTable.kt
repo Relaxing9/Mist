@@ -1,7 +1,8 @@
 package com.illuzionzstudios.mist.random
 
 import com.illuzionzstudios.mist.model.Pair
-import java.util.*
+import java.util.LinkedList
+import java.util.Random
 
 /**
  * Contains items that can be picked based on weights

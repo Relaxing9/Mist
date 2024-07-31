@@ -3,12 +3,14 @@ package com.illuzionzstudios.mist.util
 import com.google.gson.GsonBuilder
 import com.illuzionzstudios.mist.util.UUIDFetcher
 import com.mojang.util.UUIDTypeAdapter
-import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.function.Consumer
+import java.util.UUID
+import java.util.Locale
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 /**
  * External UUID library included for our plugin. Runs Async

@@ -11,8 +11,9 @@ import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.util.Vector
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.UUID
+import java.util.Locale
 
 /**
  * Utility method for dealing with players

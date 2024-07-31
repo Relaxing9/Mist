@@ -1,6 +1,6 @@
 package com.illuzionzstudios.mist.data.player
 
-import java.util.*
+import java.util.UUID
 
 /**
  * Default data player

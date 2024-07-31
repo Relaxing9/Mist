@@ -5,7 +5,12 @@ import com.illuzionzstudios.mist.Mist.Companion.tellLaterConversing
 import com.illuzionzstudios.mist.ui.UserInterface
 import com.illuzionzstudios.mist.util.TextUtil
 import com.illuzionzstudios.mist.util.Valid
-import org.bukkit.conversations.*
+import org.bukkit.conversations.Conversable
+import org.bukkit.conversations.ConversationAbandonedEvent
+import org.bukkit.conversations.ConversationContext
+import org.bukkit.conversations.ConversationPrefix
+import org.bukkit.conversations.Prompt
+import org.bukkit.conversations.ValidatingPrompt
 import org.bukkit.entity.Player
 
 /**
