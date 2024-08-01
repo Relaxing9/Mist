@@ -124,13 +124,13 @@ class ReflectionUtil {
          * Get the field content
          */
         fun <T> getFieldContent(clazz: Class<*>, field: String, instance: Any?): T {
-            var clazz = clazz
-            val originalClassName = clazz.simpleName
+            var localClazz = clazz
+            val originalClassName = localClazz.simpleName
             do  // note: getDeclaredFields() fails if any of the fields are classes that cannot be loaded
-                for (f in clazz.declaredFields) if (f.name == field) return getFieldContent(
+                for (f in localClazz.declaredFields) if (f.name == field) return getFieldContent(
                     f,
                     instance
-                ) as T while (!clazz.superclass.also { clazz = it }
+                ) as T while (!localClazz.superclass.also { localClazz = it }
                     .isAssignableFrom(
                         Any::class.java
                     ))
@@ -155,9 +155,9 @@ class ReflectionUtil {
          * Get all fields from the class and its super classes
          */
         fun getAllFields(clazz: Class<*>): Array<Field> {
-            var clazz = clazz
+            var localClazz = clazz
             val list: MutableList<Field> = ArrayList()
-            do list.addAll(listOf(*clazz.declaredFields)) while (!clazz.superclass.also { clazz = it }
+            do list.addAll(listOf(*localClazz.declaredFields)) while (!localClazz.superclass.also { localClazz = it }
                     .isAssignableFrom(
                         Any::class.java
                     ))
@@ -226,9 +226,9 @@ class ReflectionUtil {
          * Get all fields from the class and its super classes
          */
         fun getAllMethods(clazz: Class<*>): Array<Method> {
-            var clazz = clazz
+            var localClazz = clazz
             val list: MutableList<Method> = ArrayList()
-            do list.addAll(listOf(*clazz.declaredMethods)) while (!clazz.superclass.also { clazz = it }
+            do list.addAll(listOf(*localClazz.declaredMethods)) while (!localClazz.superclass.also { localClazz = it }
                     .isAssignableFrom(
                         Any::class.java
                     ))
