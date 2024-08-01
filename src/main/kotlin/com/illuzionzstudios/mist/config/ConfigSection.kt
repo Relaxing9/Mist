@@ -7,7 +7,7 @@ import com.illuzionzstudios.mist.util.Valid
 import lombok.*
 import org.bukkit.configuration.Configuration
 import org.bukkit.configuration.MemoryConfiguration
-import java.util.*
+import java.util.Objects
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier

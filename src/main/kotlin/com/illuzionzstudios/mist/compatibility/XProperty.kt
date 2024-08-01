@@ -6,7 +6,7 @@ import com.illuzionzstudios.mist.util.Valid
 import org.bukkit.entity.Entity
 import org.bukkit.inventory.meta.ItemMeta
 import java.lang.reflect.Method
-import java.util.*
+import java.util.Locale
 
 /**
  * Some properties of things.

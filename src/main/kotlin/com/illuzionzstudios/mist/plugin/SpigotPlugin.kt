@@ -26,14 +26,15 @@ import org.bukkit.ChatColor
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.*
+import java.util.Arrays
+import java.util.Objects
 
 /**
  * Represents an instance of a custom spigot plugin with our
  * "Mist" functionality
  *
  * The plugin is only designed to work on versions
- * {@version 1.8.8} to {@version 1.20.1}
+ * {@version 1.8.8} to {@version 1.20.6}
  */
 abstract class SpigotPlugin(var metricsId: Int = 0) : JavaPlugin(), Listener {
 

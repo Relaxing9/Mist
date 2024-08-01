@@ -4,7 +4,7 @@ import com.illuzionzstudios.mist.util.Valid
 import org.bukkit.conversations.Conversation
 import org.bukkit.conversations.ConversationCanceller
 import org.bukkit.conversations.ConversationContext
-import java.util.*
+import java.util.Arrays
 
 /**
  * A simple conversation canceller

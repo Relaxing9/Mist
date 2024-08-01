@@ -7,7 +7,7 @@ import com.illuzionzstudios.mist.config.locale.MistString
 import com.illuzionzstudios.mist.config.serialization.loader.type.YamlSectionLoader
 import com.illuzionzstudios.mist.exception.PluginException
 import com.illuzionzstudios.mist.item.CustomItem
-import java.util.*
+import java.util.EnumMap
 
 /**
  * A loader for a [CustomItem] from a YAML config section. Can be implemented

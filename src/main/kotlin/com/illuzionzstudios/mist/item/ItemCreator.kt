@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.ItemMeta
-import java.util.*
 import java.util.function.Consumer
 
 /**
@@ -151,7 +150,7 @@ class ItemCreator(
 
         // Glow
         if (glow) {
-            stackMeta?.addEnchant(Enchantment.DURABILITY, 1, true)
+            stackMeta?.addEnchant(Enchantment.UNBREAKING, 1, true)
             flags.add(XItemFlag.HIDE_ENCHANTS)
         }
 

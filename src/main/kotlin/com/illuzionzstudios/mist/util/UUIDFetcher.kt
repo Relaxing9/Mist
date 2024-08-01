@@ -3,12 +3,14 @@ package com.illuzionzstudios.mist.util
 import com.google.gson.GsonBuilder
 import com.illuzionzstudios.mist.util.UUIDFetcher
 import com.mojang.util.UUIDTypeAdapter
-import java.io.*
 import java.net.HttpURLConnection
-import java.net.URL
-import java.util.*
+import java.net.URI
 import java.util.concurrent.Executors
 import java.util.function.Consumer
+import java.util.UUID
+import java.util.Locale
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 /**
  * External UUID library included for our plugin. Runs Async
@@ -27,10 +29,13 @@ class UUIDFetcher(
 
     companion object {
         private val gson = GsonBuilder().registerTypeAdapter(UUID::class.java, UUIDTypeAdapter()).create()
+        
         private const val UUID_URL = "https://api.mojang.com/users/profiles/minecraft/%s?at=%d"
         private const val NAME_URL = "https://api.mojang.com/user/profiles/%s/names"
+
         private val uuidCache: MutableMap<String, UUID?> = HashMap()
         private val nameCache: MutableMap<UUID?, String?> = HashMap()
+
         private val pool = Executors.newCachedThreadPool()
 
         /**
@@ -71,27 +76,30 @@ class UUIDFetcher(
          * @param timestamp Time when the player had this name in milliseconds
          */
         fun getUUIDAt(name: String, timestamp: Long): UUID? {
-            var name = name
-            name = name.lowercase(Locale.getDefault())
-            if (uuidCache.containsKey(name)) {
-                return uuidCache[name]
+            var lname = name
+            lname = lname.lowercase(Locale.getDefault())
+            if (uuidCache.containsKey(lname)) {
+                return uuidCache[lname]
             }
-            try {
+
+            return try {
                 val connection =
-                    URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection() as HttpURLConnection
+                    URI(String.format(UUID_URL, lname, timestamp / 1000)).toURL().openConnection() as HttpURLConnection
                 connection.readTimeout = 5000
                 val data =
                     gson.fromJson(
                         BufferedReader(InputStreamReader(connection.inputStream)),
                         UUIDFetcher::class.java
                     )
-                uuidCache[name] = data.id
+
+                uuidCache[lname] = data.id
                 nameCache[data.id] = data.name
-                return data.id
+                
+                data.id
             } catch (e: Exception) {
                 e.printStackTrace()
+                null
             }
-            return null
         }
 
         /**
@@ -115,27 +123,36 @@ class UUIDFetcher(
             if (nameCache.containsKey(uuid)) {
                 return nameCache[uuid]
             }
-            try {
+            return try {
+                var cleanUUID = fromUUID(uuid)
                 val connection =
-                    URL(
-                        String.format(
-                            NAME_URL,
-                            UUIDTypeAdapter.fromUUID(uuid)
-                        )
-                    ).openConnection() as HttpURLConnection
+                    URI(String.format(NAME_URL, cleanUUID)).toURL()
+                    .openConnection() as HttpURLConnection
                 connection.readTimeout = 5000
                 val nameHistory = gson.fromJson(
                     BufferedReader(InputStreamReader(connection.inputStream)),
                     Array<UUIDFetcher>::class.java
                 )
                 val currentNameData = nameHistory[nameHistory.size - 1]
+
                 uuidCache[currentNameData.name!!.lowercase(Locale.getDefault())] = uuid
                 nameCache[uuid] = currentNameData.name
-                return currentNameData.name
+                
+                currentNameData.name
             } catch (e: Exception) {
                 e.printStackTrace()
+                null
             }
-            return null
+        }
+
+        /**
+         * Sanitizes UUID for lookup, method was deprecated in UUIDTypeAdapter
+         *
+         * @param uuid The uuid
+         * @return Formatted uuid
+         */
+        fun fromUUID(value: UUID?): String {
+            return value.toString().replace("-", "")
         }
     }
 }

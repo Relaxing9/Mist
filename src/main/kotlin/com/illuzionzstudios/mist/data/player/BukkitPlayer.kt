@@ -8,7 +8,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.PlayerInventory
-import java.util.*
+import java.util.UUID
 
 /**
  * Player that contains Bukkit API methods

@@ -16,14 +16,25 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.error.YAMLException
 import org.yaml.snakeyaml.representer.Representer
-import java.io.*
+import java.io.File
+import java.io.BufferedInputStream
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.io.InputStream
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.Reader
+import java.io.StringReader
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.io.StringWriter
+import java.io.Writer
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.LinkedList
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.stream.Collectors
-
 
 /**
  * Handles a [ConfigSection] as a YAML file. This means being a file

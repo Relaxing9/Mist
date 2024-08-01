@@ -8,7 +8,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.net.URI
 import java.net.URISyntaxException
-import java.util.*
+import java.util.UUID
+import java.util.Base64
 
 /**
  * A library for the Bukkit API to create player skulls

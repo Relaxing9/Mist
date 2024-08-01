@@ -2,7 +2,7 @@ package com.illuzionzstudios.mist.data.player
 
 import com.illuzionzstudios.mist.data.PlayerData
 import com.illuzionzstudios.mist.data.controller.PlayerDataController
-import java.util.*
+import java.util.UUID
 
 /**
  * A player that we don't know if is offline or online

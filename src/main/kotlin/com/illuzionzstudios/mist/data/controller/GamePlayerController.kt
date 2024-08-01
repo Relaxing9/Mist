@@ -2,7 +2,7 @@ package com.illuzionzstudios.mist.data.controller
 
 import com.illuzionzstudios.mist.data.player.GamePlayer
 import com.illuzionzstudios.mist.plugin.SpigotPlugin
-import java.util.*
+import java.util.UUID
 
 /**
  * Default game player controllers

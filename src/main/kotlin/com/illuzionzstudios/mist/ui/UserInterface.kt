@@ -7,7 +7,8 @@ import com.illuzionzstudios.mist.scheduler.Tickable
 import com.illuzionzstudios.mist.ui.button.Button
 import com.illuzionzstudios.mist.ui.button.type.ReturnBackButton
 import com.illuzionzstudios.mist.ui.render.InterfaceDrawer
-import com.illuzionzstudios.mist.util.*
+import com.illuzionzstudios.mist.util.ReflectionUtil
+import com.illuzionzstudios.mist.util.Valid
 import lombok.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -17,8 +18,9 @@ import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
-import java.lang.reflect.*
-import java.util.*
+import java.lang.reflect.Field
+import java.lang.reflect.Modifier
+import java.util.Arrays
 
 /**
  * Our main menu (or interface) for all inventory interaction. We provide
