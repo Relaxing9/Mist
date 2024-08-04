@@ -16,6 +16,11 @@ object ServerVersion {
     private var serverVersion: String? = null
 
     /**
+     * List of new Minecraft Versions past MC 1.20.4
+     */
+    private val newMinecraftVersions = arrayOf("1.20.5", "1.20.6", "1.21")
+
+    /**
      * The wrapper representation of the version
      */
     @Getter
@@ -110,35 +115,38 @@ object ServerVersion {
             val brand: String = packageName.substring(
                 packageName.lastIndexOf('.') + 1
             )
-            if (!(curr.equals("1.20.6") || curr.equals("1.20.5") ||
-                curr.equals("1.21"))) {
-                    val hasGatekeeper = "craftbukkit" != brand
-                    serverVersion = brand
-                    if (hasGatekeeper) {
-                        var pos = 0
-                        for (ch in brand.toCharArray()) {
-                            pos++
-                            if (pos > 2 && ch == 'R') break
-                        }
-                        val numericVersion: String = brand.substring(
-                            1,
-                            pos - 2
-                        ).replace("_", ".")
-                        var found = 0
-                        for (ch in numericVersion.toCharArray()) if (ch == '.') found++
-                        Valid.checkBoolean(
-                            found == 1,
-                            "Minecraft Version checker malfunction. Could not detect your server version. Detected: $numericVersion Current: $curr"
-                        )
-                        current = V.parse(
-                            numericVersion.split("\\.".toRegex()).toTypedArray()[1]
-                                .toInt()
-                        )
-                    } else current = V.v1_3_AND_BELOW
+            var new = 0
+            for (v in newMinecraftVersions) {
+                if (v.equals(curr)) { new++ }
+            }
+            if (new == 0) {
+                serverVersion = brand
+                val hasGatekeeper = "craftbukkit" != brand
+                if (hasGatekeeper) {
+                    var pos = 0
+                    for (ch in brand.toCharArray()) {
+                        pos++
+                        if (pos > 2 && ch == 'R') break
+                    }
+                    val numericVersion: String = brand.substring(
+                        1,
+                        pos - 2
+                    ).replace("_", ".")
+                    var found = 0
+                    for (ch in numericVersion.toCharArray()) if (ch == '.') found++
+                    Valid.checkBoolean(
+                        found == 1,
+                        "Minecraft Version checker malfunction. Could not detect your server version. Detected: $numericVersion Current: $curr"
+                    )
+                    current = V.parse(
+                        numericVersion.split("\\.".toRegex()).toTypedArray()[1]
+                            .toInt()
+                    )
+                } else current = V.v1_3_AND_BELOW
                 } else {
                     serverVersion = curr
                     var numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
-                    if (numericVersion2 == 21) numericVersion2 *= 10
+                    if (numericVersion2 == 21) { numericVersion2 *= 10 }
                     current = V.parse(numericVersion2)
             }
         } catch (t: Throwable) {

@@ -41,10 +41,10 @@ class ReflectionUtil {
          * automatically
          */
         fun getOBCClass(name: String): Class<*> {
-            if (ServerVersion.olderThan(V.v1_20_4)) {
-                return lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name)
+            if (ServerVersion.newerThan(V.v1_20_4)) {
+                return lookupClass(CRAFTBUKKIT + "." + name)
             }
-            return lookupClass(CRAFTBUKKIT + "." + name)
+            return lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name)
         }
 
         /**
