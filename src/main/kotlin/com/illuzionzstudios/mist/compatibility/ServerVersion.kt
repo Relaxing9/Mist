@@ -79,7 +79,7 @@ object ServerVersion {
          */
         @field:Getter private val tested: Boolean = true
     ) {
-        v1_21(21), v1_20_6(206), v1_20_5(205),
+        v1_21(210), v1_20_6(206), v1_20_5(205),
         v1_20_4(204), v1_20(20), v1_19(19), v1_18(18), v1_17(17), v1_16(16), v1_15(15), v1_14(14), v1_13(13), v1_12(12), v1_11(11),
         v1_10(10), v1_9(9), v1_8(8), v1_7(7, false), v1_6(6, false), v1_5(5, false), v1_4(4, false), v1_3_AND_BELOW(3, false);
 
@@ -136,9 +136,10 @@ object ServerVersion {
                         )
                     } else current = V.v1_3_AND_BELOW
                 } else {
-                val numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
-                serverVersion = curr
-                current = V.parse(numericVersion2)
+                    serverVersion = curr
+                    var numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
+                    if (numericVersion2 == 21) numericVersion2 *= 10
+                    current = V.parse(numericVersion2)
             }
         } catch (t: Throwable) {
             Logger.displayError(t, "Error detecting your Minecraft version. Check your server compatibility.")
