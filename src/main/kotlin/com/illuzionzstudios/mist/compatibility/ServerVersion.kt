@@ -143,11 +143,11 @@ object ServerVersion {
                             .toInt()
                     )
                 } else current = V.v1_3_AND_BELOW
-                } else {
-                    serverVersion = curr
-                    var numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
-                    if (numericVersion2 == 21) { numericVersion2 *= 10 }
-                    current = V.parse(numericVersion2)
+            } else {
+                serverVersion = curr
+                var numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
+                if (numericVersion2 == 21) { numericVersion2 *= 10 }
+                current = V.parse(numericVersion2)
             }
         } catch (t: Throwable) {
             Logger.displayError(t, "Error detecting your Minecraft version. Check your server compatibility.")
