@@ -79,8 +79,9 @@ object ServerVersion {
          */
         @field:Getter private val tested: Boolean = true
     ) {
-        v1_20_6(20_6), v1_20(20), v1_19(19), v1_18(18), v1_17(17), v1_16(16), v1_15(15), v1_14(14), v1_13(13), v1_12(12), v1_11(11), v1_10(10),
-        v1_9(9), v1_8(8), v1_7(7, false), v1_6(6, false), v1_5(5, false), v1_4(4, false), v1_3_AND_BELOW(3, false);
+        v1_21(21), v1_20_6(206), v1_20_5(205),
+        v1_20_4(204), v1_20(20), v1_19(19), v1_18(18), v1_17(17), v1_16(16), v1_15(15), v1_14(14), v1_13(13), v1_12(12), v1_11(11),
+        v1_10(10), v1_9(9), v1_8(8), v1_7(7, false), v1_6(6, false), v1_5(5, false), v1_4(4, false), v1_3_AND_BELOW(3, false);
 
         companion object {
             /**
@@ -102,32 +103,43 @@ object ServerVersion {
     init {
         try {
             val packageName = Bukkit.getServer().javaClass.getPackage().name
-            val curr: String = packageName.substring(
+            val protocol = Bukkit.getServer().bukkitVersion
+            val curr: String = protocol.substring(0,
+                protocol.indexOf('-')                
+            )
+            val brand: String = packageName.substring(
                 packageName.lastIndexOf('.') + 1
             )
-            val hasGatekeeper = "craftbukkit" != curr
-            serverVersion = curr
-            if (hasGatekeeper) {
-                var pos = 0
-                for (ch in curr.toCharArray()) {
-                    pos++
-                    if (pos > 2 && ch == 'R') break
-                }
-                val numericVersion: String = curr.substring(
-                    1,
-                    pos - 2
-                ).replace("_", ".")
-                var found = 0
-                for (ch in numericVersion.toCharArray()) if (ch == '.') found++
-                Valid.checkBoolean(
-                    found == 1,
-                    "Minecraft Version checker malfunction. Could not detect your server version. Detected: $numericVersion Current: $curr"
-                )
-                current = V.parse(
-                    numericVersion.split("\\.".toRegex()).toTypedArray()[1]
-                        .toInt()
-                )
-            } else current = V.v1_3_AND_BELOW
+            if (!(curr.equals("1.20.6") || curr.equals("1.20.5") ||
+                curr.equals("1.21"))) {
+                    val hasGatekeeper = "craftbukkit" != brand
+                    serverVersion = brand
+                    if (hasGatekeeper) {
+                        var pos = 0
+                        for (ch in brand.toCharArray()) {
+                            pos++
+                            if (pos > 2 && ch == 'R') break
+                        }
+                        val numericVersion: String = brand.substring(
+                            1,
+                            pos - 2
+                        ).replace("_", ".")
+                        var found = 0
+                        for (ch in numericVersion.toCharArray()) if (ch == '.') found++
+                        Valid.checkBoolean(
+                            found == 1,
+                            "Minecraft Version checker malfunction. Could not detect your server version. Detected: $numericVersion Current: $curr"
+                        )
+                        current = V.parse(
+                            numericVersion.split("\\.".toRegex()).toTypedArray()[1]
+                                .toInt()
+                        )
+                    } else current = V.v1_3_AND_BELOW
+                } else {
+                val numericVersion2: Int = curr.substring(1).replace(".", "").toInt()
+                serverVersion = curr
+                current = V.parse(numericVersion2)
+            }
         } catch (t: Throwable) {
             Logger.displayError(t, "Error detecting your Minecraft version. Check your server compatibility.")
         }

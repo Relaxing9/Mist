@@ -1,6 +1,7 @@
 package com.illuzionzstudios.mist.util
 
 import com.illuzionzstudios.mist.compatibility.ServerVersion
+import com.illuzionzstudios.mist.compatibility.ServerVersion.V
 import com.illuzionzstudios.mist.exception.PluginException
 import org.apache.commons.lang.ClassUtils
 import java.lang.reflect.Constructor
@@ -40,7 +41,10 @@ class ReflectionUtil {
          * automatically
          */
         fun getOBCClass(name: String): Class<*> {
-            return lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name)
+            if (ServerVersion.olderThan(V.v1_20_4)) {
+                return lookupClass(CRAFTBUKKIT + "." + ServerVersion.getServerVersion() + "." + name)
+            }
+            return lookupClass(CRAFTBUKKIT + "." + name)
         }
 
         /**
