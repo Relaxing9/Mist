@@ -18,7 +18,7 @@ object ServerVersion {
     /**
      * List of new Minecraft Versions past MC 1.20.4
      */
-    private val newMinecraftVersions = arrayOf("1.20.5", "1.20.6", "1.21")
+    private val newMinecraftVersions = arrayOf("1.20.5", "1.20.6", "1.21", "1.21.1")
 
     /**
      * The wrapper representation of the version
@@ -84,7 +84,7 @@ object ServerVersion {
          */
         @field:Getter private val tested: Boolean = true
     ) {
-        v1_21(210), v1_20_6(206), v1_20_5(205),
+        v1_21_1(211), v1_21(210), v1_20_6(206), v1_20_5(205),
         v1_20_4(204), v1_20(20), v1_19(19), v1_18(18), v1_17(17), v1_16(16), v1_15(15), v1_14(14), v1_13(13), v1_12(12), v1_11(11),
         v1_10(10), v1_9(9), v1_8(8), v1_7(7, false), v1_6(6, false), v1_5(5, false), v1_4(4, false), v1_3_AND_BELOW(3, false);
 
